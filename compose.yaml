@@ -1,0 +1,37 @@
+services:
+  mysql:
+    image: 'mysql:8.0'
+    container_name: mysql-container
+    environment:
+      - 'MYSQL_DATABASE=work'
+      - 'MYSQL_PASSWORD=work2024!'
+      - 'MYSQL_ROOT_PASSWORD=work2024!'
+      - 'MYSQL_USER=work'
+    ports:
+      - '3306:3306'
+    volumes:
+      - mysql_data:/var/lib/mysql   # 호스트의 볼륨을 컨테이너의 MySQL 데이터 디렉토리에 마운트
+  redis:
+    image: 'redis:latest'
+    ports:
+      - '6379'
+  spring-app_prod:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: spring_app_prod
+    environment:
+      - 'SPRING_DATASOURCE_URL=jdbc:mysql://mysql-container:3306/work'
+      - 'SPRING_DATASOURCE_USERNAME=work'
+      - 'SPRING_DATASOURCE_PASSWORD=work2024!'
+      - 'SPRING_DATA_REDIS_HOST=redis'
+      - 'SPRING_DATA_REDIS_PORT=6379'
+    ports:
+      - "8080:8080"
+    depends_on:
+      - redis
+      - mysql
+    volumes:
+      - ./uploads:/uploads
+volumes:
+  mysql_data:

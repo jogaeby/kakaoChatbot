@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>근무신청 현황</title>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- FullCalendar JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <script th:src="@{/js/scripts.js}"></script>
+    <script th:src="@{/js/view/common/common.js}"></script>
+    <script th:src="@{/js/view/fragments/header.js}"></script>
+    <script th:src="@{/js/view/fragments/sidebar.js}"></script>
+
+    <style>
+        /* 요일 헤더 텍스트 색상 변경 */
+        .fc .fc-col-header-cell-cushion {
+            color: gray; /* 요일 텍스트 색상 */
+
+        }
+
+        .fc .fc-daygrid-day-number {
+            color: #000000; /* 요일 텍스트 색상 */
+        }
+
+        .fc-daygrid-day-number,.fc-col-header-cell-cushion {
+            text-decoration: none; /* 언더바 제거 */
+        }
+
+        .fc-day-sat {
+            background-color: #f0f8ff; /* 토요일 색상 */
+        }
+
+        .fc-day-sun {
+            background-color: #ffebee; /* 일요일 색상 */
+        }
+
+        #calendar {
+            max-width: 900px;
+            margin: 30px auto;
+        }
+
+        #loadingOverlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.5);
+            z-index: 9999;
+        }
+
+        #loadingOverlay img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+</head>
+<body class="sb-nav-fixed">
+<div th:replace="fragments/header :: header"></div>
+<div id="layoutSidenav">
+    <div th:replace="fragments/sidebar :: sidebar"></div>
+    <div id="layoutSidenav_content">
+        <main id="contents">
+            <div class="container-fluid px-4">
+                <div class="card m-4">
+                    <div class="card-header" style="display: flex; justify-content: space-between;  align-items: center;">
+                        <div>
+                            <i class="fas fa-table me-1"></i>
+                            근무신청 현황
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="calendar"></div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+        <div id="loadingOverlay">
+            <img src="/loading.gif" alt="로딩 중...">
+        </div>
+
+        <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h6 class="modal-title" id="addModalLabel">근무자시작 시간</h6>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="addWorkTime">근무시작 시간:</label>
+                            <input type="time" class="form-control mb-3" id="addWorkTime">
+                            <input type="hidden" class="form-control mb-3" id="addWorkTimeId">
+                        </div>
+                        <div class="d-flex align-items-center justify-content-center mt-4 mb-0 gap-3">
+                            <button type="button" id="addWorkTimeButton" class="btn btn-primary">수정</button>
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">취소</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <th:block th:replace="fragments/footer :: footer"></th:block>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
+
+<!-- home.js를 FullCalendar가 로드된 후에 실행 -->
+<script th:src="@{/js/view/home/home.js}"></script>
+</body>
+</html>
