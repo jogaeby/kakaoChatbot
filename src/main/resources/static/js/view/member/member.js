@@ -1,10 +1,9 @@
 $(document).ready(function(){
     const headers = [
-        'No', '개인키','이름', '연락처','버스 탑승지','성별','생년월일','주소','가입일','관리'
+        'No', 'ID','이름', '연락처','가입일','관리'
     ];
-    getMembers()
 
-    getBoardPoints();
+    getMembers()
 
     $("#addMemberButton").on("click",function () {
         $('#addModal').find('input').val('');
@@ -12,14 +11,21 @@ $(document).ready(function(){
     })
 
     $("#addMember").on("click",function () {
-        let name = $("#addMemberName").val();
-        let phone = $("#addMemberPhone").val();
-        let gender = $("#addMemberGender").val();
-        let birthDate = $("#addMemberBirthDate").val();
-        let address = $("#addMemberAddress").val();
-        let kakaoUserKey = $("#addMemberKakaoUserKey").val();
-        let addMemberBoardPoint = $("#addMemberBoardPoint").val();
-        let addMemberGroupName = $("#addMemberGroupName").val();
+        const id = $("#addMemberId").val();
+        const password = $("#addMemberPassword").val();
+        const name = $("#addMemberName").val();
+        const phone = $("#addMemberPhone").val();
+
+        if (!id) {
+            alert("아이디를 입력하세요.")
+            return
+        }
+
+        if (!password) {
+            alert("비밀번호를 입력하세요.")
+            return
+        }
+
         if (!name) {
             alert("이름을 입력하세요.")
             return
@@ -30,50 +36,20 @@ $(document).ready(function(){
             return
         }
 
-        if (!gender) {
-            alert("성별을 선택하세요.")
-            return
-        }
-
-        if (!birthDate) {
-            alert("생년월일을 입력하세요.")
-            return
-        }
-
-        if (!address) {
-            alert("주소를 입력하세요.")
-            return
-        }
-
-        if (!kakaoUserKey) {
-            alert("개인코드를 입력하세요.")
-            return
-        }
-
-        if (!addMemberBoardPoint) {
-            alert("버스 탑승지를 선택하세요.")
-            return
-        }
-
-        if (!addMemberGroupName) {
-            alert("소속을 입력해주세요.")
-            return
-        }
-
-        addMember(name,phone,gender,birthDate,address,kakaoUserKey,addMemberBoardPoint,addMemberGroupName)
+        addMember(id,password,name,phone)
     })
 
 
     $("#updateMember").on("click",function () {
-        let id = $("#updateMemberId").val();
-        let name = $("#updateMemberName").val();
-        let phone = $("#updateMemberPhone").val();
-        let gender = $("#updateMemberGender").val();
-        let birthDate = $("#updateMemberBirthDate").val();
-        let address = $("#updateMemberAddress").val();
-        let kakaoUserKey = $("#updateMemberKakaoUserKey").val();
-        let updateMemberBoardPoint = $("#updateMemberBoardPoint").val();
-        let updateMemberGroupName = $("#updateMemberGroupName").val();
+        const id = $("#updateMemberId").val();
+        const password = $("#updateMemberPassword").val();
+        const name = $("#updateMemberName").val();
+        const phone = $("#updateMemberPhone").val();
+
+        if (!id) {
+            alert("아이디를 입력하세요.")
+            return
+        }
 
         if (!name) {
             alert("이름을 입력하세요.")
@@ -84,54 +60,18 @@ $(document).ready(function(){
             alert("연락처를 입력하세요.")
             return
         }
-
-        if (!gender) {
-            alert("성별을 선택하세요.")
-            return
-        }
-
-        if (!birthDate) {
-            alert("생년월일을 입력하세요.")
-            return
-        }
-
-        if (!address) {
-            alert("주소를 입력하세요.")
-            return
-        }
-
-        if (!kakaoUserKey) {
-            alert("개인코드를 입력하세요.")
-            return
-        }
-
-        if (!updateMemberBoardPoint) {
-            alert("버스 탑승지를 선택하세요.")
-            return
-        }
-
-        if (!updateMemberGroupName) {
-            alert("소속을 입력하세요.")
-            return
-        }
-
-        updateMember(id,name,phone,gender,birthDate,address,kakaoUserKey,updateMemberBoardPoint,updateMemberGroupName)
+        updateMember(id,name,phone,password)
     })
 
-    function updateMember(id,name,phone,gender,birthDate,address,kakaoUserKey,updateMemberBoardPoint,updateMemberGroupName) {
+    function updateMember(id,name,phone,password) {
         const addData = JSON.stringify({
             id:id,
             name:name,
             phone:phone,
-            gender:gender,
-            birthDate:birthDate,
-            address:address,
-            kakaoUserKey:kakaoUserKey,
-            boardingPointId:updateMemberBoardPoint,
-            groupName:updateMemberGroupName
+            password:password
         });
 
-        fetch(`/managers`, {
+        fetch(`/members`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json'
@@ -146,24 +86,18 @@ $(document).ready(function(){
                 }else {
                     alert("수정을 실패하였습니다.")
                 }
-
             })
             .catch(error => {
+
                 console.log(error)
             });
     }
-
-
-    function addMember(name,phone,gender,birthDate,address,kakaoUserKey,addMemberBoardPoint,addMemberGroupName) {
+    function addMember(id,password, name,phone) {
         const addData = JSON.stringify({
+            id:id,
+            password:password,
             name:name,
             phone:phone,
-            gender:gender,
-            birthDate:birthDate,
-            address:address,
-            kakaoUserKey:kakaoUserKey,
-            boardingPointId:addMemberBoardPoint,
-            groupName:addMemberGroupName
         });
 
         fetch(`/members`, {
@@ -187,7 +121,6 @@ $(document).ready(function(){
                 console.log(error)
             });
     }
-
     function getMembers() {
         fetch(`/members/list`, {
             method: 'GET',
@@ -204,22 +137,14 @@ $(document).ready(function(){
                 console.log(error)
             });
     }
-
     function createTableRow(data, index) {
-        const idCell = $('<td>').text(data.kakaoUserKey).css({ cursor: 'pointer', color: 'blue' });
+        const idCell = $('<td>').text(data.id).css({ cursor: 'pointer', color: 'blue' });
 
         idCell.on('click', () => {
             // 모달에 데이터 채우기
             $('#updateMemberId').val(data.id);
-            $('#updateMemberAccountName').val(data.accountId);
             $('#updateMemberName').val(data.name);
             $('#updateMemberPhone').val(data.phone);
-            $('#updateMemberGender').val(data.gender);
-            $('#updateMemberBirthDate').val(data.birthDate);
-            $('#updateMemberAddress').val(data.address);
-            $('#updateMemberKakaoUserKey').val(data.kakaoUserKey);
-            $('#updateMemberBoardPoint').val(data.boardingPointId);
-            $('#updateMemberGroupName').val(data.groupName);
             // 모달 열기
             $('#updateModal').modal('show');
         });
@@ -229,16 +154,11 @@ $(document).ready(function(){
         row.append(idCell);
         row.append($('<td>').text(data.name));
         row.append($('<td>').text(data.phone));
-        row.append($('<td>').text(data.boardingPointName));
-        row.append($('<td>').text(data.gender));
-        row.append($('<td>').text(data.birthDate));
-        row.append($('<td>').text(data.address));
         row.append($('<td>').text(data.createDate));
         row.append($('<td style="display: flex; justify-content: center;">').append(deleteButton(data)));
 
         return row;
     }
-
     function deleteButton (data) {
         return  $('<button>').text('삭제').addClass('btn btn-danger mx-lg-1 btn-sm').on('click',function (){
 
@@ -247,7 +167,6 @@ $(document).ready(function(){
             }
         })
     }
-
     function deleteMember(id) {
         fetch(`/members/${id}`, {
             method: 'DELETE',
@@ -266,40 +185,6 @@ $(document).ready(function(){
             .catch(error => {
                 console.log(error)
             });
-    }
-
-    function getBoardPoints() {
-        fetch(`/boardingPoint/list`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-            .then(response => {
-                return response.json()
-            }).then(data => {
-            renderBoardPointSelect(data)
-        })
-            .catch(error => {
-                console.log(error)
-            });
-    }
-
-    function renderBoardPointSelect(data) {
-        $('#updateMemberBoardPoint').empty()
-        $('#addMemberBoardPoint').empty()
-
-        data.forEach(function (board) {
-            let text = board.busName +' - '+board.boardPoint
-
-            $('#addMemberBoardPoint').append(
-                $('<option>', { value: board.id, text: text })
-            );
-
-            $('#updateMemberBoardPoint').append(
-                $('<option>', { value: board.id, text: text })
-            );
-        })
     }
 })
 

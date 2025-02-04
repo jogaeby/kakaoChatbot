@@ -27,9 +27,9 @@ spring:
           time_zone: Asia/Seoul
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://52.78.230.246:3306/work
-    username: work
-    password: work2024!
+    url: jdbc:mysql://211.188.58.30:3306/dao
+    username: dao
+    password: dao2024!
     hikari:
       maximum-pool-size: 10
       minimum-idle: 5

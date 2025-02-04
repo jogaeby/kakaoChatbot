@@ -1,7 +1,5 @@
 package com.chatbot.base.common;
 
-import org.springframework.stereotype.Service;
-
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.TextStyle;
@@ -9,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class StringFormatterService {
+public class StringUtil {
 
     public static String formatPhoneNumber(String phoneNumber) {
         // +82를 0으로 바꾸고 나머지 부분에서 공백과 대시를 제거
@@ -40,7 +38,6 @@ public class StringFormatterService {
 
         return result;
     }
-
 
     public static String formatCurrency(String amount) {
         if (amount == null || amount.equals("0")) {

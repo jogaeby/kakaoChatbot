@@ -1,7 +1,7 @@
 package com.chatbot.base.common;
 
-import com.chatbot.base.constant.MemberRole;
-import com.chatbot.base.dto.MemberInfoDtoFromJwt;
+import com.chatbot.base.domain.member.constant.MemberRole;
+import com.chatbot.base.domain.member.dto.MemberDTO;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,18 +17,16 @@ public class JwtService {
     @Value("${jwt.secret}")
     private String JWT_SECRET;
 
-    public String createMemberInfoToken(MemberInfoDtoFromJwt memberInfoDtoFromJwt) {
+    public String createToken(MemberDTO memberDTO) {
         LocalDateTime current = LocalDateTime.now();
         Timestamp isu = Timestamp.valueOf(current);
         Timestamp ex = Timestamp.valueOf(current.plusDays(60));
 
         Claims claims = Jwts.claims()
-                .add("id",memberInfoDtoFromJwt.getId())
-                .add("accountId",memberInfoDtoFromJwt.getAccountId())
-                .add("name",memberInfoDtoFromJwt.getName())
-                .add("phone",memberInfoDtoFromJwt.getPhone())
-                .add("email",memberInfoDtoFromJwt.getEmail())
-                .add("role",memberInfoDtoFromJwt.getRole().getName())
+                .add("id",memberDTO.getId())
+                .add("name",memberDTO.getName())
+                .add("phone",memberDTO.getPhone())
+                .add("role",memberDTO.getRole().getName())
                 .build();
 
         return Jwts.builder()
@@ -44,27 +42,23 @@ public class JwtService {
                 ;
     }
 
-    public MemberInfoDtoFromJwt getMemberInfoFromToken(String token) {
+    public MemberDTO getMemberDTOFromToken(String token) {
         Claims body = Jwts.parser().setSigningKey(JWT_SECRET).build().parseClaimsJws(token).getBody();
         String id = String.valueOf(body.get("id"));
-        String academyId = String.valueOf(body.get("academyId"));
-        String accountId = String.valueOf(body.get("accountId"));
         String name = String.valueOf(body.get("name"));
         String phone = String.valueOf(body.get("phone"));
-        String email = String.valueOf(body.get("email"));
         String role = String.valueOf(body.get("role"));
+
         MemberRole memberRole = MemberRole.fromString(role);
 
-        MemberInfoDtoFromJwt memberInfoDtoFromJwt = MemberInfoDtoFromJwt.builder()
+        MemberDTO memberDTO = MemberDTO.builder()
                 .id(id)
-                .accountId(accountId)
                 .name(name)
                 .phone(phone)
-                .email(email)
                 .role(memberRole)
                 .build();
 
-        return memberInfoDtoFromJwt;
+        return memberDTO;
     }
 
     public boolean isValidateToken(String token) {

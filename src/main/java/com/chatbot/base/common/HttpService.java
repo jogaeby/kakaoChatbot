@@ -1,7 +1,7 @@
 package com.chatbot.base.common;
 
-import com.chatbot.base.constant.MemberRole;
-import com.chatbot.base.dto.MemberInfoDtoFromJwt;
+import com.chatbot.base.domain.member.constant.MemberRole;
+import com.chatbot.base.domain.member.dto.MemberDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -11,25 +11,24 @@ import javax.security.sasl.AuthenticationException;
 
 @Service
 public class HttpService {
-    public MemberInfoDtoFromJwt getUserInfoFromHttpRequest() {
+    public MemberDTO getMemberDTOFromHttpRequest() {
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         HttpServletRequest request = requestAttributes.getRequest();
-        return  (MemberInfoDtoFromJwt) request.getAttribute("memberInfo");
+        return  (MemberDTO) request.getAttribute("memberInfo");
     }
-//
-
     public MemberRole getMemberRole() {
-        MemberInfoDtoFromJwt userInfoFromHttpRequest = getUserInfoFromHttpRequest();
+        MemberDTO userInfoFromHttpRequest = getMemberDTOFromHttpRequest();
 
         return userInfoFromHttpRequest.getRole();
     }
     public boolean isAdmin() throws AuthenticationException {
-        MemberInfoDtoFromJwt userInfoFromHttpRequest = getUserInfoFromHttpRequest();
+        MemberDTO userInfoFromHttpRequest = getMemberDTOFromHttpRequest();
 
         MemberRole role = userInfoFromHttpRequest.getRole();
         if (role.getName().equals(MemberRole.ADMIN.getName())) return true;
         throw new AuthenticationException("권한이 관리자가 아닙니다.");
     }
+
 //
 //    public void director() throws AuthenticationException {
 //        MemberInfoDtoFromJwt userInfoFromHttpRequest = getUserInfoFromHttpRequest();

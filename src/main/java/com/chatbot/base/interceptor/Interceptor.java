@@ -3,7 +3,7 @@ package com.chatbot.base.interceptor;
 
 import com.chatbot.base.annotation.PassAuth;
 import com.chatbot.base.common.JwtService;
-import com.chatbot.base.dto.MemberInfoDtoFromJwt;
+import com.chatbot.base.domain.member.dto.MemberDTO;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -40,13 +40,13 @@ public class Interceptor implements HandlerInterceptor {
             }
         }
 
-        if (accessToken.isEmpty() || !(jwtService.isValidateToken(accessToken))) {
+        if (accessToken == null || accessToken.isEmpty() || !(jwtService.isValidateToken(accessToken))) {
             throw new Exception("잘못된 토큰입니다.");
         }
 
-        MemberInfoDtoFromJwt memberInfoFromToken = jwtService.getMemberInfoFromToken(accessToken);
+        MemberDTO memberDTO = jwtService.getMemberDTOFromToken(accessToken);
 
-        request.setAttribute("memberInfo",memberInfoFromToken);
+        request.setAttribute("memberInfo",memberDTO);
 
         return true;
     }

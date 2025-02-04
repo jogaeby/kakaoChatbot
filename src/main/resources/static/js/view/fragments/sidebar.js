@@ -11,27 +11,13 @@ $(document).ready(function(){
         // 모든 메뉴를 담을 HTML 문자열 초기화
         let menuHtml = '';
 
-        if (userRole === '매니저') {
+        if (userRole != '관리자') {
             menuHtml += `   
                  <div class="nav">
                     <a class="nav-link" href="/home" >
                         <div class="sb-nav-link-icon"><i class='far fa-calendar-alt'></i></div>
-                        캘린더
+                        매물등록
                     </a>
-                       <a class="nav-link" href="/schedule" >
-                        <div class="sb-nav-link-icon"><i class='far fa-list-alt'></i></div>
-                        스케줄
-                    </a>
-                    
-                    <a class="nav-link" href="/boardingPoint" >
-                        <div class="sb-nav-link-icon"><i class='fas fa-bus-alt'></i></div>
-                        버스 탑승지
-                    </a>
-                    
-                   <a class="nav-link" href="/members" >
-                        <div class="sb-nav-link-icon"><i class="fa-sharp fa-light fa-user"></i></div>
-                        근무자
-                   </a>
                 </div>     
                 `;
         }
@@ -39,29 +25,15 @@ $(document).ready(function(){
         if (userRole === '관리자') {
             menuHtml += `   
                  <div class="nav">
+                 
                     <a class="nav-link" href="/home" >
                         <div class="sb-nav-link-icon"><i class='far fa-calendar-alt'></i></div>
-                        캘린더
-                    </a>
-                       <a class="nav-link" href="/schedule" >
-                        <div class="sb-nav-link-icon"><i class='far fa-list-alt'></i></div>
-                        스케줄
+                        매물등록
                     </a>
                     
-                     <a class="nav-link" href="/boardingPoint" >
-                        <div class="sb-nav-link-icon"><i class='fas fa-bus-alt'></i></div>
-                         버스 탑승지
-                    </a>
-                    
-                    
-                   <a class="nav-link" href="/members" >
+                    <a class="nav-link" href="/members" >
                         <div class="sb-nav-link-icon"><i class="fa-sharp fa-light fa-user"></i></div>
-                        근무자
-                   </a>
-                    
-                    <a class="nav-link" href="/managers" >
-                        <div class="sb-nav-link-icon"><i class="fa fa-user-secret"></i></div>
-                        관리자
+                        회원관리
                     </a>
                 </div>     
                 `;

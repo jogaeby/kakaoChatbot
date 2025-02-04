@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Slf4j
 @RequiredArgsConstructor
 @Controller
-@RequestMapping("home")
-public class HomeController {
+@RequestMapping("board")
+public class BoardController {
     @GetMapping("")
     public String getHomePage() {
-        return "home";
+        return "board";
     }
 
 }

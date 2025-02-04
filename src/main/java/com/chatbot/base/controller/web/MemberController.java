@@ -1,11 +1,12 @@
 package com.chatbot.base.controller.web;
 
 import com.chatbot.base.common.HttpService;
-import com.chatbot.base.constant.MemberRole;
-import com.chatbot.base.domain.member.dto.MemberDto;
+import com.chatbot.base.domain.member.constant.MemberRole;
+import com.chatbot.base.domain.member.dto.MemberDTO;
 import com.chatbot.base.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -25,72 +26,76 @@ public class MemberController {
         return "member";
     }
 
-    @PostMapping()
-    public ResponseEntity addMember(@RequestBody MemberDto memberDto)
+    @GetMapping("list")
+    public ResponseEntity getMembers()
     {
         try {
-            memberService.joinMember(memberDto);
+            List<MemberDTO> members = memberService.getMembersByRole(MemberRole.MEMBER);
+
+            return ResponseEntity
+                    .ok(members);
+
+        }catch (Exception e) {
+            log.error("{}",e.getMessage(),e);
+            return ResponseEntity
+                    .notFound()
+                    .build();
+        }
+    }
+    @PostMapping()
+    public ResponseEntity addMember(@RequestBody MemberDTO memberDto)
+    {
+        try {
+            memberService.join(memberDto);
 
             return ResponseEntity
                     .ok()
                     .build();
         }catch (Exception e) {
-            log.error("{} {}",e.getMessage(),e.getStackTrace());
+            log.error("{}",e.getMessage(),e);
             return ResponseEntity
                     .notFound()
                     .build();
         }
     }
     @PatchMapping()
-    public ResponseEntity updateMember(@RequestBody MemberDto memberDto)
+    public ResponseEntity updateMember(@RequestBody MemberDTO memberDto)
     {
         try {
-            memberService.updateMember(memberDto);
+            memberService.update(memberDto);
 
             return ResponseEntity
                     .ok()
                     .build();
         }catch (Exception e) {
-            log.error("{} {}",e.getMessage(),e.getStackTrace());
+            log.error("{}",e.getMessage(),e);
             return ResponseEntity
                     .notFound()
                     .build();
         }
     }
 
-    @GetMapping("list")
-    public ResponseEntity getMembers()
-    {
-        try {
-            List<MemberDto> members = memberService.getMembersByRole(MemberRole.MEMBER);
-
-            return ResponseEntity
-                    .ok(members);
-
-        }catch (Exception e) {
-            log.error("{} {}",e.getMessage(),e.getStackTrace());
-            return ResponseEntity
-                    .notFound()
-                    .build();
-        }
-    }
-
-    @DeleteMapping("{id}")
-    public ResponseEntity deleteMember(@PathVariable String id)
-    {
-        try {
-            MemberRole memberRole = httpService.getMemberRole();
-
-            memberService.deleteMember(id, memberRole);
-            return ResponseEntity
-                    .ok()
-                    .build();
-
-        }catch (Exception e) {
-            log.error("{} {}",e.getMessage(),e.getStackTrace());
-            return ResponseEntity
-                    .notFound()
-                    .build();
-        }
-    }
+//    @DeleteMapping("{id}")
+//    public ResponseEntity deleteMember(@PathVariable String id)
+//    {
+//        try {
+//
+//            if (httpService.isAdmin()) {
+//                memberService.deleteMember(id, memberRole);
+//                return ResponseEntity
+//                        .ok()
+//                        .build();
+//            }else {
+//                throw new AuthenticationException("권한이 없습니다. 권한 = " + httpService.getMemberRole());
+//            }
+//
+//
+//
+//        }catch (Exception e) {
+//            log.error("{}",e.getMessage(),e);
+//            return ResponseEntity
+//                    .notFound()
+//                    .build();
+//        }
+//    }
 }

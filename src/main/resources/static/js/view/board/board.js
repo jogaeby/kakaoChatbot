@@ -1,8 +1,10 @@
 $(document).ready(function(){
     const headers = [
-        'No','아이디', '이름', '연락처','성별','생년월일','주소','권한','가입일','관리'
+        'No', '개인키','이름', '연락처','버스 탑승지','성별','생년월일','주소','가입일','관리'
     ];
     getMembers()
+
+    getBoardPoints();
 
     $("#addMemberButton").on("click",function () {
         $('#addModal').find('input').val('');
@@ -16,78 +18,117 @@ $(document).ready(function(){
         let birthDate = $("#addMemberBirthDate").val();
         let address = $("#addMemberAddress").val();
         let kakaoUserKey = $("#addMemberKakaoUserKey").val();
-        let id = $("#addMemberAccountName").val();
-        let password = $("#addMemberPassword").val();
-        if (!id || !password) {
-            alert("아이디와 비밀번호는 필수로 입력해주세요.")
+        let addMemberBoardPoint = $("#addMemberBoardPoint").val();
+        let addMemberGroupName = $("#addMemberGroupName").val();
+        if (!name) {
+            alert("이름을 입력하세요.")
             return
         }
-        addMember(id,password,name,phone,gender,birthDate,address,kakaoUserKey)
+
+        if (!phone) {
+            alert("연락처를 입력하세요.")
+            return
+        }
+
+        if (!gender) {
+            alert("성별을 선택하세요.")
+            return
+        }
+
+        if (!birthDate) {
+            alert("생년월일을 입력하세요.")
+            return
+        }
+
+        if (!address) {
+            alert("주소를 입력하세요.")
+            return
+        }
+
+        if (!kakaoUserKey) {
+            alert("개인코드를 입력하세요.")
+            return
+        }
+
+        if (!addMemberBoardPoint) {
+            alert("버스 탑승지를 선택하세요.")
+            return
+        }
+
+        if (!addMemberGroupName) {
+            alert("소속을 입력해주세요.")
+            return
+        }
+
+        addMember(name,phone,gender,birthDate,address,kakaoUserKey,addMemberBoardPoint,addMemberGroupName)
     })
+
 
     $("#updateMember").on("click",function () {
         let id = $("#updateMemberId").val();
-        let accountId = $("#updateMemberAccountName").val();
-        let password = $("#updateMemberPassword").val();
         let name = $("#updateMemberName").val();
         let phone = $("#updateMemberPhone").val();
         let gender = $("#updateMemberGender").val();
         let birthDate = $("#updateMemberBirthDate").val();
         let address = $("#updateMemberAddress").val();
         let kakaoUserKey = $("#updateMemberKakaoUserKey").val();
+        let updateMemberBoardPoint = $("#updateMemberBoardPoint").val();
+        let updateMemberGroupName = $("#updateMemberGroupName").val();
 
-        if (!accountId) {
-            alert("아이디를 입력해주세요.")
+        if (!name) {
+            alert("이름을 입력하세요.")
             return
         }
-        updateMember(id,accountId,password,name,phone,gender,birthDate,address,kakaoUserKey)
+
+        if (!phone) {
+            alert("연락처를 입력하세요.")
+            return
+        }
+
+        if (!gender) {
+            alert("성별을 선택하세요.")
+            return
+        }
+
+        if (!birthDate) {
+            alert("생년월일을 입력하세요.")
+            return
+        }
+
+        if (!address) {
+            alert("주소를 입력하세요.")
+            return
+        }
+
+        if (!kakaoUserKey) {
+            alert("개인코드를 입력하세요.")
+            return
+        }
+
+        if (!updateMemberBoardPoint) {
+            alert("버스 탑승지를 선택하세요.")
+            return
+        }
+
+        if (!updateMemberGroupName) {
+            alert("소속을 입력하세요.")
+            return
+        }
+
+        updateMember(id,name,phone,gender,birthDate,address,kakaoUserKey,updateMemberBoardPoint,updateMemberGroupName)
     })
 
-    function addMember(id,password,name,phone,gender,birthDate,address,kakaoUserKey) {
-        const addData = JSON.stringify({
-            accountId:id,
-            password:password,
-            name:name,
-            phone:phone,
-            gender:gender,
-            birthDate:birthDate,
-            address:address,
-            kakaoUserKey:kakaoUserKey
-        });
-
-        fetch(`/managers`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body:addData
-        })
-            .then(response => {
-                if (response.ok){
-                    alert("성공적으로 추가하였습니다.")
-                    $('#addModal').modal('hide');
-                    $('#addModal').find('input').val('');
-                    getMembers()
-                }else {
-                    alert("추가를 실패하였습니다.")
-                }
-
-            })
-            .catch(error => {
-                console.log(error)
-            });
-    }
-    function updateMember(id,accountId,password,name,phone,gender,birthDate,address,kakaoUserKey) {
+    function updateMember(id,name,phone,gender,birthDate,address,kakaoUserKey,updateMemberBoardPoint,updateMemberGroupName) {
         const addData = JSON.stringify({
             id:id,
-            accountId:accountId,
-            password:password,
             name:name,
             phone:phone,
             gender:gender,
             birthDate:birthDate,
             address:address,
-            kakaoUserKey:kakaoUserKey
+            kakaoUserKey:kakaoUserKey,
+            boardingPointId:updateMemberBoardPoint,
+            groupName:updateMemberGroupName
         });
 
         fetch(`/managers`, {
@@ -112,8 +153,43 @@ $(document).ready(function(){
             });
     }
 
+
+    function addMember(name,phone,gender,birthDate,address,kakaoUserKey,addMemberBoardPoint,addMemberGroupName) {
+        const addData = JSON.stringify({
+            name:name,
+            phone:phone,
+            gender:gender,
+            birthDate:birthDate,
+            address:address,
+            kakaoUserKey:kakaoUserKey,
+            boardingPointId:addMemberBoardPoint,
+            groupName:addMemberGroupName
+        });
+
+        fetch(`/members`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body:addData
+        })
+            .then(response => {
+                if (response.ok){
+                    alert("성공적으로 추가하였습니다.")
+                    $('#addModal').modal('hide');
+                    getMembers()
+                }else {
+                    alert("추가를 실패하였습니다.")
+                }
+
+            })
+            .catch(error => {
+                console.log(error)
+            });
+    }
+
     function getMembers() {
-        fetch(`/managers/list`, {
+        fetch(`/members/list`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -130,7 +206,8 @@ $(document).ready(function(){
     }
 
     function createTableRow(data, index) {
-        const idCell = $('<td>').text(data.accountId).css({ cursor: 'pointer', color: 'blue' });
+        const idCell = $('<td>').text(data.kakaoUserKey).css({ cursor: 'pointer', color: 'blue' });
+
         idCell.on('click', () => {
             // 모달에 데이터 채우기
             $('#updateMemberId').val(data.id);
@@ -141,6 +218,8 @@ $(document).ready(function(){
             $('#updateMemberBirthDate').val(data.birthDate);
             $('#updateMemberAddress').val(data.address);
             $('#updateMemberKakaoUserKey').val(data.kakaoUserKey);
+            $('#updateMemberBoardPoint').val(data.boardingPointId);
+            $('#updateMemberGroupName').val(data.groupName);
             // 모달 열기
             $('#updateModal').modal('show');
         });
@@ -150,10 +229,10 @@ $(document).ready(function(){
         row.append(idCell);
         row.append($('<td>').text(data.name));
         row.append($('<td>').text(data.phone));
+        row.append($('<td>').text(data.boardingPointName));
         row.append($('<td>').text(data.gender));
         row.append($('<td>').text(data.birthDate));
         row.append($('<td>').text(data.address));
-        row.append($('<td>').text(data.role));
         row.append($('<td>').text(data.createDate));
         row.append($('<td style="display: flex; justify-content: center;">').append(deleteButton(data)));
 
@@ -187,6 +266,40 @@ $(document).ready(function(){
             .catch(error => {
                 console.log(error)
             });
+    }
+
+    function getBoardPoints() {
+        fetch(`/boardingPoint/list`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                return response.json()
+            }).then(data => {
+            renderBoardPointSelect(data)
+        })
+            .catch(error => {
+                console.log(error)
+            });
+    }
+
+    function renderBoardPointSelect(data) {
+        $('#updateMemberBoardPoint').empty()
+        $('#addMemberBoardPoint').empty()
+
+        data.forEach(function (board) {
+            let text = board.busName +' - '+board.boardPoint
+
+            $('#addMemberBoardPoint').append(
+                $('<option>', { value: board.id, text: text })
+            );
+
+            $('#updateMemberBoardPoint').append(
+                $('<option>', { value: board.id, text: text })
+            );
+        })
     }
 })
 

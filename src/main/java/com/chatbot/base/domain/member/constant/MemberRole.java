@@ -1,4 +1,4 @@
-package com.chatbot.base.constant;
+package com.chatbot.base.domain.member.constant;
 
 public enum MemberRole {
     ADMIN("관리자"),

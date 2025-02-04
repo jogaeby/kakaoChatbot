@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
-    protected String handleMethodArgumentNotValidException(Exception ex) {
-        log.error("******* exceptionHandler catch = {} {} *******",ex.getMessage(),ex.getStackTrace());
+    protected String handleMethodArgumentNotValidException(Exception e) {
+        log.error("******* exceptionHandler catch = {} *******",e.getMessage(),e);
 
         return "login";
     }
