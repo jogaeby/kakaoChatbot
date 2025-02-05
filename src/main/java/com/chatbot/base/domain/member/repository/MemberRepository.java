@@ -10,7 +10,6 @@ import java.util.UUID;
 
 public interface MemberRepository extends JpaRepository<Member, UUID> {
     Optional<Member> findById(String id);
-
     List<Member> findAllByRole(MemberRole role);
-
+    void deleteById(String id);
 }

@@ -112,6 +112,8 @@ $(document).ready(function(){
                     alert("성공적으로 추가하였습니다.")
                     $('#addModal').modal('hide');
                     getMembers()
+                }else if(response.status == 403){
+                    alert("중복된 ID 입니다.")
                 }else {
                     alert("추가를 실패하였습니다.")
                 }
@@ -162,7 +164,7 @@ $(document).ready(function(){
     function deleteButton (data) {
         return  $('<button>').text('삭제').addClass('btn btn-danger mx-lg-1 btn-sm').on('click',function (){
 
-            if (confirm(`${data.name}님을 삭제하시겠습니까?`)) {
+            if (confirm(`${data.id}계정을 삭제하시겠습니까?`)) {
                 deleteMember(data.id)
             }
         })

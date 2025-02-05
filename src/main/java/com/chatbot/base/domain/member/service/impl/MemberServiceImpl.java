@@ -66,4 +66,10 @@ public class MemberServiceImpl implements MemberService {
 
         return member.toDTO();
     }
+
+    @Transactional
+    @Override
+    public void delete(String id) {
+        memberRepository.deleteById(id);
+    }
 }

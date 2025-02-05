@@ -7,6 +7,7 @@ import com.chatbot.base.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.websocket.AuthenticationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +39,7 @@ public class MemberController {
         }catch (Exception e) {
             log.error("{}",e.getMessage(),e);
             return ResponseEntity
-                    .notFound()
+                    .status(400)
                     .build();
         }
     }
@@ -51,10 +52,15 @@ public class MemberController {
             return ResponseEntity
                     .ok()
                     .build();
+        }catch (DataIntegrityViolationException e) {
+            log.error("{}",e.getMessage(),e);
+            return ResponseEntity
+                    .status(403)
+                    .build();
         }catch (Exception e) {
             log.error("{}",e.getMessage(),e);
             return ResponseEntity
-                    .notFound()
+                    .status(400)
                     .build();
         }
     }
@@ -70,32 +76,29 @@ public class MemberController {
         }catch (Exception e) {
             log.error("{}",e.getMessage(),e);
             return ResponseEntity
-                    .notFound()
+                    .status(400)
                     .build();
         }
     }
 
-//    @DeleteMapping("{id}")
-//    public ResponseEntity deleteMember(@PathVariable String id)
-//    {
-//        try {
-//
-//            if (httpService.isAdmin()) {
-//                memberService.deleteMember(id, memberRole);
-//                return ResponseEntity
-//                        .ok()
-//                        .build();
-//            }else {
-//                throw new AuthenticationException("권한이 없습니다. 권한 = " + httpService.getMemberRole());
-//            }
-//
-//
-//
-//        }catch (Exception e) {
-//            log.error("{}",e.getMessage(),e);
-//            return ResponseEntity
-//                    .notFound()
-//                    .build();
-//        }
-//    }
+    @DeleteMapping("{id}")
+    public ResponseEntity deleteMember(@PathVariable String id)
+    {
+        try {
+
+            if (httpService.isAdmin()) {
+                memberService.delete(id);
+                return ResponseEntity
+                        .ok()
+                        .build();
+            }else {
+                throw new AuthenticationException("권한이 없습니다. 권한 = " + httpService.getMemberRole());
+            }
+        }catch (Exception e) {
+            log.error("{}",e.getMessage(),e);
+            return ResponseEntity
+                    .status(400)
+                    .build();
+        }
+    }
 }

@@ -11,4 +11,5 @@ public interface MemberService {
     List<MemberDTO> getMembersByRole(MemberRole role);
     MemberDTO join(MemberDTO memberDTO);
     MemberDTO update(MemberDTO memberDTO);
+    void delete(String id);
 }
