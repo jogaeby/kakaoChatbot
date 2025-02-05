@@ -63,10 +63,32 @@ public class ProductController {
         }
     }
 
+    @PatchMapping()
+    public ResponseEntity updateProduct(@RequestBody ProductDTO productDTO)
+    {
+        try {
+            if (httpService.isAdmin() || productService.isOwnerProduct(productDTO.getId(),httpService.getMemberDTOFromHttpRequest().getId())) {
+
+                productService.updateProduct(productDTO);
+
+                return ResponseEntity
+                        .ok()
+                        .build();
+            }else {
+                throw new AuthenticationException("삭제 권한이 없습니다. productId = " + productDTO.getId());
+            }
+        }catch (Exception e) {
+            log.error("{}",e.getMessage(),e);
+            return ResponseEntity
+                    .status(400)
+                    .build();
+        }
+    }
+
     @DeleteMapping("{id}")
     public ResponseEntity deleteProduct(@PathVariable String id) {
         try {
-            if (httpService.isAdmin() || productService.isDeleteProduct(id,httpService.getMemberDTOFromHttpRequest().getId())) {
+            if (httpService.isAdmin() || productService.isOwnerProduct(id,httpService.getMemberDTOFromHttpRequest().getId())) {
 
                 productService.deleteProduct(id);
 

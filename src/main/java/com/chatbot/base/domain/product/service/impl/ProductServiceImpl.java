@@ -61,13 +61,24 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public boolean isDeleteProduct(String productId, String memberId) {
+    public boolean isOwnerProduct(String productId, String memberId) {
         Product product = productRepository.findById(UUID.fromString(productId))
                 .orElseThrow(() -> new NoSuchElementException("Product not found / id = " + productId));
         if (product.getMember().getId().equals(memberId)) {
             return true;
         }
         return false;
+    }
+
+    @Transactional
+    @Override
+    public void updateProduct(ProductDTO productDTO) {
+        String id = productDTO.getId();
+
+        Product product = productRepository.findById(UUID.fromString(id))
+                .orElseThrow(() -> new NoSuchElementException("Product not found / id = " + id));
+
+        product.update(productDTO);
     }
 
     @Transactional

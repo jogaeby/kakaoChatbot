@@ -64,6 +64,7 @@ public class MemberController {
                     .build();
         }
     }
+
     @PatchMapping()
     public ResponseEntity updateMember(@RequestBody MemberDTO memberDto)
     {

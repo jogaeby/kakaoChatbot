@@ -23,136 +23,63 @@ $(document).ready(function(){
         const link = $("#addProductLink").val();
 
         if (!imageUrl) {
-            alert("이미지는 필수입니다.")
+            alert("이미지 URL을 입력하세요.")
             return
         }
+
+        if (!title) {
+            alert("제목을 입력하세요.")
+            return
+        }
+
         if (!description) {
-            alert("설명은 필수입니다.")
+            alert("설명을 입력하세요. (최대 230자)")
             return
         }
+
+        if (!link) {
+            alert("링크를 입력하세요.")
+            return
+        }
+
         addProduct(imageUrl,title,description,link)
     })
 
+    $("#updateProductButton").on("click",function () {
+        const productId = $('#updateProductId').val();
+        const imageUrl = $('#updateProductImageUrl').val();
+        const title = $('#updateProductTitle').val();
+        const description = $('#updateProductDescription').val();
+        const link = $('#updateProductLink').val();
+        const memberId = $('#updateProductMemberId').val();
 
-    $("#updateMember").on("click",function () {
-        let id = $("#updateMemberId").val();
-        let name = $("#updateMemberName").val();
-        let phone = $("#updateMemberPhone").val();
-        let gender = $("#updateMemberGender").val();
-        let birthDate = $("#updateMemberBirthDate").val();
-        let address = $("#updateMemberAddress").val();
-        let kakaoUserKey = $("#updateMemberKakaoUserKey").val();
-        let updateMemberBoardPoint = $("#updateMemberBoardPoint").val();
-        let updateMemberGroupName = $("#updateMemberGroupName").val();
-
-        if (!name) {
-            alert("이름을 입력하세요.")
+        if (!productId || !memberId) {
+            alert("관리자에게 문의하세요")
             return
         }
 
-        if (!phone) {
-            alert("연락처를 입력하세요.")
+        if (!imageUrl) {
+            alert("이미지 URL을 입력하세요.")
             return
         }
 
-        if (!gender) {
-            alert("성별을 선택하세요.")
+        if (!title) {
+            alert("제목을 입력하세요.")
             return
         }
 
-        if (!birthDate) {
-            alert("생년월일을 입력하세요.")
+        if (!description) {
+            alert("설명을 입력하세요. (최대 230자)")
             return
         }
 
-        if (!address) {
-            alert("주소를 입력하세요.")
+        if (!link) {
+            alert("링크를 입력하세요.")
             return
         }
 
-        if (!kakaoUserKey) {
-            alert("개인코드를 입력하세요.")
-            return
-        }
-
-        if (!updateMemberBoardPoint) {
-            alert("버스 탑승지를 선택하세요.")
-            return
-        }
-
-        if (!updateMemberGroupName) {
-            alert("소속을 입력하세요.")
-            return
-        }
-
-        updateMember(id,name,phone,gender,birthDate,address,kakaoUserKey,updateMemberBoardPoint,updateMemberGroupName)
+        updateProduct(productId,imageUrl,title,description,link,memberId)
     })
-
-    function updateMember(id,name,phone,gender,birthDate,address,kakaoUserKey,updateMemberBoardPoint,updateMemberGroupName) {
-        const addData = JSON.stringify({
-            id:id,
-            name:name,
-            phone:phone,
-            gender:gender,
-            birthDate:birthDate,
-            address:address,
-            kakaoUserKey:kakaoUserKey,
-            boardingPointId:updateMemberBoardPoint,
-            groupName:updateMemberGroupName
-        });
-
-        fetch(`/managers`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body:addData
-        })
-            .then(response => {
-                if (response.ok){
-                    alert("성공적으로 수정하였습니다.")
-                    $('#updateModal').modal('hide');
-                    getMembers()
-                }else {
-                    alert("수정을 실패하였습니다.")
-                }
-
-            })
-            .catch(error => {
-                console.log(error)
-            });
-    }
-
-
-    function addProduct(imageUrl,title,description,link) {
-        const data = JSON.stringify({
-            images:[imageUrl],
-            title:title,
-            description:description,
-            link:link,
-        });
-
-        fetch(`/product`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body:data
-        })
-            .then(response => {
-                if (response.ok){
-                    alert("성공적으로 추가하였습니다.")
-                    $('#addModal').modal('hide');
-                    getProducts()
-                }else {
-                    alert("추가를 실패하였습니다.")
-                }
-
-            })
-            .catch(error => {
-                console.log(error)
-            });
-    }
 
     function getProducts() {
         const page = 0
@@ -217,15 +144,77 @@ $(document).ready(function(){
         return row;
     }
 
+    function updateProduct(productId,imageUrl,title,description,link,memberId) {
+        const data = JSON.stringify({
+            id:productId,
+            images:[imageUrl],
+            title:title,
+            description:description,
+            link:link,
+            memberId:memberId
+        });
+
+        fetch(`/product`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body:data
+        })
+            .then(response => {
+                if (response.ok){
+                    alert("성공적으로 수정하였습니다.")
+                    $('#updateModal').modal('hide');
+                    getProducts()
+                }else {
+                    alert("수정을 실패하였습니다.")
+                }
+
+            })
+            .catch(error => {
+                console.log(error)
+            });
+    }
+
+    function addProduct(imageUrl,title,description,link) {
+        const data = JSON.stringify({
+            images:[imageUrl],
+            title:title,
+            description:description,
+            link:link,
+        });
+
+        fetch(`/product`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body:data
+        })
+            .then(response => {
+                if (response.ok){
+                    alert("성공적으로 추가하였습니다.")
+                    $('#addModal').modal('hide');
+                    getProducts()
+                }else {
+                    alert("추가를 실패하였습니다.")
+                }
+
+            })
+            .catch(error => {
+                console.log(error)
+            });
+    }
+
     function deleteButton (data) {
         return  $('<button>').text('삭제').addClass('btn btn-danger mx-lg-1 btn-sm').on('click',function (){
             if (confirm(`${data.title}을 삭제하시겠습니까?`)) {
-                deleteMember(data.id)
+                deleteProduct(data.id)
             }
         })
     }
 
-    function deleteMember(id) {
+    function deleteProduct(id) {
         fetch(`/product/${id}`, {
             method: 'DELETE',
             headers: {

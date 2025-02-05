@@ -23,11 +23,16 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Product extends BaseEntity {
     private String title;
+
     private String description;
+
     private String link;
+
     private List<String> images = new ArrayList<>();
+
     @Enumerated(EnumType.STRING)
     private ProductStatus status;
+
     @ManyToOne(fetch = FetchType.LAZY) // Member와 연관관계 설정
     @JoinColumn(name = "member_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Member member;
@@ -65,6 +70,13 @@ public class Product extends BaseEntity {
                 .memberId(member.getId())
                 .createDate(getCreateDate().toLocalDate())
                 .build();
+    }
+
+    public void update(ProductDTO productDTO) {
+        this.title = productDTO.getTitle();
+        this.description = productDTO.getDescription();
+        this.link = productDTO.getLink();
+        this.images = productDTO.getImages();
     }
 
     public void updateStatus(ProductStatus status) {

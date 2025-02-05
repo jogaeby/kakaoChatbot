@@ -16,7 +16,9 @@ public interface ProductService {
 
     void deleteProduct(String productId);
 
-    boolean isDeleteProduct(String productId, String memberId);
+    boolean isOwnerProduct(String productId, String memberId);
+
+    void updateProduct(ProductDTO productDTO);
 
     void updateProductStatus(LocalDateTime localDateTime);
 }
