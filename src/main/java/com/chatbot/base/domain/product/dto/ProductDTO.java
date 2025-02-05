@@ -18,6 +18,7 @@ public class ProductDTO {
     private String link;
     private List<String> images;
     private String status;
+    private int statusPriority;
     private LocalDate createDate;
     private String memberId;
 }

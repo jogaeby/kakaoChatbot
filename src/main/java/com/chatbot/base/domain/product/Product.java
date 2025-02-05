@@ -61,6 +61,7 @@ public class Product extends BaseEntity {
                 .link(link)
                 .images(images)
                 .status(status.getName())
+                .statusPriority(status.getPriority())
                 .memberId(member.getId())
                 .createDate(getCreateDate().toLocalDate())
                 .build();

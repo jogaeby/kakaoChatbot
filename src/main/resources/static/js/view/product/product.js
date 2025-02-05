@@ -3,6 +3,11 @@ $(document).ready(function(){
         'No', '제목','설명', '작성자','상태','등록일','기타'
     ];
 
+    const jwtToken = getCookie('session-id');
+    const payload = parseJWT(jwtToken);
+    const userRole = payload.role;
+    const id = payload.id;
+
     getProducts()
 
     $("#addProductModalButton").on("click",function () {
@@ -151,7 +156,7 @@ $(document).ready(function(){
 
     function getProducts() {
         const page = 0
-        const size = 10
+        const size = 20
         const sort = 'createDate,desc'
 
         fetch(`/product/list?page=${page}&size=${size}&sort=${sort}`, {
@@ -171,40 +176,49 @@ $(document).ready(function(){
     }
 
     function createTableRow(data, index) {
+        const row = $('<tr>');
+        row.append($('<td>').text(index + 1));
         const idCell = $('<td>').text(data.title).css({ cursor: 'pointer', color: 'blue' });
 
         idCell.on('click', () => {
+            const isOwner = (userRole == '관리자' || id == data.memberId);
+
+            $('#updateProductButton').toggle(isOwner);
+
             // 모달에 데이터 채우기
-            $('#updateMemberId').val(data.id);
-            $('#updateMemberAccountName').val(data.accountId);
-            $('#updateMemberName').val(data.name);
-            $('#updateMemberPhone').val(data.phone);
-            $('#updateMemberGender').val(data.gender);
-            $('#updateMemberBirthDate').val(data.birthDate);
-            $('#updateMemberAddress').val(data.address);
-            $('#updateMemberKakaoUserKey').val(data.kakaoUserKey);
-            $('#updateMemberBoardPoint').val(data.boardingPointId);
-            $('#updateMemberGroupName').val(data.groupName);
+            $('#updateProductId').val(data.id);
+            $('#updateProductImageUrl').val(data.images);
+            $('#updateProductTitle').val(data.title);
+            $('#updateProductDescription').val(data.description);
+            $('#updateProductLink').val(data.link);
+            $('#updateProductMemberId').val(data.memberId);
+
+            $('#updateProductImageUrl').prop('readonly', !isOwner);
+            $('#updateProductTitle').prop('readonly', !isOwner);
+            $('#updateProductDescription').prop('readonly', !isOwner);
+            $('#updateProductLink').prop('readonly', !isOwner);
+
             // 모달 열기
             $('#updateModal').modal('show');
         });
 
-        const row = $('<tr>');
-        row.append($('<td>').text(index + 1));
         row.append(idCell);
         row.append($('<td>').text(data.description));
         row.append($('<td>').text(data.memberId));
         row.append($('<td>').text(data.status));
         row.append($('<td>').text(data.createDate));
 
-        row.append($('<td style="display: flex; justify-content: center;">').append(deleteButton(data)));
+        if (userRole == '관리자' || id == data.memberId) {
+            row.append($('<td style="display: flex; justify-content: center;">').append(deleteButton(data)));
+        }else {
+            row.append($('<td>').append($('<td>').text("")));
+        }
 
         return row;
     }
 
     function deleteButton (data) {
         return  $('<button>').text('삭제').addClass('btn btn-danger mx-lg-1 btn-sm').on('click',function (){
-
             if (confirm(`${data.title}을 삭제하시겠습니까?`)) {
                 deleteMember(data.id)
             }

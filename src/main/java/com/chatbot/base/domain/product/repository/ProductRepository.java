@@ -12,4 +12,6 @@ import java.util.UUID;
 public interface ProductRepository extends JpaRepository<Product, UUID> {
 
     List<Product> findByStatusAndCreateDateBetween(ProductStatus status, LocalDateTime startDate, LocalDateTime endDate);
+
+    List<Product> findByStatus(ProductStatus status);
 }

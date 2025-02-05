@@ -97,43 +97,29 @@
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h6 class="modal-title" id="updateModalLabel">근무자 정보</h6>
+                                <h6 class="modal-title" id="updateModalLabel">매물 수정</h6>
                             </div>
                             <div class="modal-body">
                                 <div class="form-group">
-                                    <input type="hidden" class="form-control mb-3" id="updateMemberId">
-                                    <label for="addMemberName">이름:</label>
-                                    <input type="text" class="form-control mb-3" id="updateMemberName">
+                                    <input type="hidden" id="updateProductId">
 
-                                    <label for="addMemberPhone">연락처:</label>
-                                    <input type="text" class="form-control mb-3" id="updateMemberPhone" placeholder="'-' 없이 입력해주세요. ex)01033331111">
+                                    <label for="updateProductImageUrl">이미지 URL:</label>
+                                    <input type="text" class="form-control mb-3" id="updateProductImageUrl" placeholder="(필수) 이미지 URL을 입력하세요.">
 
-                                    <label for="addMemberPhone">성별:</label>
-                                    <select class="form-control mb-3" id="updateMemberGender">
-                                        <option value="기타">기타</option>
-                                        <option value="남성">남성</option>
-                                        <option value="여성">여성</option>
-                                    </select>
+                                    <label for="updateProductTitle">제목:</label>
+                                    <input type="text" class="form-control mb-3" id="updateProductTitle" placeholder="제목을 입력하세요.">
 
-                                    <label for="addMemberPhone">생년월일:</label>
-                                    <input type="date" class="form-control mb-3" id="updateMemberBirthDate">
+                                    <label for="updateProductDescription">설명:</label>
+                                    <textarea class="form-control mb-3 fixed-textarea" id="updateProductDescription" rows="3" placeholder="(필수) 상품 설명을 입력하세요. 최대 230자 "></textarea>
 
-                                    <label for="addMemberPhone">주소:</label>
-                                    <input type="text" class="form-control mb-3" id="updateMemberAddress">
+                                    <label for="updateProductLink">링크:</label>
+                                    <input type="text" class="form-control mb-3" id="updateProductLink" placeholder="링크를 입력하세요.">
 
-                                    <label for="addMemberKakaoUserKey">개인코드:</label>
-                                    <input type="text" class="form-control mb-3" id="updateMemberKakaoUserKey">
-
-                                    <label for="updateMemberGroupName">소속:</label>
-                                    <input type="text" class="form-control mb-3" id="updateMemberGroupName">
-
-                                    <label for="updateMemberBoardPoint">버스 탑승지:</label>
-                                    <select class="form-control mb-3" id="updateMemberBoardPoint">
-                                    </select>
-
+                                    <label for="updateProductMemberId">작성자:</label>
+                                    <input type="text" class="form-control mb-3" id="updateProductMemberId" readonly>
                                 </div>
                                 <div class="d-flex align-items-center justify-content-center mt-4 mb-0 gap-3">
-                                    <button type="button" id="updateMember" class="btn btn-primary">수정</button>
+                                    <button type="button" id="updateProductButton" class="btn btn-primary">수정</button>
                                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">취소</button>
                                 </div>
                             </div>
