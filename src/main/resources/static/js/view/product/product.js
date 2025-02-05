@@ -1,66 +1,31 @@
 $(document).ready(function(){
     const headers = [
-        'No', '개인키','이름', '연락처','버스 탑승지','성별','생년월일','주소','가입일','관리'
+        'No', '제목','설명', '작성자','상태','등록일','기타'
     ];
-    getMembers()
 
-    getBoardPoints();
+    getProducts(0,10,'createDate,desc')
 
-    $("#addMemberButton").on("click",function () {
+    $("#addProductModalButton").on("click",function () {
         $('#addModal').find('input').val('');
+        $('#addModal').find('textarea').val('');
         $('#addModal').modal('show');
     })
 
-    $("#addMember").on("click",function () {
-        let name = $("#addMemberName").val();
-        let phone = $("#addMemberPhone").val();
-        let gender = $("#addMemberGender").val();
-        let birthDate = $("#addMemberBirthDate").val();
-        let address = $("#addMemberAddress").val();
-        let kakaoUserKey = $("#addMemberKakaoUserKey").val();
-        let addMemberBoardPoint = $("#addMemberBoardPoint").val();
-        let addMemberGroupName = $("#addMemberGroupName").val();
-        if (!name) {
-            alert("이름을 입력하세요.")
+    $("#addProductButton").on("click",function () {
+        const imageUrl = $("#addProductImageUrl").val();
+        const title = $("#addProductTitle").val();
+        const description = $("#addProductDescription").val();
+        const link = $("#addProductLink").val();
+
+        if (!imageUrl) {
+            alert("이미지는 필수입니다.")
             return
         }
-
-        if (!phone) {
-            alert("연락처를 입력하세요.")
+        if (!description) {
+            alert("설명은 필수입니다.")
             return
         }
-
-        if (!gender) {
-            alert("성별을 선택하세요.")
-            return
-        }
-
-        if (!birthDate) {
-            alert("생년월일을 입력하세요.")
-            return
-        }
-
-        if (!address) {
-            alert("주소를 입력하세요.")
-            return
-        }
-
-        if (!kakaoUserKey) {
-            alert("개인코드를 입력하세요.")
-            return
-        }
-
-        if (!addMemberBoardPoint) {
-            alert("버스 탑승지를 선택하세요.")
-            return
-        }
-
-        if (!addMemberGroupName) {
-            alert("소속을 입력해주세요.")
-            return
-        }
-
-        addMember(name,phone,gender,birthDate,address,kakaoUserKey,addMemberBoardPoint,addMemberGroupName)
+        addProduct(imageUrl,title,description,link)
     })
 
 
@@ -154,24 +119,20 @@ $(document).ready(function(){
     }
 
 
-    function addMember(name,phone,gender,birthDate,address,kakaoUserKey,addMemberBoardPoint,addMemberGroupName) {
-        const addData = JSON.stringify({
-            name:name,
-            phone:phone,
-            gender:gender,
-            birthDate:birthDate,
-            address:address,
-            kakaoUserKey:kakaoUserKey,
-            boardingPointId:addMemberBoardPoint,
-            groupName:addMemberGroupName
+    function addProduct(imageUrl,title,description,link) {
+        const data = JSON.stringify({
+            imageUrl:imageUrl,
+            title:title,
+            description:description,
+            link:link,
         });
 
-        fetch(`/members`, {
+        fetch(`/product`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body:addData
+            body:data
         })
             .then(response => {
                 if (response.ok){
@@ -188,8 +149,8 @@ $(document).ready(function(){
             });
     }
 
-    function getMembers() {
-        fetch(`/members/list`, {
+    function getProducts(page,size,sort) {
+        fetch(`/product/list?page=${page}&size=${size}&sort=${sort}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -266,40 +227,6 @@ $(document).ready(function(){
             .catch(error => {
                 console.log(error)
             });
-    }
-
-    function getBoardPoints() {
-        fetch(`/boardingPoint/list`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-            .then(response => {
-                return response.json()
-            }).then(data => {
-            renderBoardPointSelect(data)
-        })
-            .catch(error => {
-                console.log(error)
-            });
-    }
-
-    function renderBoardPointSelect(data) {
-        $('#updateMemberBoardPoint').empty()
-        $('#addMemberBoardPoint').empty()
-
-        data.forEach(function (board) {
-            let text = board.busName +' - '+board.boardPoint
-
-            $('#addMemberBoardPoint').append(
-                $('<option>', { value: board.id, text: text })
-            );
-
-            $('#updateMemberBoardPoint').append(
-                $('<option>', { value: board.id, text: text })
-            );
-        })
     }
 })
 

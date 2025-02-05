@@ -14,7 +14,7 @@ $(document).ready(function(){
         if (userRole != '관리자') {
             menuHtml += `   
                  <div class="nav">
-                    <a class="nav-link" href="/home" >
+                    <a class="nav-link" href="/product" >
                         <div class="sb-nav-link-icon"><i class='far fa-calendar-alt'></i></div>
                         매물등록
                     </a>
@@ -26,7 +26,7 @@ $(document).ready(function(){
             menuHtml += `   
                  <div class="nav">
                  
-                    <a class="nav-link" href="/home" >
+                    <a class="nav-link" href="/product" >
                         <div class="sb-nav-link-icon"><i class='far fa-calendar-alt'></i></div>
                         매물등록
                     </a>

@@ -36,8 +36,4 @@ public class BaseEntity {
     public void onPreUpdate(){
         this.lastModifiedDate = LocalDateTime.now();
     }
-
-    public void updateCreateDate(){
-        this.createDate = LocalDateTime.now();
-    }
 }

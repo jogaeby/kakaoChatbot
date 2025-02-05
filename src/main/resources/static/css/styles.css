@@ -11251,3 +11251,14 @@ body {
   src: url("font/GmarketSansTTF/GmarketSansTTFMedium.ttf") format("truetype");
   font-weight: normal;
 }
+
+.fixed-textarea {
+  width: 100%; /* 너비 자동 조정 */
+  height: 300px; /* 고정 높이 */
+  resize: none; /* 사용자가 크기 조절 못 하도록 */
+  overflow-y: auto; /* 내용이 많아지면 세로 스크롤 */
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
