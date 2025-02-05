@@ -3,7 +3,7 @@ $(document).ready(function(){
         'No', '제목','설명', '작성자','상태','등록일','기타'
     ];
 
-    getProducts(0,10,'createDate,desc')
+    getProducts()
 
     $("#addProductModalButton").on("click",function () {
         $('#addModal').find('input').val('');
@@ -121,7 +121,7 @@ $(document).ready(function(){
 
     function addProduct(imageUrl,title,description,link) {
         const data = JSON.stringify({
-            imageUrl:imageUrl,
+            images:[imageUrl],
             title:title,
             description:description,
             link:link,
@@ -138,7 +138,7 @@ $(document).ready(function(){
                 if (response.ok){
                     alert("성공적으로 추가하였습니다.")
                     $('#addModal').modal('hide');
-                    getMembers()
+                    getProducts()
                 }else {
                     alert("추가를 실패하였습니다.")
                 }
@@ -149,7 +149,11 @@ $(document).ready(function(){
             });
     }
 
-    function getProducts(page,size,sort) {
+    function getProducts() {
+        const page = 0
+        const size = 10
+        const sort = 'createDate,desc'
+
         fetch(`/product/list?page=${page}&size=${size}&sort=${sort}`, {
             method: 'GET',
             headers: {
@@ -167,7 +171,7 @@ $(document).ready(function(){
     }
 
     function createTableRow(data, index) {
-        const idCell = $('<td>').text(data.kakaoUserKey).css({ cursor: 'pointer', color: 'blue' });
+        const idCell = $('<td>').text(data.title).css({ cursor: 'pointer', color: 'blue' });
 
         idCell.on('click', () => {
             // 모달에 데이터 채우기
@@ -188,13 +192,11 @@ $(document).ready(function(){
         const row = $('<tr>');
         row.append($('<td>').text(index + 1));
         row.append(idCell);
-        row.append($('<td>').text(data.name));
-        row.append($('<td>').text(data.phone));
-        row.append($('<td>').text(data.boardingPointName));
-        row.append($('<td>').text(data.gender));
-        row.append($('<td>').text(data.birthDate));
-        row.append($('<td>').text(data.address));
+        row.append($('<td>').text(data.description));
+        row.append($('<td>').text(data.memberId));
+        row.append($('<td>').text(data.status));
         row.append($('<td>').text(data.createDate));
+
         row.append($('<td style="display: flex; justify-content: center;">').append(deleteButton(data)));
 
         return row;
@@ -203,14 +205,14 @@ $(document).ready(function(){
     function deleteButton (data) {
         return  $('<button>').text('삭제').addClass('btn btn-danger mx-lg-1 btn-sm').on('click',function (){
 
-            if (confirm(`${data.name}님을 삭제하시겠습니까?`)) {
+            if (confirm(`${data.title}을 삭제하시겠습니까?`)) {
                 deleteMember(data.id)
             }
         })
     }
 
     function deleteMember(id) {
-        fetch(`/members/${id}`, {
+        fetch(`/product/${id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
@@ -219,7 +221,7 @@ $(document).ready(function(){
             .then(response => {
                 if (response.ok){
                     alert("성공적으로 삭제하였습니다.")
-                    getMembers()
+                    getProducts()
                 }else {
                     alert("삭제를 실패하였습니다.")
                 }

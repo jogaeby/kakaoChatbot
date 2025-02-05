@@ -1,9 +1,18 @@
 package com.chatbot.base.domain.product.service;
 
 import com.chatbot.base.domain.product.Product;
+import com.chatbot.base.domain.product.dto.ProductDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface ProductService {
-    Page<Product> getProductList(Pageable pageable);
+    List<ProductDTO> getProductList(Pageable pageable);
+
+    void addProduct(ProductDTO productDTO, String memberId);
+
+    void deleteProduct(String productId);
+
+    boolean isDeleteProduct(String productId, String memberId);
 }
