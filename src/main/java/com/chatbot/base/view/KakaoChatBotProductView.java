@@ -21,7 +21,7 @@ import java.util.List;
 @Component
 public class KakaoChatBotProductView {
 
-    public ChatBotResponse productView(List<ProductDTO> productDTOList) {
+    public ChatBotResponse productView(List<ProductDTO> productDTOList,String blockId) {
         ChatBotResponse response = new ChatBotResponse();
         Carousel<BasicCard> carousel = new Carousel<>();
 
@@ -33,7 +33,8 @@ public class KakaoChatBotProductView {
         productDTOList.forEach(productDTO -> {
             BasicCard basicCard = new BasicCard();
             Button linkButton = new Button("링크",ButtonAction.웹링크연결,productDTO.getLink());
-            Button detailButton = new Button("상세보기",ButtonAction.블럭이동,"67a3fb7863e1a53ac8d17145", ButtonParamKey.choice,productDTO.getId());
+            Button detailButton = new Button("상세보기",ButtonAction.블럭이동,"67a3fb7863e1a53ac8d17145", ButtonParamKey.productId,productDTO.getId());
+            detailButton.setExtra(ButtonParamKey.choice,blockId);
 
             basicCard.setThumbnail(productDTO.getImages().get(0));
             basicCard.setTitle(productDTO.getTitle());
@@ -48,7 +49,7 @@ public class KakaoChatBotProductView {
         return response;
     }
 
-    public ChatBotResponse productDetailView(ProductDTO productDTO) {
+    public ChatBotResponse productDetailView(ProductDTO productDTO, String blockId) {
         ChatBotResponse response = new ChatBotResponse();
 
         BasicCard basicCard = new BasicCard();
@@ -60,7 +61,7 @@ public class KakaoChatBotProductView {
         basicCard.setButton(linkButton);
 
         response.addBasicCard(basicCard);
-        response.addQuickButton("이전으로",ButtonAction.블럭이동,"67a3fb6e38e4386089f9fa44");
+        response.addQuickButton("이전으로",ButtonAction.블럭이동,blockId);
         return response;
     }
 }

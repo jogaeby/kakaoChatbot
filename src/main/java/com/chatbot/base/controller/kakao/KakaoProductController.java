@@ -32,10 +32,21 @@ public class KakaoProductController {
     }
 
     @PostMapping(value = "today")
-    public ChatBotResponse getProducts(@RequestBody ChatBotRequest chatBotRequest) {
+    public ChatBotResponse getProductsByToday(@RequestBody ChatBotRequest chatBotRequest) {
         try {
             List<ProductDTO> productList = productService.getProductList(ProductStatus.DISPLAY);
-            return kakaoChatBotProductView.productView(productList);
+            return kakaoChatBotProductView.productView(productList,"67a3fb6e38e4386089f9fa44");
+        }catch (Exception e) {
+            log.error("{}",e.getMessage(),e);
+            return chatBotExceptionResponse.createException();
+        }
+    }
+
+    @PostMapping(value = "dayBefore")
+    public ChatBotResponse getProductsByDayBefore(@RequestBody ChatBotRequest chatBotRequest) {
+        try {
+            List<ProductDTO> productList = productService.getProductList(ProductStatus.PRE_DISPLAY);
+            return kakaoChatBotProductView.productView(productList,"67a3ff73cf3be837a5176214");
         }catch (Exception e) {
             log.error("{}",e.getMessage(),e);
             return chatBotExceptionResponse.createException();
@@ -45,11 +56,11 @@ public class KakaoProductController {
     @PostMapping(value = "detail")
     public ChatBotResponse getProductDetail(@RequestBody ChatBotRequest chatBotRequest) {
         try {
-            String productId = chatBotRequest.getChoiceParam();
-
+            String productId = chatBotRequest.getProductId();
+            String preBlockId = chatBotRequest.getChoiceParam();
             ProductDTO productDTO = productService.getProduct(productId);
 
-            return kakaoChatBotProductView.productDetailView(productDTO);
+            return kakaoChatBotProductView.productDetailView(productDTO,preBlockId);
         }catch (Exception e) {
             log.error("{}",e.getMessage(),e);
             return chatBotExceptionResponse.createException();

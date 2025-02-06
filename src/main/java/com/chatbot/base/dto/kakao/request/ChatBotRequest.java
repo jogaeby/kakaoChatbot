@@ -192,6 +192,11 @@ public class ChatBotRequest {
         return action.getClientExtra().getChoice();
     }
 
+    public String getProductId(){
+        if (Objects.isNull(action.getClientExtra().getProductId())) return null;
+        return action.getClientExtra().getProductId();
+    }
+
     public int getPageNumber(){
         if (Objects.isNull(action.getClientExtra().getPageNumber())) return 0;
         return Integer.parseInt(action.getClientExtra().getPageNumber());
