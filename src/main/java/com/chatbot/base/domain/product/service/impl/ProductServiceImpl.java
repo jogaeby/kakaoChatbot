@@ -41,6 +41,22 @@ public class ProductServiceImpl implements ProductService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<ProductDTO> getProductList(ProductStatus status) {
+
+        return productRepository.findByStatus(ProductStatus.DISPLAY).stream()
+                .map(Product::toDTO)
+                .sorted(Comparator.comparing(ProductDTO::getCreateDate).reversed())
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public ProductDTO getProduct(String productId) {
+        Product product = productRepository.findById(UUID.fromString(productId))
+                .orElseThrow(() -> new NoSuchElementException("not found Product / id = " + productId));
+        return product.toDTO();
+    }
+
     @Transactional
     @Override
     public void addProduct(ProductDTO productDTO, String memberId) {
