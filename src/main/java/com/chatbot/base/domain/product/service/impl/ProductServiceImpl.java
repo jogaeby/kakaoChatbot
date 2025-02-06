@@ -44,7 +44,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductDTO> getProductList(ProductStatus status) {
 
-        return productRepository.findByStatus(ProductStatus.DISPLAY).stream()
+        return productRepository.findByStatus(status).stream()
                 .map(Product::toDTO)
                 .sorted(Comparator.comparing(ProductDTO::getCreateDate).reversed())
                 .collect(Collectors.toList());
