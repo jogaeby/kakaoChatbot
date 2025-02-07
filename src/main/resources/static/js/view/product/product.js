@@ -12,14 +12,20 @@ $(document).ready(function(){
 
     $("#addProductModalButton").on("click",function () {
         $('#addModal').find('input').val('');
-        $('#addModal').find('textarea').val('');
         $('#addModal').modal('show');
     })
 
     $("#addProductButton").on("click",function () {
         const imageUrl = $("#addProductImageUrl").val();
         const title = $("#addProductTitle").val();
-        const description = $("#addProductDescription").val();
+        const no = $("#addProductNo").val();
+        const category = $("#addProductCategory").val();
+        const location = $("#addProductLocation").val();
+        const price = $("#addProductPrice").val();
+        const minPrice = $("#addProductMinPrice").val();
+        const expectedPrice = $("#addProductExpectedPrice").val();
+        const saleDate = $("#addProductSaleDate").val();
+        const managerName = $("#addProductManagerName").val();
         const link = $("#addProductLink").val();
 
         if (!imageUrl) {
@@ -32,8 +38,38 @@ $(document).ready(function(){
             return
         }
 
-        if (!description) {
-            alert("설명을 입력하세요. (최대 230자)")
+        if (!no) {
+            alert("타경번호를 입력하세요.")
+            return
+        }
+
+        if (!category) {
+            alert("물건종류를 입력하세요.")
+            return
+        }
+        if (!location) {
+            alert("소재지를 입력하세요.")
+            return
+        }
+        if (!price) {
+            alert("감정가를 입력하세요.")
+            return
+        }
+        if (!minPrice) {
+            alert("최저가를 입력하세요.")
+            return
+        }
+        if (!expectedPrice) {
+            alert("예상 낙찰가를 입력하세요.")
+            return
+        }
+
+        if (!saleDate) {
+            alert("매각 기일을 선택하세요.")
+            return
+        }
+        if (!managerName) {
+            alert("담당자 이름을 입력하세요.")
             return
         }
 
@@ -42,7 +78,7 @@ $(document).ready(function(){
             return
         }
 
-        addProduct(imageUrl,title,description,link)
+        addProduct(imageUrl,title,no, category, location, price, minPrice, expectedPrice, saleDate, managerName, link)
     })
 
     $("#updateProductButton").on("click",function () {
@@ -176,11 +212,19 @@ $(document).ready(function(){
             });
     }
 
-    function addProduct(imageUrl,title,description,link) {
+    function addProduct(imageUrl,title,no, category, location, price, minPrice, expectedPrice, saleDate, managerName, link) {
         const data = JSON.stringify({
             images:[imageUrl],
             title:title,
-            description:description,
+            no:no,
+            category:category,
+            location:location,
+            price:price,
+            minPrice:minPrice,
+            expectedPrice:expectedPrice,
+            no:no,
+            no:no,
+            no:no,
             link:link,
         });
 

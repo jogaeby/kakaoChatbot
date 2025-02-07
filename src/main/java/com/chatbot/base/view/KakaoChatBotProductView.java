@@ -38,7 +38,7 @@ public class KakaoChatBotProductView {
 
             basicCard.setThumbnail(productDTO.getImages().get(0));
             basicCard.setTitle(productDTO.getTitle());
-            basicCard.setDescription(productDTO.getDescription());
+//            basicCard.setDescription(productDTO.getDescription());
             basicCard.setButton(linkButton);
             basicCard.setButton(detailButton);
 
@@ -57,7 +57,7 @@ public class KakaoChatBotProductView {
 
         basicCard.setThumbnail(productDTO.getImages().get(0));
         basicCard.setTitle(productDTO.getTitle());
-        basicCard.setDescription(productDTO.getDescription());
+//        basicCard.setDescription(productDTO.getDescription());
         basicCard.setButton(linkButton);
 
         response.addBasicCard(basicCard);

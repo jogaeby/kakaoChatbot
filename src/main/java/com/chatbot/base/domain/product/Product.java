@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +25,23 @@ import java.util.List;
 public class Product extends BaseEntity {
     private String title;
 
-    private String description;
+    private String no;
+
+    private String category;
+
+    private String location;
+
+    private String price;
+
+    private String minPrice;
+
+    private String expectedPrice;
+
+    private LocalDate saleDate;
+
+    private String managerName;
+
+    private String managerPhone;
 
     private String link;
 
@@ -38,19 +55,29 @@ public class Product extends BaseEntity {
     private Member member;
 
     @Builder(access = AccessLevel.PRIVATE)
-    public Product(String title, String description, String link, List<String> images, ProductStatus status, Member member) {
+    public Product(String title, String no, String category, String location, String price, String minPrice, LocalDate saleDate, String managerName, String managerPhone, String expectedPrice, String link, List<String> images, ProductStatus status, Member member) {
         this.title = title;
-        this.description = description;
+        this.no = no;
+        this.category = category;
+        this.location = location;
+        this.price = price;
+        this.minPrice = minPrice;
+        this.saleDate = saleDate;
+        this.managerName = managerName;
+        this.managerPhone = managerPhone;
+        this.expectedPrice = expectedPrice;
         this.link = link;
         this.images = images;
         this.status = status;
         this.member = member;
     }
 
+
+
+
     public static Product of(ProductDTO productDTO,Member member) {
         return Product.builder()
                 .title(productDTO.getTitle())
-                .description(productDTO.getDescription())
                 .link(productDTO.getLink())
                 .images(productDTO.getImages())
                 .status(ProductStatus.REGISTRATION)
@@ -62,7 +89,15 @@ public class Product extends BaseEntity {
         return ProductDTO.builder()
                 .id(getUuid().toString())
                 .title(title)
-                .description(description)
+                .no(no)
+                .category(category)
+                .location(location)
+                .price(price)
+                .minPrice(minPrice)
+                .expectedPrice(expectedPrice)
+                .saleDate(saleDate)
+                .managerName(managerName)
+                .managerPhone(managerPhone)
                 .link(link)
                 .images(images)
                 .status(status.getName())
@@ -74,7 +109,6 @@ public class Product extends BaseEntity {
 
     public void update(ProductDTO productDTO) {
         this.title = productDTO.getTitle();
-        this.description = productDTO.getDescription();
         this.link = productDTO.getLink();
         this.images = productDTO.getImages();
     }

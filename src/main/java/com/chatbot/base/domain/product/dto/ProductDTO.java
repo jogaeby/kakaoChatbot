@@ -13,12 +13,36 @@ import java.util.List;
 @Builder
 public class ProductDTO {
     private String id;
+
     private String title;
-    private String description;
+
+    private String no;
+
+    private String category;
+
+    private String location;
+
+    private String price;
+
+    private String minPrice;
+
+    private String expectedPrice;
+
+    private LocalDate saleDate;
+
+    private String managerName;
+
+    private String managerPhone;
+
     private String link;
+
     private List<String> images;
+
     private String status;
+
     private int statusPriority;
+
     private LocalDate createDate;
+
     private String memberId;
 }
