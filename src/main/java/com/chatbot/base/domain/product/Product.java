@@ -78,6 +78,16 @@ public class Product extends BaseEntity {
     public static Product of(ProductDTO productDTO,Member member) {
         return Product.builder()
                 .title(productDTO.getTitle())
+                .no(productDTO.getNo())
+                .category(productDTO.getCategory())
+                .location(productDTO.getLocation())
+                .price(productDTO.getPrice())
+                .minPrice(productDTO.getMinPrice())
+                .saleDate(productDTO.getSaleDate())
+                .managerName(productDTO.getManagerName())
+                .managerPhone(productDTO.getManagerPhone())
+                .expectedPrice(productDTO.getExpectedPrice())
+                .saleDate(productDTO.getSaleDate())
                 .link(productDTO.getLink())
                 .images(productDTO.getImages())
                 .status(ProductStatus.REGISTRATION)
@@ -109,6 +119,16 @@ public class Product extends BaseEntity {
 
     public void update(ProductDTO productDTO) {
         this.title = productDTO.getTitle();
+        this.no = productDTO.getNo();
+        this.category = productDTO.getCategory();
+        this.location = productDTO.getLocation();
+        this.price = productDTO.getPrice();
+        this.minPrice = productDTO.getMinPrice();
+        this.saleDate = productDTO.getSaleDate();
+        this.managerName = productDTO.getManagerName();
+        this.managerPhone = productDTO.getManagerPhone();
+        this.expectedPrice = productDTO.getExpectedPrice();
+        this.saleDate = productDTO.getSaleDate();
         this.link = productDTO.getLink();
         this.images = productDTO.getImages();
     }

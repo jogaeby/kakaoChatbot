@@ -35,10 +35,31 @@ public class KakaoChatBotProductView {
             Button linkButton = new Button("링크",ButtonAction.웹링크연결,productDTO.getLink());
             Button detailButton = new Button("상세보기",ButtonAction.블럭이동,"67a3fb7863e1a53ac8d17145", ButtonParamKey.productId,productDTO.getId());
             detailButton.setExtra(ButtonParamKey.choice,blockId);
+            StringBuilder message = new StringBuilder();
+            message
+                    .append("타경번호: "+productDTO.getNo())
+                    .append("\n")
+                    .append("타경번호: "+productDTO.getNo())
+                    .append("\n")
+                    .append("물건종류: "+productDTO.getCategory())
+                    .append("\n")
+                    .append("소재지: "+productDTO.getLocation())
+                    .append("\n")
+                    .append("감정가: "+productDTO.getPrice())
+                    .append("\n")
+                    .append("최저가: "+productDTO.getMinPrice())
+                    .append("\n")
+                    .append("예상 낙찰가: "+productDTO.getExpectedPrice())
+                    .append("\n")
+                    .append("매각 기일: "+productDTO.getSaleDate())
+                    .append("\n")
+                    .append("담당자: "+productDTO.getManagerName())
+                    .append("\n")
+            ;
 
             basicCard.setThumbnail(productDTO.getImages().get(0));
             basicCard.setTitle(productDTO.getTitle());
-//            basicCard.setDescription(productDTO.getDescription());
+            basicCard.setDescription(message.toString());
             basicCard.setButton(linkButton);
             basicCard.setButton(detailButton);
 
@@ -54,10 +75,31 @@ public class KakaoChatBotProductView {
 
         BasicCard basicCard = new BasicCard();
         Button linkButton = new Button("매물 상세보기",ButtonAction.웹링크연결,productDTO.getLink());
+        StringBuilder message = new StringBuilder();
+        message
+                .append("타경번호: "+productDTO.getNo())
+                .append("\n")
+                .append("타경번호: "+productDTO.getNo())
+                .append("\n")
+                .append("물건종류: "+productDTO.getCategory())
+                .append("\n")
+                .append("소재지: "+productDTO.getLocation())
+                .append("\n")
+                .append("감정가: "+productDTO.getPrice())
+                .append("\n")
+                .append("최저가: "+productDTO.getMinPrice())
+                .append("\n")
+                .append("예상 낙찰가: "+productDTO.getExpectedPrice())
+                .append("\n")
+                .append("매각 기일: "+productDTO.getSaleDate())
+                .append("\n")
+                .append("담당자: "+productDTO.getManagerName())
+                .append("\n")
+        ;
 
         basicCard.setThumbnail(productDTO.getImages().get(0));
         basicCard.setTitle(productDTO.getTitle());
-//        basicCard.setDescription(productDTO.getDescription());
+        basicCard.setDescription(message.toString());
         basicCard.setButton(linkButton);
 
         response.addBasicCard(basicCard);
