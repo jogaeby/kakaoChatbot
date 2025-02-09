@@ -10,6 +10,7 @@ import com.chatbot.base.domain.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,12 +43,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductDTO> getProductList(ProductStatus status) {
-
-        return productRepository.findByStatus(status).stream()
-                .map(Product::toDTO)
-                .sorted(Comparator.comparing(ProductDTO::getCreateDate).reversed())
-                .collect(Collectors.toList());
+    public Page<Product> getProductList(ProductStatus status,int pageNum) {
+        Pageable pageable = PageRequest.of(pageNum, 10); // 0번째 페이지, 10개씩 조회
+//        productRepository.findByStatus(status,pageable).stream()
+//                .map(Product::toDTO)
+//                .sorted(Comparator.comparing(ProductDTO::getCreateDate).reversed())
+//                .collect(Collectors.toList());
+        return productRepository.findByStatus(status, pageable);
     }
 
     @Override

@@ -13,7 +13,7 @@ import java.util.List;
 public interface ProductService {
     List<ProductDTO> getProductList(Pageable pageable);
 
-    List<ProductDTO> getProductList(ProductStatus status);
+    Page<Product> getProductList(ProductStatus status, int pageNumber);
 
     ProductDTO getProduct(String productId);
 

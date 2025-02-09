@@ -1,27 +1,29 @@
 package com.chatbot.base.view;
 
-import com.chatbot.base.common.StringUtil;
 import com.chatbot.base.domain.product.Product;
 import com.chatbot.base.domain.product.dto.ProductDTO;
 import com.chatbot.base.dto.kakao.constatnt.button.ButtonAction;
 import com.chatbot.base.dto.kakao.constatnt.button.ButtonParamKey;
 import com.chatbot.base.dto.kakao.response.ChatBotResponse;
 import com.chatbot.base.dto.kakao.response.property.common.Button;
-import com.chatbot.base.dto.kakao.response.property.common.Context;
 import com.chatbot.base.dto.kakao.response.property.components.BasicCard;
 import com.chatbot.base.dto.kakao.response.property.components.Carousel;
-import com.chatbot.base.dto.kakao.response.property.components.SimpleText;
-import com.chatbot.base.dto.kakao.response.property.components.TextCard;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class KakaoChatBotProductView {
 
-    public ChatBotResponse productView(List<ProductDTO> productDTOList,String blockId) {
+    public ChatBotResponse productView(Page<Product> products, String blockId) {
+        List<ProductDTO> productDTOList = products.getContent().stream()
+                .map(Product::toDTO)
+                .sorted(Comparator.comparing(ProductDTO::getCreateDate).reversed())
+                .collect(Collectors.toList());
+
         ChatBotResponse response = new ChatBotResponse();
         Carousel<BasicCard> carousel = new Carousel<>();
 
@@ -32,26 +34,26 @@ public class KakaoChatBotProductView {
 
         productDTOList.forEach(productDTO -> {
             BasicCard basicCard = new BasicCard();
-            Button linkButton = new Button("링크 바로가기",ButtonAction.웹링크연결,productDTO.getLink());
-            Button detailButton = new Button("상세보기",ButtonAction.블럭이동,"67a3fb7863e1a53ac8d17145", ButtonParamKey.productId,productDTO.getId());
-            detailButton.setExtra(ButtonParamKey.choice,blockId);
+            Button linkButton = new Button("링크 바로가기", ButtonAction.웹링크연결, productDTO.getLink());
+            Button detailButton = new Button("상세보기", ButtonAction.블럭이동, "67a3fb7863e1a53ac8d17145", ButtonParamKey.productId, productDTO.getId());
+            detailButton.setExtra(ButtonParamKey.choice, blockId);
             StringBuilder message = new StringBuilder();
             message
-                    .append("타경번호: "+productDTO.getNo())
+                    .append("타경번호: " + productDTO.getNo())
                     .append("\n")
-                    .append("물건종류: "+productDTO.getCategory())
+                    .append("물건종류: " + productDTO.getCategory())
                     .append("\n")
-                    .append("소재지: "+productDTO.getLocation())
+                    .append("소재지: " + productDTO.getLocation())
                     .append("\n")
-                    .append("감정가: "+productDTO.getPrice())
+                    .append("감정가: " + productDTO.getPrice())
                     .append("\n")
-                    .append("최저가: "+productDTO.getMinPrice())
+                    .append("최저가: " + productDTO.getMinPrice())
                     .append("\n")
-                    .append("예상 낙찰가: "+productDTO.getExpectedPrice())
+                    .append("예상 낙찰가: " + productDTO.getExpectedPrice())
                     .append("\n")
-                    .append("매각 기일: "+productDTO.getSaleDate())
+                    .append("매각 기일: " + productDTO.getSaleDate())
                     .append("\n")
-                    .append("담당자: "+productDTO.getManagerName())
+                    .append("담당자: " + productDTO.getManagerName())
                     .append("\n")
             ;
 
@@ -65,6 +67,18 @@ public class KakaoChatBotProductView {
         });
 
         response.addCarousel(carousel);
+        int currentPageNumber = products.getNumber();
+        if (products.hasNext()) {
+            int nextPageNumber = currentPageNumber + 1;
+
+            response.addQuickButton("다음으로", ButtonAction.블럭이동, blockId, ButtonParamKey.pageNumber, String.valueOf(nextPageNumber));
+        }
+
+        if (products.hasPrevious()) {
+            int prevPageNumber = currentPageNumber - 1;
+            response.addQuickButton("이전으로", ButtonAction.블럭이동, blockId, ButtonParamKey.pageNumber, String.valueOf(prevPageNumber));
+        }
+
         return response;
     }
 
