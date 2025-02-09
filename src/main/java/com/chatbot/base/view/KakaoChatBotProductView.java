@@ -71,12 +71,12 @@ public class KakaoChatBotProductView {
         if (products.hasNext()) {
             int nextPageNumber = currentPageNumber + 1;
 
-            response.addQuickButton("다음으로", ButtonAction.블럭이동, blockId, ButtonParamKey.pageNumber, String.valueOf(nextPageNumber));
+            response.addQuickButton("다음으로⮕", ButtonAction.블럭이동, blockId, ButtonParamKey.pageNumber, String.valueOf(nextPageNumber));
         }
 
         if (products.hasPrevious()) {
             int prevPageNumber = currentPageNumber - 1;
-            response.addQuickButton("이전으로", ButtonAction.블럭이동, blockId, ButtonParamKey.pageNumber, String.valueOf(prevPageNumber));
+            response.addQuickButton("⬅이전으로", ButtonAction.블럭이동, blockId, ButtonParamKey.pageNumber, String.valueOf(prevPageNumber));
         }
 
         return response;
