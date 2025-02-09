@@ -105,9 +105,9 @@ public class ProductServiceImpl implements ProductService {
         log.info("상품 상태 업데이트 날짜 범위 {} ~ {}", startDate, endDate);
 
         // 상태 변경을 각 메서드로 분리 (순서 중요)
-        updatePreDisplayToRegistration();
+//        updatePreDisplayToRegistration();
         updateDisplayToPreDisplay();
-        updateRegistrationToDisplay(startDate, endDate);
+//        updateRegistrationToDisplay(startDate, endDate);
     }
 
     private void updateRegistrationToDisplay(LocalDateTime startDate, LocalDateTime endDate) {
@@ -149,9 +149,12 @@ public class ProductServiceImpl implements ProductService {
 
         List<Product> displayProducts = productRepository.findByStatusAndCreateDateBetween(ProductStatus.DISPLAY, startDate, endDate);
 
-        if (displayProducts.size() < 10) {
-           return false;
-        }
-        return true;
+//        if (displayProducts.size() < 10) {
+//           return false;
+//        }
+//
+//        return true;
+
+        return false;
     }
 }
