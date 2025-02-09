@@ -32,13 +32,11 @@ public class KakaoChatBotProductView {
 
         productDTOList.forEach(productDTO -> {
             BasicCard basicCard = new BasicCard();
-            Button linkButton = new Button("링크",ButtonAction.웹링크연결,productDTO.getLink());
+            Button linkButton = new Button("링크 바로가기",ButtonAction.웹링크연결,productDTO.getLink());
             Button detailButton = new Button("상세보기",ButtonAction.블럭이동,"67a3fb7863e1a53ac8d17145", ButtonParamKey.productId,productDTO.getId());
             detailButton.setExtra(ButtonParamKey.choice,blockId);
             StringBuilder message = new StringBuilder();
             message
-                    .append("타경번호: "+productDTO.getNo())
-                    .append("\n")
                     .append("타경번호: "+productDTO.getNo())
                     .append("\n")
                     .append("물건종류: "+productDTO.getCategory())
@@ -74,11 +72,9 @@ public class KakaoChatBotProductView {
         ChatBotResponse response = new ChatBotResponse();
 
         BasicCard basicCard = new BasicCard();
-        Button linkButton = new Button("매물 상세보기",ButtonAction.웹링크연결,productDTO.getLink());
+        Button linkButton = new Button("링크 바로가기",ButtonAction.웹링크연결,productDTO.getLink());
         StringBuilder message = new StringBuilder();
         message
-                .append("타경번호: "+productDTO.getNo())
-                .append("\n")
                 .append("타경번호: "+productDTO.getNo())
                 .append("\n")
                 .append("물건종류: "+productDTO.getCategory())
