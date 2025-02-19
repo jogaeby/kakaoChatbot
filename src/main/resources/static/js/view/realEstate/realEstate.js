@@ -1,21 +1,27 @@
 const cardContainer = document.getElementById('cardContainer');
 const loading = document.getElementById('loading');
-let page = 0;         // 페이지 번호 (0부터 시작)
-let isLoading = false;
-let hasMore = true;   // 더 불러올 데이터 여부
+let page = 0;          // 페이지 번호 (0부터 시작)
+let isLoading = false; // 로딩 중 상태
+let hasMore = true;    // 더 불러올 데이터 여부
+let itemIndex = 1;     // 순번 (1부터 시작)
 
 // 📍 URL에서 상품 ID 가져오기
 const urlParams = new URLSearchParams(window.location.search);
 const productId = urlParams.get('id');  // 예: ?id=123
 
-// 🚩 카드 렌더링 함수
-function renderCard(item, prepend = false) {
+// 🚩 카드 렌더링 함수 (특정 상품은 '선택 매물' 표시)
+function renderCard(item, isSelected = false) {
     const card = document.createElement('div');
     card.className = 'card shadow-lg border-0 rounded-lg mt-3';
-    card.setAttribute('data-product-id', item.id ?? 'N/A');
+    card.setAttribute('data-product-id', item.productId ?? 'N/A');
+
+    // 🏷️ 순번 또는 '선택 매물' 표시
+    const label = isSelected ? '선택 매물' : `No: ${itemIndex++}`;
 
     card.innerHTML = `
-        <img src="${item.images?.[0] ?? '/loginLogo.png'}" alt="image" class="card-img-top">
+ 
+        <img src="${item.images?.[0] ?? '/default-image.png'}" alt="Logo" class="card-img-top">
+        <div class="card-header"><strong>${label}</strong></div>
         <div class="card-body">
             <div><strong>제목:</strong> ${item.title ?? 'N/A'}</div>
             <div><strong>타경번호:</strong> ${item.no ?? 'N/A'}</div>
@@ -32,26 +38,27 @@ function renderCard(item, prepend = false) {
         </div>
     `;
 
-    // 🚀 상품 ID 우선: 맨 위에 추가 (prepend가 true일 때)
-    if (prepend) {
-        cardContainer.prepend(card);
+    // 🚀 선택 매물은 상단에, 일반 매물은 하단에 추가
+    if (isSelected) {
+        cardContainer.prepend(card);  // 선택 매물은 상단
     } else {
-        cardContainer.appendChild(card);
+        cardContainer.appendChild(card);  // 일반 매물은 하단
     }
 
     return card;
 }
 
-// 🚩 특정 상품 ID로 조회 (상단에 렌더링)
+// 🚩 특정 상품 ID로 조회 (선택 매물 표시)
 async function fetchProductById(productId) {
     try {
         const response = await fetch(`/product/${productId}`);
         if (!response.ok) throw new Error('상품을 찾을 수 없습니다.');
         const product = await response.json();
 
-        renderCard(product, true);  // 🚀 상단에 렌더링
+        console.log(`🔑 선택 매물 조회 성공: ${product.productId}`);
+        renderCard(product, true);  // 🚀 선택 매물로 렌더링
     } catch (error) {
-        console.error('❌ 특정 상품 조회 실패:', error);
+        console.error('❌ 선택 매물 조회 실패:', error);
         alert('해당 상품을 찾을 수 없습니다.');
     }
 }
@@ -66,7 +73,9 @@ async function fetchData() {
         const response = await fetch(`/product/previous?page=${page}&size=10`);
         const data = await response.json();
 
-        // 일반 데이터 렌더링
+        console.log('📦 일반 매물 데이터:', data);
+
+        // 일반 매물 렌더링
         if (data.content && data.content.length > 0) {
             data.content.forEach(item => renderCard(item));
             page++;  // 다음 페이지로 이동
@@ -79,8 +88,6 @@ async function fetchData() {
         }
     } catch (error) {
         console.error('❌ 데이터 불러오기 실패:', error);
-        alert("데이터 불러오기 실패하였습니다.")
-        loading.innerText = '로딩중...';
     } finally {
         isLoading = false;
         loading.style.display = 'none';
@@ -96,7 +103,8 @@ window.addEventListener('scroll', () => {
 
 // 🚩 실행 로직
 if (productId) {
-    fetchProductById(productId);  // 🚀 상품 ID가 있으면 상단에 표시
+    console.log(`🔑 특정 상품 ID 감지됨: ${productId}`);
+    fetchProductById(productId);  // 🚀 선택 매물로 상단에 표시
 }
 
-fetchData();  // 일반 데이터 로딩
+fetchData();  // 일반 매물 로딩
