@@ -71,7 +71,7 @@ public class KakaoChatBotProductView {
         if (products.hasNext()) {
             int nextPageNumber = currentPageNumber + 1;
 
-            response.addQuickButton("다음으로⮕", ButtonAction.블럭이동, blockId, ButtonParamKey.pageNumber, String.valueOf(nextPageNumber));
+            response.addQuickButton("다음 10개 보기⮕", ButtonAction.블럭이동, blockId, ButtonParamKey.pageNumber, String.valueOf(nextPageNumber));
         }
 
         if (products.hasPrevious()) {
