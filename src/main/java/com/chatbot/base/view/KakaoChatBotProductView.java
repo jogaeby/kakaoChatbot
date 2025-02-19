@@ -37,8 +37,8 @@ public class KakaoChatBotProductView {
         productDTOList.forEach(productDTO -> {
             BasicCard basicCard = new BasicCard();
             Button linkButton = new Button("링크 바로가기", ButtonAction.웹링크연결, productDTO.getLink());
-            Button detailButton = new Button("상세보기", ButtonAction.블럭이동, "67a3fb7863e1a53ac8d17145", ButtonParamKey.productId, productDTO.getId());
             Button webDetailButton = new Button("웹으로 보기",ButtonAction.웹링크연결,url+productDTO.getId());
+            Button detailButton = new Button("상세보기", ButtonAction.블럭이동, "67a3fb7863e1a53ac8d17145", ButtonParamKey.productId, productDTO.getId());
             detailButton.setExtra(ButtonParamKey.choice, blockId);
             StringBuilder message = new StringBuilder();
             message
