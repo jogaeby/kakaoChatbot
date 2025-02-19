@@ -1,6 +1,7 @@
 package com.chatbot.base.view;
 
 import com.chatbot.base.domain.product.Product;
+import com.chatbot.base.domain.product.constant.ProductStatus;
 import com.chatbot.base.domain.product.dto.ProductDTO;
 import com.chatbot.base.dto.kakao.constatnt.button.ButtonAction;
 import com.chatbot.base.dto.kakao.constatnt.button.ButtonParamKey;
@@ -83,46 +84,11 @@ public class KakaoChatBotProductView {
 
     public ChatBotResponse productDetailView(ProductDTO productDTO, String blockId) {
         ChatBotResponse response = new ChatBotResponse();
-
-        BasicCard basicCard = new BasicCard();
-        Button linkButton = new Button("링크 바로가기",ButtonAction.웹링크연결,productDTO.getLink());
-        StringBuilder message = new StringBuilder();
-        message
-                .append("타경번호: "+productDTO.getNo())
-                .append("\n")
-                .append("물건종류: "+productDTO.getCategory())
-                .append("\n")
-                .append("소재지: "+productDTO.getLocation())
-                .append("\n")
-                .append("감정가: "+productDTO.getPrice())
-                .append("\n")
-                .append("최저가: "+productDTO.getMinPrice())
-                .append("\n")
-                .append("예상 낙찰가: "+productDTO.getExpectedPrice())
-                .append("\n")
-                .append("매각 기일: "+productDTO.getSaleDate())
-                .append("\n")
-                .append("담당자: "+productDTO.getManagerName())
-                .append("\n")
-        ;
-
-        basicCard.setThumbnail(productDTO.getImages().get(0));
-        basicCard.setTitle(productDTO.getTitle());
-        basicCard.setDescription(message.toString());
-        basicCard.setButton(linkButton);
-
-        response.addBasicCard(basicCard);
-        response.addQuickButton("이전으로",ButtonAction.블럭이동,blockId);
-        return response;
-    }
-
-    public ChatBotResponse previousProductDetailView(ProductDTO productDTO, String blockId) {
         String url = "http://211.188.58.30:8080/product/realEstate?id=";
-        ChatBotResponse response = new ChatBotResponse();
-
         BasicCard basicCard = new BasicCard();
         Button linkButton = new Button("링크 바로가기",ButtonAction.웹링크연결,productDTO.getLink());
         Button detailButton = new Button("상세보기",ButtonAction.웹링크연결,url+productDTO.getId());
+
         StringBuilder message = new StringBuilder();
         message
                 .append("타경번호: "+productDTO.getNo())
@@ -146,8 +112,10 @@ public class KakaoChatBotProductView {
         basicCard.setThumbnail(productDTO.getImages().get(0));
         basicCard.setTitle(productDTO.getTitle());
         basicCard.setDescription(message.toString());
-        basicCard.setButton(detailButton);
         basicCard.setButton(linkButton);
+        if (productDTO.getStatus().equals(ProductStatus.PRE_DISPLAY.getName())) {
+            basicCard.setButton(detailButton);
+        }
 
         response.addBasicCard(basicCard);
         response.addQuickButton("이전으로",ButtonAction.블럭이동,blockId);
