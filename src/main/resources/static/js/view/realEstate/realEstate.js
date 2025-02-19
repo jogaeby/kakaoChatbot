@@ -23,7 +23,6 @@ function renderCard(item, isSelected = false) {
         <img src="${item.images?.[0] ?? '/default-image.png'}" alt="Logo" class="card-img-top">
         <div class="card-header"><strong>${label}</strong></div>
         <div class="card-body">
-            <div><strong>제목:</strong> ${item.title ?? ''}</div>
             <div><strong>타경번호:</strong> ${item.no ?? ''}</div>
             <div><strong>물건종류:</strong> ${item.category ?? ''}</div>
             <div><strong>소재지:</strong> ${item.location ?? ''}</div>
