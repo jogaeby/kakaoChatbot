@@ -28,9 +28,10 @@ public class KakaoChatBotProductView {
         Carousel<BasicCard> carousel = new Carousel<>();
 
         if (productDTOList.isEmpty()) {
-            response.addSimpleText("현재 등록된 매물이 존재하지 않습니다.");
+            response.addSimpleText("오늘자 매물이 아직 등록되지 않았습니다.");
             return response;
         }
+
         String url = "http://211.188.58.30:8080/product/realEstate?id=";
 
         productDTOList.forEach(productDTO -> {
