@@ -31,11 +31,13 @@ public class KakaoChatBotProductView {
             response.addSimpleText("현재 등록된 매물이 존재하지 않습니다.");
             return response;
         }
+        String url = "http://211.188.58.30:8080/product/realEstate?id=";
 
         productDTOList.forEach(productDTO -> {
             BasicCard basicCard = new BasicCard();
             Button linkButton = new Button("링크 바로가기", ButtonAction.웹링크연결, productDTO.getLink());
             Button detailButton = new Button("상세보기", ButtonAction.블럭이동, "67a3fb7863e1a53ac8d17145", ButtonParamKey.productId, productDTO.getId());
+            Button webDetailButton = new Button("웹으로 보기",ButtonAction.웹링크연결,url+productDTO.getId());
             detailButton.setExtra(ButtonParamKey.choice, blockId);
             StringBuilder message = new StringBuilder();
             message
@@ -44,7 +46,7 @@ public class KakaoChatBotProductView {
                     .append("물건종류: " + productDTO.getCategory())
                     .append("\n")
                     .append("소재지: " + productDTO.getLocation())
-                    .append("\n")
+                    .append("\n\n")
                     .append("감정가: " + productDTO.getPrice())
                     .append("\n")
                     .append("최저가: " + productDTO.getMinPrice())
@@ -60,8 +62,13 @@ public class KakaoChatBotProductView {
             basicCard.setThumbnail(productDTO.getImages().get(0));
             basicCard.setTitle(productDTO.getTitle());
             basicCard.setDescription(message.toString());
-            basicCard.setButton(linkButton);
             basicCard.setButton(detailButton);
+            if (productDTO.getStatus().equals(ProductStatus.PRE_DISPLAY.getName())) {
+                basicCard.setButton(webDetailButton);
+            }
+            basicCard.setButton(webDetailButton);
+            basicCard.setButton(linkButton);
+
 
             carousel.addComponent(basicCard);
         });
@@ -87,7 +94,7 @@ public class KakaoChatBotProductView {
         String url = "http://211.188.58.30:8080/product/realEstate?id=";
         BasicCard basicCard = new BasicCard();
         Button linkButton = new Button("링크 바로가기",ButtonAction.웹링크연결,productDTO.getLink());
-        Button detailButton = new Button("상세보기",ButtonAction.웹링크연결,url+productDTO.getId());
+        Button webDetailButton = new Button("웹으로 보기",ButtonAction.웹링크연결,url+productDTO.getId());
 
         StringBuilder message = new StringBuilder();
         message
@@ -96,7 +103,7 @@ public class KakaoChatBotProductView {
                 .append("물건종류: "+productDTO.getCategory())
                 .append("\n")
                 .append("소재지: "+productDTO.getLocation())
-                .append("\n")
+                .append("\n\n")
                 .append("감정가: "+productDTO.getPrice())
                 .append("\n")
                 .append("최저가: "+productDTO.getMinPrice())
@@ -114,7 +121,7 @@ public class KakaoChatBotProductView {
         basicCard.setDescription(message.toString());
         basicCard.setButton(linkButton);
         if (productDTO.getStatus().equals(ProductStatus.PRE_DISPLAY.getName())) {
-            basicCard.setButton(detailButton);
+            basicCard.setButton(webDetailButton);
         }
 
         response.addBasicCard(basicCard);
