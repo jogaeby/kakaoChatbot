@@ -124,7 +124,6 @@ public class Product extends BaseEntity {
         this.location = productDTO.getLocation();
         this.price = productDTO.getPrice();
         this.minPrice = productDTO.getMinPrice();
-        this.saleDate = productDTO.getSaleDate();
         this.managerName = productDTO.getManagerName();
         this.managerPhone = productDTO.getManagerPhone();
         this.expectedPrice = productDTO.getExpectedPrice();

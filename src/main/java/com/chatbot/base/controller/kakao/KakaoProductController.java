@@ -38,7 +38,7 @@ public class KakaoProductController {
         try {
             int pageNumber = chatBotRequest.getPageNumber();
 
-            Page<Product> productList = productService.getProductList(ProductStatus.DISPLAY, pageNumber);
+            Page<ProductDTO> productList = productService.getProductList(ProductStatus.DISPLAY, pageNumber,10);
 
             return kakaoChatBotProductView.productView(productList,"67a3fb6e38e4386089f9fa44");
         }catch (Exception e) {
@@ -52,7 +52,7 @@ public class KakaoProductController {
         try {
             int pageNumber = chatBotRequest.getPageNumber();
 
-            Page<Product> productList = productService.getProductList(ProductStatus.PRE_DISPLAY, pageNumber);
+            Page<ProductDTO> productList = productService.getProductList(ProductStatus.PRE_DISPLAY, pageNumber,10);
 
             return kakaoChatBotProductView.productView(productList,"67a3ff73cf3be837a5176214");
         }catch (Exception e) {

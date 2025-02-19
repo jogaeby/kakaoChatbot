@@ -44,10 +44,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<Product> getProductList(ProductStatus status,int pageNum) {
+    public Page<ProductDTO> getProductList(ProductStatus status, int pageNum, int pageSize) {
         Sort sort = Sort.by("createDate").descending();
-        Pageable pageable = PageRequest.of(pageNum, 10,sort); // 0번째 페이지, 10개씩 조회
-        return productRepository.findByStatus(status, pageable);
+        Pageable pageable = PageRequest.of(pageNum, pageSize,sort);
+        return productRepository.findByStatus(status, pageable)
+                .map(Product::toDTO);
     }
 
     @Override

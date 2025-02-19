@@ -1,9 +1,11 @@
 package com.chatbot.base.controller.web;
 
+import com.chatbot.base.annotation.PassAuth;
 import com.chatbot.base.common.HttpService;
 import com.chatbot.base.domain.member.constant.MemberRole;
 import com.chatbot.base.domain.member.dto.MemberDTO;
 import com.chatbot.base.domain.product.Product;
+import com.chatbot.base.domain.product.constant.ProductStatus;
 import com.chatbot.base.domain.product.dto.ProductDTO;
 import com.chatbot.base.domain.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +31,13 @@ public class ProductController {
     public String getProductPage() {
         return "product";
     }
+
+    @PassAuth
+    @GetMapping("realEstate")
+    public String getPublicProductPage() {
+        return "realEstate";
+    }
+
     @GetMapping("list")
     public ResponseEntity getProducts(Pageable pageable) {
         try {
@@ -37,6 +46,38 @@ public class ProductController {
 
             return ResponseEntity
                     .ok(productList);
+        }catch (Exception e) {
+            log.error("{}",e.getMessage(),e);
+            return ResponseEntity
+                    .status(400)
+                    .build();
+        }
+    }
+
+    @PassAuth
+    @GetMapping("previous")
+    public ResponseEntity getPreviousProducts(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        try {
+            Page<ProductDTO> productList = productService.getProductList(ProductStatus.PRE_DISPLAY,page,size);
+
+            return ResponseEntity
+                    .ok(productList);
+        }catch (Exception e) {
+            log.error("{}",e.getMessage(),e);
+            return ResponseEntity
+                    .status(400)
+                    .build();
+        }
+    }
+
+    @PassAuth
+    @GetMapping("{id}")
+    public ResponseEntity getPreviousProduct(@PathVariable String id) {
+        try {
+            ProductDTO productDTO = productService.getProduct(id);
+
+            return ResponseEntity
+                    .ok(productDTO);
         }catch (Exception e) {
             log.error("{}",e.getMessage(),e);
             return ResponseEntity
