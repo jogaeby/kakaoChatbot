@@ -61,7 +61,6 @@ public class KakaoChatBotProductView {
             ;
 
             basicCard.setThumbnail(productDTO.getImages().get(0));
-            basicCard.setTitle(productDTO.getTitle());
             basicCard.setDescription(message.toString());
             basicCard.setButton(detailButton);
             if (productDTO.getStatus().equals(ProductStatus.PRE_DISPLAY.getName())) {
@@ -117,7 +116,6 @@ public class KakaoChatBotProductView {
         ;
 
         basicCard.setThumbnail(productDTO.getImages().get(0));
-        basicCard.setTitle(productDTO.getTitle());
         basicCard.setDescription(message.toString());
         basicCard.setButton(linkButton);
         if (productDTO.getStatus().equals(ProductStatus.PRE_DISPLAY.getName())) {
