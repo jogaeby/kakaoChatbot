@@ -58,6 +58,7 @@ public class KakaoChatBotProductView {
                     .append("\n")
                     .append("담당자: " + productDTO.getManagerName())
                     .append("\n")
+                    .append("담당자 연락처: "+productDTO.getManagerPhone())
             ;
 
             basicCard.setThumbnail(productDTO.getImages().get(0));
@@ -112,6 +113,8 @@ public class KakaoChatBotProductView {
                 .append("매각 기일: "+productDTO.getSaleDate())
                 .append("\n")
                 .append("담당자: "+productDTO.getManagerName())
+                .append("\n")
+                .append("담당자 연락처: "+productDTO.getManagerPhone())
                 .append("\n")
         ;
 

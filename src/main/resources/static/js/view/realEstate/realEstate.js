@@ -13,7 +13,7 @@ const productId = urlParams.get('id');  // 예: ?id=123
 function renderCard(item, isSelected = false) {
     const card = document.createElement('div');
     card.className = 'card shadow-lg border-0 rounded-lg mt-3';
-    card.setAttribute('data-product-id', item.productId ?? 'N/A');
+    card.setAttribute('data-product-id', item.productId ?? '');
 
     // 🏷️ 순번 또는 '선택 매물' 표시
     const label = isSelected ? '선택 매물' : `No: ${itemIndex++}`;
@@ -23,18 +23,19 @@ function renderCard(item, isSelected = false) {
         <img src="${item.images?.[0] ?? '/default-image.png'}" alt="Logo" class="card-img-top">
         <div class="card-header"><strong>${label}</strong></div>
         <div class="card-body">
-            <div><strong>제목:</strong> ${item.title ?? 'N/A'}</div>
-            <div><strong>타경번호:</strong> ${item.no ?? 'N/A'}</div>
-            <div><strong>물건종류:</strong> ${item.category ?? 'N/A'}</div>
-            <div><strong>소재지:</strong> ${item.location ?? 'N/A'}</div>
-            <div><strong>감정가:</strong> ${item.price?.toLocaleString() ?? 'N/A'}원</div>
-            <div><strong>최저가:</strong> ${item.minPrice?.toLocaleString() ?? 'N/A'}원</div>
-            <div><strong>예상 낙찰가:</strong> ${item.expectedPrice?.toLocaleString() ?? 'N/A'}원</div>
-            <div><strong>매각 기일:</strong> ${item.saleDate ?? 'N/A'}</div>
-            <div><strong>담당자:</strong> ${item.managerName ?? 'N/A'}</div>
+            <div><strong>제목:</strong> ${item.title ?? ''}</div>
+            <div><strong>타경번호:</strong> ${item.no ?? ''}</div>
+            <div><strong>물건종류:</strong> ${item.category ?? ''}</div>
+            <div><strong>소재지:</strong> ${item.location ?? ''}</div>
+            <div><strong>감정가:</strong> ${item.price?.toLocaleString() ?? ''}원</div>
+            <div><strong>최저가:</strong> ${item.minPrice?.toLocaleString() ?? ''}원</div>
+            <div><strong>예상 낙찰가:</strong> ${item.expectedPrice?.toLocaleString() ?? ''}원</div>
+            <div><strong>매각 기일:</strong> ${item.saleDate ?? ''}</div>
+            <div><strong>담당자:</strong> ${item.managerName ?? ''}</div>
+            <div><strong>담당자 연락처:</strong> ${item.managerPhone ?? ''}</div>
             <div><strong>링크:</strong> <a href="${item.link ?? '#'}" target="_blank">상세 보기</a></div>
-            <div><strong>작성자:</strong> ${item.memberId ?? 'N/A'}</div>
-            <div><strong>작성일:</strong> ${item.createDate ?? 'N/A'}</div>
+            <div><strong>작성자:</strong> ${item.memberId ?? ''}</div>
+            <div><strong>작성일:</strong> ${item.createDate ?? ''}</div>
         </div>
     `;
 

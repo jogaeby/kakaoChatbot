@@ -1,5 +1,6 @@
 package com.chatbot.base.domain.product;
 
+import com.chatbot.base.common.StringUtil;
 import com.chatbot.base.domain.BaseEntity;
 import com.chatbot.base.domain.member.Member;
 import com.chatbot.base.domain.member.constant.MemberRole;
@@ -85,7 +86,7 @@ public class Product extends BaseEntity {
                 .minPrice(productDTO.getMinPrice())
                 .saleDate(productDTO.getSaleDate())
                 .managerName(productDTO.getManagerName())
-                .managerPhone(productDTO.getManagerPhone())
+                .managerPhone(StringUtil.formatPhoneNumber(productDTO.getManagerPhone()))
                 .expectedPrice(productDTO.getExpectedPrice())
                 .saleDate(productDTO.getSaleDate())
                 .link(productDTO.getLink())
@@ -125,7 +126,7 @@ public class Product extends BaseEntity {
         this.price = productDTO.getPrice();
         this.minPrice = productDTO.getMinPrice();
         this.managerName = productDTO.getManagerName();
-        this.managerPhone = productDTO.getManagerPhone();
+        this.managerPhone = StringUtil.formatPhoneNumber(productDTO.getManagerPhone());
         this.expectedPrice = productDTO.getExpectedPrice();
         this.saleDate = productDTO.getSaleDate();
         this.link = productDTO.getLink();
