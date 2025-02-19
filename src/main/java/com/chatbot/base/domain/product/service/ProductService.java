@@ -11,6 +11,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ProductService {
+    List<ProductDTO> getProductListByMember(Pageable pageable,String memberId);
+
     List<ProductDTO> getProductList(Pageable pageable);
 
     Page<ProductDTO> getProductList(ProductStatus status, int pageNum,int pageSize);

@@ -11,22 +11,26 @@ import javax.security.sasl.AuthenticationException;
 
 @Service
 public class HttpService {
+
     public MemberDTO getMemberDTOFromHttpRequest() {
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         HttpServletRequest request = requestAttributes.getRequest();
         return  (MemberDTO) request.getAttribute("memberInfo");
     }
+
     public MemberRole getMemberRole() {
         MemberDTO userInfoFromHttpRequest = getMemberDTOFromHttpRequest();
 
         return userInfoFromHttpRequest.getRole();
     }
-    public boolean isAdmin() throws AuthenticationException {
+
+    public boolean isAdmin() {
         MemberDTO userInfoFromHttpRequest = getMemberDTOFromHttpRequest();
 
         MemberRole role = userInfoFromHttpRequest.getRole();
         if (role.getName().equals(MemberRole.ADMIN.getName())) return true;
-        throw new AuthenticationException("권한이 관리자가 아닙니다.");
+
+        return false;
     }
 
 //

@@ -41,8 +41,15 @@ public class ProductController {
     @GetMapping("list")
     public ResponseEntity getProducts(Pageable pageable) {
         try {
+            MemberDTO memberDTOFromHttpRequest = httpService.getMemberDTOFromHttpRequest();
 
-            List<ProductDTO> productList = productService.getProductList(pageable);
+            if (httpService.isAdmin()) {
+                List<ProductDTO> productList = productService.getProductList(pageable);
+                return ResponseEntity
+                        .ok(productList);
+            }
+
+            List<ProductDTO> productList = productService.getProductListByMember(pageable,memberDTOFromHttpRequest.getId());
 
             return ResponseEntity
                     .ok(productList);

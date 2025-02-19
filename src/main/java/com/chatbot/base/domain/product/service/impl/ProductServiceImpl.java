@@ -33,6 +33,19 @@ public class ProductServiceImpl implements ProductService {
     private final MemberService memberService;
 
     @Override
+    public List<ProductDTO> getProductListByMember(Pageable pageable, String memberId) {
+        Member member = memberService.getMemberById(memberId);
+
+        Page<Product> products = productRepository.findAllByMember(member,pageable);
+
+        return products.getContent().stream()
+                .map(Product::toDTO)
+                .sorted(Comparator.comparing(ProductDTO::getCreateDate).reversed()
+                        .thenComparing(ProductDTO::getStatusPriority))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<ProductDTO> getProductList(Pageable pageable) {
         Page<Product> products = productRepository.findAll(pageable);
 
