@@ -1,6 +1,6 @@
 $(document).ready(function(){
     const headers = [
-        'No', '제목', '작성자','상태','등록일','기타'
+        'No', '메모', '작성자','상태','매각 기일','등록일','기타'
     ];
 
     const jwtToken = getCookie('session-id');
@@ -26,6 +26,7 @@ $(document).ready(function(){
         const expectedPrice = $("#addProductExpectedPrice").val();
         const saleDate = $("#addProductSaleDate").val();
         const managerName = $("#addProductManagerName").val();
+        const managerPhone = $("#addProductManagerPhone").val();
         const link = $("#addProductLink").val();
 
         if (!imageUrl) {
@@ -34,7 +35,7 @@ $(document).ready(function(){
         }
 
         if (!title) {
-            alert("제목을 입력하세요.")
+            alert("메모를 입력하세요.")
             return
         }
 
@@ -72,13 +73,16 @@ $(document).ready(function(){
             alert("담당자 이름을 입력하세요.")
             return
         }
-
+        if (!managerPhone) {
+            alert("담당자 연락처를 입력하세요.")
+            return
+        }
         if (!link) {
             alert("링크를 입력하세요.")
             return
         }
 
-        addProduct(imageUrl,title,no, category, location, price, minPrice, expectedPrice, saleDate, managerName, link)
+        addProduct(imageUrl,title,no, category, location, price, minPrice, expectedPrice, saleDate, managerName, managerPhone, link)
     })
 
     $("#updateProductButton").on("click",function () {
@@ -93,7 +97,7 @@ $(document).ready(function(){
         const expectedPrice = $('#updateProductExpectedPrice').val();
         const saleDate = $('#updateProductSaleDate').val();
         const managerName = $('#updateProductManagerName').val();
-
+        const managerPhone = $('#updateProductManagerPhone').val();
         const link = $('#updateProductLink').val();
         const memberId = $('#updateProductMemberId').val();
 
@@ -108,7 +112,7 @@ $(document).ready(function(){
         }
 
         if (!title) {
-            alert("제목을 입력하세요.")
+            alert("메모를 입력하세요.")
             return
         }
 
@@ -146,13 +150,16 @@ $(document).ready(function(){
             alert("담당자 이름을 입력하세요.")
             return
         }
-
+        if (!managerPhone) {
+            alert("담당자 연락처를 입력하세요.")
+            return
+        }
         if (!link) {
             alert("링크를 입력하세요.")
             return
         }
 
-        updateProduct(productId,imageUrl,title,no, category, location, price, minPrice, expectedPrice, saleDate, managerName, link,memberId)
+        updateProduct(productId,imageUrl,title,no, category, location, price, minPrice, expectedPrice, saleDate, managerName, managerPhone, link,memberId)
     })
 
     function getProducts() {
@@ -199,7 +206,7 @@ $(document).ready(function(){
             $('#updateProductExpectedPrice').val(data.expectedPrice);
             $('#updateProductSaleDate').val(data.saleDate);
             $('#updateProductManagerName').val(data.managerName);
-
+            $('#updateProductManagerPhone').val(data.managerPhone);
             $('#updateProductLink').val(data.link);
             $('#updateProductMemberId').val(data.memberId);
 
@@ -213,6 +220,7 @@ $(document).ready(function(){
             $('#updateProductExpectedPrice').prop('readonly', !isOwner);
             $('#updateProductSaleDate').prop('readonly', !isOwner);
             $('#updateProductManagerName').prop('readonly', !isOwner);
+            $('#updateProductManagerPhone').prop('readonly', !isOwner);
             $('#updateProductLink').prop('readonly', !isOwner);
 
             // 모달 열기
@@ -222,6 +230,7 @@ $(document).ready(function(){
         row.append(idCell);
         row.append($('<td>').text(data.memberId));
         row.append($('<td>').text(data.status));
+        row.append($('<td>').text(data.saleDate));
         row.append($('<td>').text(data.createDate));
 
         if (userRole == '관리자' || id == data.memberId) {
@@ -233,7 +242,7 @@ $(document).ready(function(){
         return row;
     }
 
-    function updateProduct(productId,imageUrl,title,no, category, location, price, minPrice, expectedPrice, saleDate, managerName, link,memberId) {
+    function updateProduct(productId,imageUrl,title,no, category, location, price, minPrice, expectedPrice, saleDate, managerName, managerPhone, link,memberId) {
         const data = JSON.stringify({
             id:productId,
             images:[imageUrl],
@@ -246,6 +255,7 @@ $(document).ready(function(){
             expectedPrice:expectedPrice,
             saleDate:saleDate,
             managerName:managerName,
+            managerPhone:managerPhone,
             link:link,
             memberId:memberId
         });
@@ -272,7 +282,7 @@ $(document).ready(function(){
             });
     }
 
-    function addProduct(imageUrl,title,no, category, location, price, minPrice, expectedPrice, saleDate, managerName, link) {
+    function addProduct(imageUrl,title,no, category, location, price, minPrice, expectedPrice, saleDate, managerName, managerPhone, link) {
         const data = JSON.stringify({
             images:[imageUrl],
             title:title,
@@ -284,6 +294,7 @@ $(document).ready(function(){
             expectedPrice:expectedPrice,
             saleDate:saleDate,
             managerName:managerName,
+            managerPhone:managerPhone,
             link:link,
         });
 
