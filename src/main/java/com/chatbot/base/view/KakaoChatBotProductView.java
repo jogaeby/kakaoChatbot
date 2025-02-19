@@ -67,7 +67,6 @@ public class KakaoChatBotProductView {
             if (productDTO.getStatus().equals(ProductStatus.PRE_DISPLAY.getName())) {
                 basicCard.setButton(webDetailButton);
             }
-            basicCard.setButton(webDetailButton);
             basicCard.setButton(linkButton);
 
 
@@ -124,7 +123,6 @@ public class KakaoChatBotProductView {
         if (productDTO.getStatus().equals(ProductStatus.PRE_DISPLAY.getName())) {
             basicCard.setButton(webDetailButton);
         }
-
         response.addBasicCard(basicCard);
         response.addQuickButton("이전으로",ButtonAction.블럭이동,blockId);
         return response;
