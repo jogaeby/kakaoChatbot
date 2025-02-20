@@ -223,50 +223,14 @@ $(document).ready(function(){
     }
 
     function createTableRow(data, index) {
-        const row = $('<tr>');
+        const row = $(`<tr id = ${data.id}>`);
 
         row.append($('<td data-column="Index">').text(index + 1));
 
         const idCell = $('<td data-column="Title">').text(data.title)
             .css({ cursor: 'pointer', color: 'blue' });
 
-        idCell.on('click', () => {
-            const isOwner = (userRole == '관리자' || id == data.memberId);
-
-            $('#updateProductButton').toggle(isOwner);
-
-            // 모달에 데이터 채우기
-            $('#updateProductId').val(data.id);
-            $('#updateProductImageUrl').val(data.images);
-            $('#updateProductTitle').val(data.title);
-            $('#updateProductNo').val(data.no);
-            $('#updateProductCategory').val(data.category);
-            $('#updateProductLocation').val(data.location);
-            $('#updateProductPrice').val(data.price);
-            $('#updateProductMinPrice').val(data.minPrice);
-            $('#updateProductExpectedPrice').val(data.expectedPrice);
-            $('#updateProductSaleDate').val(data.saleDate);
-            $('#updateProductManagerName').val(data.managerName);
-            $('#updateProductManagerPhone').val(data.managerPhone);
-            $('#updateProductLink').val(data.link);
-            $('#updateProductMemberId').val(data.memberId);
-
-            $('#updateProductImageUrl').prop('readonly', !isOwner);
-            $('#updateProductTitle').prop('readonly', !isOwner);
-            $('#updateProductNo').prop('readonly', !isOwner);
-            $('#updateProductCategory').prop('readonly', !isOwner);
-            $('#updateProductLocation').prop('readonly', !isOwner);
-            $('#updateProductPrice').prop('readonly', !isOwner);
-            $('#updateProductMinPrice').prop('readonly', !isOwner);
-            $('#updateProductExpectedPrice').prop('readonly', !isOwner);
-            $('#updateProductSaleDate').prop('readonly', !isOwner);
-            $('#updateProductManagerName').prop('readonly', !isOwner);
-            $('#updateProductManagerPhone').prop('readonly', !isOwner);
-            $('#updateProductLink').prop('readonly', !isOwner);
-
-            // 모달 열기
-            $('#updateModal').modal('show');
-        });
+        idCell.on('click', () => openUpdateModal(data));
 
         row.append(idCell);
         row.append($('<td data-column="Member ID">').text(data.memberId));
@@ -287,7 +251,6 @@ $(document).ready(function(){
 
         return row;
     }
-
 
     function updateProduct(productId,imageUrl,title,no, category, location, price, minPrice, expectedPrice, saleDate, managerName, managerPhone, link,memberId) {
         const data = JSON.stringify({

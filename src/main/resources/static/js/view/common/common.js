@@ -145,6 +145,56 @@ function sortTableByColumn(column, order) {
     tbody.find('tr').each((index, row) => {
         $(row).find('td[data-column="Index"]').text(index + 1);
     });
+    // ✅ 이벤트 위임 방식으로 모달 이벤트 유지
+    $('#dataTable tbody').off('click', 'td[data-column="Title"]');
+    $('#dataTable tbody').on('click', 'td[data-column="Title"]', function () {
+        const productId = $(this).closest('tr').attr('id');
+
+        getProduct(productId).then(product => {
+            if (product) {
+                openUpdateModal(product); // 모달 열기
+            } else {
+                console.log('상품 정보를 불러올 수 없습니다.');
+            }
+        });
+    });
+}
+function getProduct(productId) {
+    return fetch(`/product/${productId}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .catch(error => {
+            console.error('Error fetching product:', error);
+            return null;
+        });
+}
+function openUpdateModal(data) {
+    // 모달에 데이터 채우기
+    $('#updateProductId').val(data.id);
+    $('#updateProductImageUrl').val(data.images);
+    $('#updateProductTitle').val(data.title);
+    $('#updateProductNo').val(data.no);
+    $('#updateProductCategory').val(data.category);
+    $('#updateProductLocation').val(data.location);
+    $('#updateProductPrice').val(data.price);
+    $('#updateProductMinPrice').val(data.minPrice);
+    $('#updateProductExpectedPrice').val(data.expectedPrice);
+    $('#updateProductSaleDate').val(data.saleDate);
+    $('#updateProductManagerName').val(data.managerName);
+    $('#updateProductManagerPhone').val(data.managerPhone);
+    $('#updateProductLink').val(data.link);
+    $('#updateProductMemberId').val(data.memberId);
+    // 모달 열기
+    $('#updateModal').modal('show');
 }
 
 function renderTable(dataList,headers,createTableRow,sortableColumns) {
