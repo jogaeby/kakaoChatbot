@@ -81,7 +81,7 @@ function parseJWT(token) {
 //     return thead;
 // }
 
-function createTableHeader(headers, sortableColumns) {
+function createTableHeader(headers, sortableColumns  = []) {
     const thead = $('<thead style="background-color: #e9ecef;">');
     const headerRow = $('<tr>');
 
