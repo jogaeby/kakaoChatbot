@@ -17,10 +17,11 @@ function renderCard(item, isSelected = false) {
 
     // 🏷️ 순번 또는 '선택 매물' 표시
     const label = isSelected ? '선택 매물' : `No: ${itemIndex++}`;
-
+    const imageUrl = item.images?.[0] ?? '/loginLogo.png';
+    const isValidUrl = imageUrl && imageUrl.startsWith('http');
     card.innerHTML = `
- 
-        <img src="${item.images?.[0] ?? '/default-image.png'}" alt="Logo" class="card-img-top">
+            <img src="${isValidUrl ? imageUrl : '/loginLogo.png'}" alt="image" class="card-img-top"
+         onerror="this.onerror=null;this.src='/loginLogo.png';">
         <div class="card-header"><strong>${label}</strong></div>
         <div class="card-body">
             <div><strong>타경번호:</strong> ${item.no ?? ''}</div>
@@ -55,8 +56,19 @@ async function fetchProductById(productId) {
         if (!response.ok) throw new Error('상품을 찾을 수 없습니다.');
         const product = await response.json();
 
-        console.log(`🔑 선택 매물 조회 성공: ${product.productId}`);
         renderCard(product, true);  // 🚀 선택 매물로 렌더링
+    } catch (error) {
+        console.error('❌ 선택 매물 조회 실패:', error);
+        alert('해당 상품을 찾을 수 없습니다.');
+    }
+}
+
+async function renderSearchProducts(items) {
+    try {
+        if (items.length == 0) throw new Error('상품을 찾을 수 없습니다.');
+        $(cardContainer).empty();
+        itemIndex = 1;
+        items.forEach(item => renderCard(item,false));
     } catch (error) {
         console.error('❌ 선택 매물 조회 실패:', error);
         alert('해당 상품을 찾을 수 없습니다.');
@@ -72,8 +84,6 @@ async function fetchData() {
     try {
         const response = await fetch(`/product/previous?page=${page}&size=10`);
         const data = await response.json();
-
-        console.log('📦 일반 매물 데이터:', data);
 
         // 일반 매물 렌더링
         if (data.content && data.content.length > 0) {
@@ -91,16 +101,63 @@ async function fetchData() {
     } finally {
         isLoading = false;
         loading.style.display = 'none';
+        observeLastCard(); // 마지막 카드 감지
     }
 }
+// 🚩 마지막 상품 감지 (IntersectionObserver 사용)
+function observeLastCard() {
+    const cards = document.querySelectorAll('.card');
+    const lastCard = cards[cards.length - 1];
 
+    if (!lastCard) return;
+
+    const observer = new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting && hasMore) {
+            observer.disconnect(); // 중복 호출 방지
+            fetchData();
+        }
+    }, { threshold: 1.0 });
+
+    observer.observe(lastCard);
+}
 // 🚩 무한 스크롤 감지
-window.addEventListener('scroll', () => {
-    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 10) {
-        fetchData();
-    }
-});
+// window.addEventListener('scroll', () => {
+//     if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 10) {
+//         console.log("scroll")
+//         fetchData();
+//     }
+// });
 
+
+$("#searchButton").on("click",function () {
+    const searchInput = $('#searchInput').val();
+    const category = $('#categorySelect').val();
+    if (category && !searchInput) {
+        alert("검색어를 입력하세요.")
+        return
+    }
+    if (!category && searchInput) {
+        alert("카테고리를 선택하세요.")
+        return
+    }
+    searchProducts(searchInput,category)
+})
+function searchProducts(searchInput, searchCategory) {
+    fetch(`/product/search?input=${searchInput}&category=${searchCategory}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(response => {
+            return response.json()
+        }).then(data => {
+        renderSearchProducts(data)
+    })
+        .catch(error => {
+            console.log(error)
+        });
+}
 // 🚩 실행 로직
 if (productId) {
     console.log(`🔑 특정 상품 ID 감지됨: ${productId}`);
@@ -108,3 +165,6 @@ if (productId) {
 }
 
 fetchData();  // 일반 매물 로딩
+$(document).ready(function(){
+    renderCategoriesToRealEstate()
+})

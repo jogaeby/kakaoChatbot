@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>매물다오 로그인</title>
+        <title>매물다오 - 이전매물</title>
         <link rel="stylesheet" th:href="@{/css/styles.css}">
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -18,8 +18,28 @@
                     <div class="container">
                         <div class="row justify-content-center">
                             <div class="col-lg-5 mb-5">
+                                <div class="card shadow-lg border-0 rounded-lg mt-4">
+                                    <div class="form-group row g-2 mx-3 m-4">
+                                        <div class="col-12 col-md-auto">
+                                            <select class="form-select form-select-sm" id="categorySelect" required>
+                                                <option value="">카테고리 선택</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="col-12 col-md">
+                                            <input type="text" class="form-control form-control-sm" id="searchInput" placeholder="검색어를 입력하세요">
+                                        </div>
+
+                                        <div class="col-12 col-md-auto">
+                                            <button class="btn btn-dark btn-sm w-100" id="searchButton" type="button">검색</button>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <!-- 카드 렌더링 영역 -->
-                                <div id="cardContainer"></div>
+                                <div id="cardContainer">
+
+                                </div>
                                 <!-- 로딩 감지용 -->
                                 <div id="loading" class="text-center mt-3">로딩 중...</div>
                             </div>

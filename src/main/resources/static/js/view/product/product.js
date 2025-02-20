@@ -1,12 +1,4 @@
 $(document).ready(function(){
-    const categories = [
-        { name: '메모', value: 'title' },
-        { name: '타경번호', value: 'no' },
-        { name: '물건종류', value: 'type' },
-        { name: '소재지', value: 'location' },
-        { name: '매각기일', value: 'saleDate' },
-        { name: '등록일', value: 'createDate' }
-    ];
     const headers = [
         'No', '메모', '작성자','상태','매각 기일','등록일','기타'
     ];
@@ -19,20 +11,7 @@ $(document).ready(function(){
 
     getProducts()
     renderCategories()
-    function renderCategories() {
-        const selectElement = document.getElementById('categorySelect');
 
-        // 기존 옵션 제거 (기본 선택 옵션 제외)
-        selectElement.innerHTML = '<option value="">카테고리 선택</option>';
-
-        // 카테고리 배열을 순회하며 옵션 추가
-        categories.forEach(category => {
-            const option = document.createElement('option');
-            option.value = category.value;
-            option.textContent = category.name;
-            selectElement.appendChild(option);
-        });
-    }
 
     $("#searchButton").on("click",function () {
         const searchInput = $('#searchInput').val();

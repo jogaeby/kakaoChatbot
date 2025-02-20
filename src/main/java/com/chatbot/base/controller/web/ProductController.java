@@ -92,6 +92,7 @@ public class ProductController {
                     .build();
         }
     }
+    @PassAuth
     @GetMapping("search")
     public ResponseEntity getPreviousProducts(@RequestParam String input, @RequestParam String category) {
         try {

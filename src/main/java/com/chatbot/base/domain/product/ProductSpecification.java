@@ -22,8 +22,10 @@ public class ProductSpecification {
                     return criteriaBuilder.like(root.get("title"), "%" + input + "%");
                 case "no":
                     return criteriaBuilder.like(root.get("no"), "%" + input + "%");
-                case "type":
-                    return criteriaBuilder.like(root.get("type"), "%" + input + "%");
+                case "category":
+                    return criteriaBuilder.like(root.get("category"), "%" + input + "%");
+                case "location":
+                    return criteriaBuilder.like(root.get("location"), "%" + input + "%");
                 case "saleDate":
                     return saleDatePredicate(root, criteriaBuilder, input);
                 case "createDate":
