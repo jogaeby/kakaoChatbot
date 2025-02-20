@@ -92,7 +92,19 @@ public class ProductController {
                     .build();
         }
     }
-
+    @GetMapping("search")
+    public ResponseEntity getPreviousProducts(@RequestParam String input, @RequestParam String category) {
+        try {
+            List<ProductDTO> productDTOS = productService.searchProducts(category, input);
+            return ResponseEntity
+                    .ok(productDTOS);
+        }catch (Exception e) {
+            log.error("{}",e.getMessage(),e);
+            return ResponseEntity
+                    .status(400)
+                    .build();
+        }
+    }
     @PostMapping()
     public ResponseEntity addProduct(@RequestBody ProductDTO productDTO) {
         try {

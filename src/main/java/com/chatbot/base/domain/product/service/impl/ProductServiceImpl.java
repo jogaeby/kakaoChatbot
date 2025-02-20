@@ -3,6 +3,7 @@ package com.chatbot.base.domain.product.service.impl;
 import com.chatbot.base.domain.member.Member;
 import com.chatbot.base.domain.member.service.MemberService;
 import com.chatbot.base.domain.product.Product;
+import com.chatbot.base.domain.product.ProductSpecification;
 import com.chatbot.base.domain.product.constant.ProductStatus;
 import com.chatbot.base.domain.product.dto.ProductDTO;
 import com.chatbot.base.domain.product.repository.ProductRepository;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,6 +52,17 @@ public class ProductServiceImpl implements ProductService {
         Page<Product> products = productRepository.findAll(pageable);
 
         return products.getContent().stream()
+                .map(Product::toDTO)
+                .sorted(Comparator.comparing(ProductDTO::getCreateDate).reversed()
+                        .thenComparing(ProductDTO::getStatusPriority))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductDTO> searchProducts(String category, String input) {
+        Specification<Product> spec = ProductSpecification.withDynamicQuery(category, input);
+        List<Product> products = productRepository.findAll(spec);
+        return products.stream()
                 .map(Product::toDTO)
                 .sorted(Comparator.comparing(ProductDTO::getCreateDate).reversed()
                         .thenComparing(ProductDTO::getStatusPriority))

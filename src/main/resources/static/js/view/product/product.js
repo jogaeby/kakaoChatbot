@@ -1,7 +1,16 @@
 $(document).ready(function(){
+    const categories = [
+        { name: '메모', value: 'title' },
+        { name: '타경번호', value: 'no' },
+        { name: '물건종류', value: 'type' },
+        { name: '소재지', value: 'location' },
+        { name: '매각기일', value: 'saleDate' },
+        { name: '등록일', value: 'createDate' }
+    ];
     const headers = [
         'No', '메모', '작성자','상태','매각 기일','등록일','기타'
     ];
+    const sortableColumns = ["매각 기일", "등록일"];
 
     const jwtToken = getCookie('session-id');
     const payload = parseJWT(jwtToken);
@@ -9,6 +18,42 @@ $(document).ready(function(){
     const id = payload.id;
 
     getProducts()
+    renderCategories()
+    function renderCategories() {
+        const selectElement = document.getElementById('categorySelect');
+
+        // 기존 옵션 제거 (기본 선택 옵션 제외)
+        selectElement.innerHTML = '<option value="">카테고리 선택</option>';
+
+        // 카테고리 배열을 순회하며 옵션 추가
+        categories.forEach(category => {
+            const option = document.createElement('option');
+            option.value = category.value;
+            option.textContent = category.name;
+            selectElement.appendChild(option);
+        });
+    }
+
+    $("#searchButton").on("click",function () {
+        const searchInput = $('#searchInput').val();
+        const category = $('#categorySelect').val();
+
+        if (category && !searchInput) {
+            alert("검색어를 입력하세요.")
+            return
+        }
+        if (!category && searchInput) {
+            alert("카테고리를 선택하세요.")
+            return
+        }
+
+        if (!category && !searchInput) {
+            getProducts()
+            return;
+        }
+
+        searchProducts(searchInput,category)
+    })
 
     $("#addProductModalButton").on("click",function () {
         $('#addModal').find('input').val('');
@@ -161,7 +206,22 @@ $(document).ready(function(){
 
         updateProduct(productId,imageUrl,title,no, category, location, price, minPrice, expectedPrice, saleDate, managerName, managerPhone, link,memberId)
     })
-
+    function searchProducts(searchInput, searchCategory) {
+        fetch(`/product/search?input=${searchInput}&category=${searchCategory}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                return response.json()
+            }).then(data => {
+            renderTable(data, headers, createTableRow,sortableColumns)
+        })
+            .catch(error => {
+                console.log(error)
+            });
+    }
     function getProducts() {
         const page = 0
         const size = 20
@@ -176,7 +236,7 @@ $(document).ready(function(){
             .then(response => {
                 return response.json()
             }).then(data => {
-            renderTable(data,headers,createTableRow)
+            renderTable(data,headers,createTableRow,sortableColumns)
         })
             .catch(error => {
                 console.log(error)
@@ -185,8 +245,11 @@ $(document).ready(function(){
 
     function createTableRow(data, index) {
         const row = $('<tr>');
-        row.append($('<td>').text(index + 1));
-        const idCell = $('<td>').text(data.title).css({ cursor: 'pointer', color: 'blue' });
+
+        row.append($('<td data-column="Index">').text(index + 1));
+
+        const idCell = $('<td data-column="Title">').text(data.title)
+            .css({ cursor: 'pointer', color: 'blue' });
 
         idCell.on('click', () => {
             const isOwner = (userRole == '관리자' || id == data.memberId);
@@ -197,7 +260,6 @@ $(document).ready(function(){
             $('#updateProductId').val(data.id);
             $('#updateProductImageUrl').val(data.images);
             $('#updateProductTitle').val(data.title);
-
             $('#updateProductNo').val(data.no);
             $('#updateProductCategory').val(data.category);
             $('#updateProductLocation').val(data.location);
@@ -228,19 +290,25 @@ $(document).ready(function(){
         });
 
         row.append(idCell);
-        row.append($('<td>').text(data.memberId));
-        row.append($('<td>').text(data.status));
-        row.append($('<td>').text(data.saleDate));
-        row.append($('<td>').text(data.createDate));
+        row.append($('<td data-column="Member ID">').text(data.memberId));
+        row.append($('<td data-column="Status">').text(data.status));
+
+        // 날짜 포맷 변경 (YYYY-MM-DD)
+        const formattedSaleDate = formatDate(data.saleDate);
+        const formattedCreateDate = formatDate(data.createDate);
+
+        row.append($('<td data-column="매각 기일">').text(formattedSaleDate));
+        row.append($('<td data-column="등록일">').text(formattedCreateDate));
 
         if (userRole == '관리자' || id == data.memberId) {
-            row.append($('<td style="display: flex; justify-content: center;">').append(deleteButton(data)));
-        }else {
-            row.append($('<td>').append($('<td>').text("")));
+            row.append($('<td style="display: flex; justify-content: center;" data-column="Actions">').append(deleteButton(data)));
+        } else {
+            row.append($('<td data-column="Actions">').text(""));
         }
 
         return row;
     }
+
 
     function updateProduct(productId,imageUrl,title,no, category, location, price, minPrice, expectedPrice, saleDate, managerName, managerPhone, link,memberId) {
         const data = JSON.stringify({

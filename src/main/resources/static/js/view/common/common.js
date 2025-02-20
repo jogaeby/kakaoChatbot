@@ -23,24 +23,90 @@ function parseJWT(token) {
     }
 }
 
-function createTableHeader(headers) {
+// function createTableHeader(headers) {
+//
+//     const thead = $('<thead style="background-color: #e9ecef;">');
+//     const headerRow = $('<tr>');
+//
+//     headers.forEach(header => {
+//         headerRow.append($('<th>').text(header));
+//     });
+//
+//     thead.append(headerRow);
+//     return thead;
+// }
 
+function createTableHeader(headers, sortableColumns) {
     const thead = $('<thead style="background-color: #e9ecef;">');
     const headerRow = $('<tr>');
 
     headers.forEach(header => {
-        headerRow.append($('<th>').text(header));
+        const th = $('<th>').text(header);
+
+        // 정렬 가능한 컬럼이면 버튼 추가
+        if (sortableColumns.includes(header)) {
+            const sortButton = $('<button class="sort-btn btn btn-sm btn-light ms-2">▲</button>')
+                .attr('data-column', header)
+                .attr('data-order', 'asc') // 기본 정렬: 오름차순
+                .on('click', function () {
+                    const column = $(this).attr('data-column');
+                    let order = $(this).attr('data-order');
+                    // 정렬 실행
+                    sortTableByColumn(column, order);
+
+                    // 정렬 방향 토글
+                    if (order === 'asc') {
+                        $(this).attr('data-order', 'desc').text('▼');
+                    } else {
+                        $(this).attr('data-order', 'asc').text('▲');
+                    }
+                });
+
+            th.append(sortButton);
+        }
+
+        headerRow.append(th);
     });
 
     thead.append(headerRow);
     return thead;
 }
+function sortTableByColumn(column, order) {
+    const table = $('#dataTable'); // 테이블 ID
+    const tbody = table.find('tbody');
+    const rows = tbody.find('tr').get();
 
-function renderTable(dataList,headers,createTableRow) {
+    // 행 정렬
+    rows.sort((a, b) => {
+        const cellA = $(a).find(`td[data-column="${column}"]`).text().trim();
+        const cellB = $(b).find(`td[data-column="${column}"]`).text().trim();
+
+        // 날짜 형식인지 확인
+        const dateA = Date.parse(cellA);
+        const dateB = Date.parse(cellB);
+
+        if (!isNaN(dateA) && !isNaN(dateB)) {
+            return order === 'asc' ? dateA - dateB : dateB - dateA;
+        }
+
+        // 일반 문자열 정렬
+        return order === 'asc' ? cellA.localeCompare(cellB) : cellB.localeCompare(cellA);
+    });
+
+    // 정렬된 행을 다시 추가
+    tbody.empty().append(rows);
+
+    // 순번 재정렬 (1부터 다시)
+    tbody.find('tr').each((index, row) => {
+        $(row).find('td[data-column="Index"]').text(index + 1);
+    });
+}
+
+function renderTable(dataList,headers,createTableRow,sortableColumns) {
     const container = $(".datatable-container").empty();
 
-    const table = $('<table>').addClass('datatable-table');
-    const thead = createTableHeader(headers);
+    const table = $('<table>').addClass('datatable-table').attr('id','dataTable');
+    const thead = createTableHeader(headers,sortableColumns);
     const tbody = $('<tbody>').addClass("orderTable");
 
     // 데이터가 없을 경우 "조회 데이터가 없습니다" 메시지를 표시
@@ -61,4 +127,23 @@ function renderTable(dataList,headers,createTableRow) {
     }
     table.append(thead).append(tbody);
     container.append(table);
+}
+
+// YYYY-MM-DD 형식으로 변환 (LocalDate)
+function formatDate(dateString) {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    return date.toISOString().split("T")[0]; // YYYY-MM-DD 형태로 반환
+}
+
+// YYYY-MM-DD HH:mm:ss 형식으로 변환 (LocalDateTime)
+function formatDateTime(dateTimeString) {
+    if (!dateTimeString) return "";
+    const date = new Date(dateTimeString);
+    return date.getFullYear() + "-" +
+        String(date.getMonth() + 1).padStart(2, '0') + "-" +
+        String(date.getDate()).padStart(2, '0') + " " +
+        String(date.getHours()).padStart(2, '0') + ":" +
+        String(date.getMinutes()).padStart(2, '0') + ":" +
+        String(date.getSeconds()).padStart(2, '0');
 }
