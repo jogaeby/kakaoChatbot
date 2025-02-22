@@ -8,6 +8,8 @@ let itemIndex = 1;     // 순번 (1부터 시작)
 // 📍 URL에서 상품 ID 가져오기
 const urlParams = new URLSearchParams(window.location.search);
 const productId = urlParams.get('id');  // 예: ?id=123
+
+
 function getSaleDateColor(saleDate) {
     if (!saleDate) return '#000'; // 날짜가 없으면 기본 검정색 반환
     const sale = new Date(saleDate);
@@ -157,8 +159,20 @@ $("#searchButton").on("click",function () {
         alert("카테고리를 선택하세요.")
         return
     }
+
+    if (!category && !searchInput) {
+        // 기존 카드, 페이지, 상태 등을 초기화
+        $(cardContainer).empty();
+        page = 0;
+        hasMore = true;
+        itemIndex = 1;
+        fetchData();
+        return;
+    }
+
     searchProducts(searchInput,category)
 })
+
 function searchProducts(searchInput, searchCategory) {
     fetch(`/product/search?input=${searchInput}&category=${searchCategory}`, {
         method: 'GET',
