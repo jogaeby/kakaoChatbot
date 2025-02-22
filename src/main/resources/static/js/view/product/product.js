@@ -338,7 +338,7 @@ $(document).ready(function() {
             formData.append('imageFile', imageFile);
         }
 
-        formData.append('imageUrl', imageUrl);
+        formData.append('images', imageUrl);
         formData.append('memo', memo);
         formData.append('no', no);
         formData.append('category', category);
