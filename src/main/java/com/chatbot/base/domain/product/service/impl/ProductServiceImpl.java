@@ -71,9 +71,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Page<ProductDTO> getProductList(ProductStatus status, int pageNum, int pageSize) {
-        Sort sort = Sort.by("createDate").descending();
+        Sort sort = Sort.by("saleDate");
         Pageable pageable = PageRequest.of(pageNum, pageSize,sort);
-        return productRepository.findByStatus(status, pageable)
+        return productRepository.findByStatusAndSaleDateGreaterThanEqual(status, LocalDate.now(),pageable)
                 .map(Product::toDTO);
     }
 

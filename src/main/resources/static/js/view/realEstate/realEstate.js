@@ -23,11 +23,11 @@ function getSaleDateColor(saleDate) {
     } else if (diffDays === 0) {
         return '#ff0000'; // 오늘: 빨간색
     } else if (diffDays <= 7) {
-        return '#ff5722'; // 7일 이내: 주황색
+        return '#ff7e22'; // 7일 이내: 주황색
     } else if (diffDays <= 14) {
-        return '#ff9800'; // 14일 이내: 연한 주황색
+        return '#4caf50'; // 14일 이내: 연한 주황색
     } else {
-        return '#4caf50'; // 그 외: 초록색
+        return '#2139dc'; // 그 외: 초록색
     }
 }
 // 🚩 카드 렌더링 함수 (특정 상품은 '선택 매물' 표시)
@@ -35,7 +35,6 @@ function renderCard(item, isSelected = false) {
     const card = document.createElement('div');
     card.className = 'card shadow-lg border-0 rounded-lg mt-3';
     card.setAttribute('data-product-id', item.productId ?? '');
-    console.log(item)
     // 🏷️ 순번 또는 '선택 매물' 표시
     const label = isSelected ? '선택 매물' : `순번: ${itemIndex++}`;
     const imageUrl = item.images?.[0] ?? '/loginLogo.png';

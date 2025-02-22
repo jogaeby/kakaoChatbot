@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -19,6 +20,8 @@ public interface ProductRepository extends JpaRepository<Product, UUID>, JpaSpec
     List<Product> findByStatus(ProductStatus status);
 
     Page<Product> findByStatus(ProductStatus status, Pageable pageable);
+
+    Page<Product> findByStatusAndSaleDateGreaterThanEqual(ProductStatus status, LocalDate today, Pageable pageable);
 
     Page<Product> findAllByMember(Member member, Pageable pageable);
 

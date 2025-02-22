@@ -122,7 +122,7 @@ public class KakaoChatBotProductView {
                 .append("\n")
                 .append("담당자 연락처: "+productDTO.getManagerPhone())
                 .append("\n")
-                .append("장단점: "+productDTO.getDescription())
+                .append("장단점: \n"+productDTO.getDescription())
         ;
 
         basicCard.setThumbnail(productDTO.getImages().get(0));
