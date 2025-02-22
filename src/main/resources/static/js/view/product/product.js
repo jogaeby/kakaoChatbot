@@ -12,7 +12,6 @@ $(document).ready(function(){
     getProducts()
     renderCategories()
 
-
     $("#searchButton").on("click",function () {
         const searchInput = $('#searchInput').val();
         const category = $('#categorySelect').val();
@@ -34,10 +33,14 @@ $(document).ready(function(){
         searchProducts(searchInput,category)
     })
 
-    $("#addProductModalButton").on("click",function () {
+    $("#addProductModalButton").on("click", function () {
         $('#addModal').find('input').val('');
+        const addDateInput = $('#addProductDisplayDate');
+        const today = new Date().toISOString().split('T')[0]; // yyyy-mm-dd 형식의 오늘 날짜 구하기
+        addDateInput.attr('min', today); // today를 최소값으로 설정
+        addDateInput.val(today); // 기본값으로 today 설정
         $('#addModal').modal('show');
-    })
+    });
 
     $("#addProductButton").on("click",function () {
         const imageUrl = $("#addProductImageUrl").val();
@@ -54,6 +57,7 @@ $(document).ready(function(){
         const managerPhone = $("#addProductManagerPhone").val();
         const description = $("#addProductDescription").val();
         const link = $("#addProductLink").val();
+        const displayDate = $("#addProductDisplayDate").val();
 
         if (!imageUrl) {
             alert("이미지 URL을 입력하세요.")
@@ -117,10 +121,17 @@ $(document).ready(function(){
             return
         }
 
-        addProduct(imageUrl,memo,no, category, location, price, currentPrice,minPrice, expectedPrice, saleDate, managerName, managerPhone, description,link)
+        if (!displayDate) {
+            alert("노출 날짜를 선택하세요.")
+            return
+        }
+
+        addProduct(imageUrl,memo,no, category, location, price, currentPrice,minPrice, expectedPrice, saleDate, managerName, managerPhone, description,link,displayDate)
     })
 
-    $("#updateProductButton").on("click",function () {
+    $("#updateProductButton").on("click", function () {
+
+
         const productId = $('#updateProductId').val();
         const imageUrl = $('#updateProductImageUrl').val();
         const memo = $('#updateProductMemo').val();
@@ -137,75 +148,79 @@ $(document).ready(function(){
         const description = $('#updateProductDescription').val();
         const link = $('#updateProductLink').val();
         const memberId = $('#updateProductMemberId').val();
+        const displayDate = $('#updateProductDisplayDate').val();
 
         if (!productId || !memberId) {
-            alert("관리자에게 문의하세요")
-            return
+            alert("관리자에게 문의하세요");
+            return;
         }
 
         if (!imageUrl) {
-            alert("이미지 URL을 입력하세요.")
-            return
+            alert("이미지 URL을 입력하세요.");
+            return;
         }
 
         if (!memo) {
-            alert("메모를 입력하세요.")
-            return
+            alert("메모를 입력하세요.");
+            return;
         }
 
         if (!no) {
-            alert("타경번호를 입력하세요.")
-            return
+            alert("타경번호를 입력하세요.");
+            return;
         }
 
         if (!category) {
-            alert("물건종류를 입력하세요.")
-            return
+            alert("물건종류를 입력하세요.");
+            return;
         }
         if (!location) {
-            alert("소재지를 입력하세요.")
-            return
+            alert("소재지를 입력하세요.");
+            return;
         }
         if (!price) {
-            alert("감정가를 입력하세요.")
-            return
+            alert("감정가를 입력하세요.");
+            return;
         }
         if (!currentPrice) {
-            alert("현시세를 입력하세요.")
-            return
+            alert("현시세를 입력하세요.");
+            return;
         }
         if (!minPrice) {
-            alert("최저가를 입력하세요.")
-            return
+            alert("최저가를 입력하세요.");
+            return;
         }
         if (!expectedPrice) {
-            alert("예상 낙찰가를 입력하세요.")
-            return
+            alert("예상 낙찰가를 입력하세요.");
+            return;
         }
 
         if (!saleDate) {
-            alert("매각 기일을 선택하세요.")
-            return
+            alert("매각 기일을 선택하세요.");
+            return;
         }
         if (!managerName) {
-            alert("담당자 이름을 입력하세요.")
-            return
+            alert("담당자 이름을 입력하세요.");
+            return;
         }
         if (!managerPhone) {
-            alert("담당자 연락처를 입력하세요.")
-            return
+            alert("담당자 연락처를 입력하세요.");
+            return;
         }
         if (!description) {
-            alert("장단점을 입력하세요.")
-            return
+            alert("장단점을 입력하세요.");
+            return;
         }
         if (!link) {
-            alert("링크를 입력하세요.")
-            return
+            alert("링크를 입력하세요.");
+            return;
         }
-
-        updateProduct(productId,imageUrl,memo,no, category, location, price, currentPrice, minPrice, expectedPrice, saleDate, managerName, managerPhone, description, link,memberId)
-    })
+        if (!displayDate) {
+            alert("링크를 입력하세요.");
+            return;
+        }
+        updateProduct(productId, imageUrl, memo, no, category, location, price, currentPrice, minPrice, expectedPrice, saleDate, managerName, managerPhone, description, link, memberId,displayDate);
+    });
 
     function searchProducts(searchInput, searchCategory) {
         fetch(`/product/search?input=${searchInput}&category=${searchCategory}`, {
@@ -275,7 +290,7 @@ $(document).ready(function(){
         return row;
     }
 
-    function updateProduct(productId,imageUrl,memo,no, category, location, price, currentPrice, minPrice, expectedPrice, saleDate, managerName, managerPhone, description, link,memberId) {
+    function updateProduct(productId,imageUrl,memo,no, category, location, price, currentPrice, minPrice, expectedPrice, saleDate, managerName, managerPhone, description, link,memberId,displayDate) {
         const data = JSON.stringify({
             id:productId,
             images:[imageUrl],
@@ -292,7 +307,8 @@ $(document).ready(function(){
             managerPhone:managerPhone,
             description:description,
             link:link,
-            memberId:memberId
+            memberId:memberId,
+            displayDate:displayDate
         });
 
         fetch(`/product`, {
@@ -317,7 +333,7 @@ $(document).ready(function(){
             });
     }
 
-    function addProduct(imageUrl,memo,no, category, location, price, currentPrice, minPrice, expectedPrice, saleDate, managerName, managerPhone, description,link) {
+    function addProduct(imageUrl,memo,no, category, location, price, currentPrice, minPrice, expectedPrice, saleDate, managerName, managerPhone, description,link,displayDate) {
         const data = JSON.stringify({
             images:[imageUrl],
             memo:memo,
@@ -333,6 +349,7 @@ $(document).ready(function(){
             managerPhone:managerPhone,
             description:description,
             link:link,
+            displayDate:displayDate
         });
 
         fetch(`/product`, {

@@ -49,4 +49,6 @@ public class ProductDTO {
     private LocalDate createDate;
 
     private String memberId;
+
+    private LocalDate displayDate;
 }

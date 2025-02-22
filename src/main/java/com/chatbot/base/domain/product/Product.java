@@ -48,10 +48,11 @@ public class Product extends BaseEntity {
 
     private String description;
 
-
     private String link;
 
     private List<String> images = new ArrayList<>();
+
+    private LocalDate displayDate;
 
     @Enumerated(EnumType.STRING)
     private ProductStatus status;
@@ -61,7 +62,7 @@ public class Product extends BaseEntity {
     private Member member;
 
     @Builder(access = AccessLevel.PRIVATE)
-    public Product(String memo, String no, String category, String location, String price, String currentPrice, String minPrice, LocalDate saleDate, String managerName, String managerPhone, String description, String expectedPrice, String link, List<String> images, ProductStatus status, Member member) {
+    public Product(String memo, String no, String category, String location, String price, String currentPrice, String minPrice, LocalDate saleDate, String managerName, String managerPhone, String description, String expectedPrice, String link, List<String> images, ProductStatus status, Member member, LocalDate displayDate) {
         this.memo = memo;
         this.no = no;
         this.category = category;
@@ -78,12 +79,33 @@ public class Product extends BaseEntity {
         this.images = images;
         this.status = status;
         this.member = member;
+        this.displayDate = displayDate;
     }
 
 
 
 
     public static Product of(ProductDTO productDTO,Member member) {
+        LocalDate displayDate = productDTO.getDisplayDate();
+        ProductStatus status;
+
+        switch (displayDate.compareTo(LocalDate.now())) {
+            case 0:
+                // displayDate가 오늘과 같으면
+                status = ProductStatus.DISPLAY;
+                break;
+            case 1:
+                // displayDate가 오늘보다 미래면
+                status = ProductStatus.REGISTRATION;
+                break;
+            case -1:
+                // displayDate가 오늘보다 과거이면
+                status = ProductStatus.PRE_DISPLAY;
+                break;
+            default:
+                status = ProductStatus.REGISTRATION;
+        }
+
         return Product.builder()
                 .memo(productDTO.getMemo())
                 .no(productDTO.getNo())
@@ -100,8 +122,9 @@ public class Product extends BaseEntity {
                 .saleDate(productDTO.getSaleDate())
                 .link(productDTO.getLink())
                 .images(productDTO.getImages())
-                .status(ProductStatus.REGISTRATION)
+                .status(status)
                 .member(member)
+                .displayDate(productDTO.getDisplayDate())
                 .build();
     }
 
@@ -125,11 +148,18 @@ public class Product extends BaseEntity {
                 .status(status.getName())
                 .statusPriority(status.getPriority())
                 .memberId(member.getId())
+                .displayDate(displayDate)
                 .createDate(getCreateDate().toLocalDate())
                 .build();
     }
 
     public void update(ProductDTO productDTO) {
+        ProductStatus productStatus = status;
+        if (productDTO.getDisplayDate().equals(LocalDate.now())) {
+            productStatus = ProductStatus.DISPLAY;
+        }
+
+
         this.memo = productDTO.getMemo();
         this.no = productDTO.getNo();
         this.category = productDTO.getCategory();
@@ -144,6 +174,8 @@ public class Product extends BaseEntity {
         this.saleDate = productDTO.getSaleDate();
         this.link = productDTO.getLink();
         this.images = productDTO.getImages();
+        this.displayDate = productDTO.getDisplayDate();
+        this.status = productStatus;
     }
 
     public void updateStatus(ProductStatus status) {

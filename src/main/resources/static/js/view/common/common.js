@@ -178,6 +178,20 @@ function getProduct(productId) {
         });
 }
 function openUpdateModal(data) {
+    const displayDate = data.displayDate;
+    const today = new Date().toISOString().split('T')[0];
+
+    // 디스플레이 날짜가 오늘 또는 이전이면 readonly, 아니면 readonly 해제
+    if (displayDate && displayDate <= today) {
+        $('#updateProductDisplayDate').attr('readonly', true);
+    } else {
+        $('#updateProductDisplayDate').removeAttr('readonly');
+
+        const updateDateInput = $('#updateProductDisplayDate');
+        const today = new Date().toISOString().split('T')[0]; // yyyy-mm-dd 형식의 오늘 날짜 구하기
+        updateDateInput.attr('min', today); // today를 최소값으로 설정
+    }
+
     // 모달에 데이터 채우기
     $('#updateProductId').val(data.id);
     $('#updateProductImageUrl').val(data.images);
@@ -195,6 +209,8 @@ function openUpdateModal(data) {
     $('#updateProductDescription').val(data.description);
     $('#updateProductLink').val(data.link);
     $('#updateProductMemberId').val(data.memberId);
+    $('#updateProductDisplayDate').val(displayDate);
+
     // 모달 열기
     $('#updateModal').modal('show');
 }

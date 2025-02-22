@@ -90,9 +90,9 @@ public class ProductServiceImpl implements ProductService {
         Member member = memberService.getMemberById(memberId);
         Product product = Product.of(productDTO,member);
 
-        if (!isFullDisplayProduct(LocalDateTime.now())) {
-            product.updateStatus(ProductStatus.DISPLAY);
-        }
+//        if (!isFullDisplayProduct(LocalDateTime.now())) {
+//            product.updateStatus(ProductStatus.DISPLAY);
+//        }
 
         productRepository.save(product);
     }
@@ -132,13 +132,12 @@ public class ProductServiceImpl implements ProductService {
         log.info("상품 상태 업데이트 날짜 범위 {} ~ {}", startDate, endDate);
 
         // 상태 변경을 각 메서드로 분리 (순서 중요)
-//        updatePreDisplayToRegistration();
         updateDisplayToPreDisplay();
-//        updateRegistrationToDisplay(startDate, endDate);
+        updateRegistrationToDisplay(startDate, endDate);
     }
 
     private void updateRegistrationToDisplay(LocalDateTime startDate, LocalDateTime endDate) {
-        List<Product> currentProducts = productRepository.findByStatusAndCreateDateBetween(ProductStatus.REGISTRATION, startDate, endDate);
+        List<Product> currentProducts = productRepository.findByStatusAndDisplayDateBetween(ProductStatus.REGISTRATION, startDate, endDate);
         log.info("REGISTRATION -> DISPLAY 상태 변경 대상 수: {}", currentProducts.size());
 
         currentProducts.forEach(currentProduct -> {
@@ -174,7 +173,7 @@ public class ProductServiceImpl implements ProductService {
         LocalDateTime startDate = date.with(LocalTime.MIN);
         LocalDateTime endDate = date.with(LocalTime.MAX);
 
-        List<Product> displayProducts = productRepository.findByStatusAndCreateDateBetween(ProductStatus.DISPLAY, startDate, endDate);
+        List<Product> displayProducts = productRepository.findByStatusAndDisplayDateBetween(ProductStatus.DISPLAY, startDate, endDate);
 
 //        if (displayProducts.size() < 10) {
 //           return false;

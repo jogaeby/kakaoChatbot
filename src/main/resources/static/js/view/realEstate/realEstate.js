@@ -14,30 +14,32 @@ function renderCard(item, isSelected = false) {
     const card = document.createElement('div');
     card.className = 'card shadow-lg border-0 rounded-lg mt-3';
     card.setAttribute('data-product-id', item.productId ?? '');
-
+    console.log(item)
     // 🏷️ 순번 또는 '선택 매물' 표시
     const label = isSelected ? '선택 매물' : `No: ${itemIndex++}`;
     const imageUrl = item.images?.[0] ?? '/loginLogo.png';
     const isValidUrl = imageUrl && imageUrl.startsWith('http');
     card.innerHTML = `
-            <img src="${isValidUrl ? imageUrl : '/loginLogo.png'}" alt="image" class="card-img-top"
+    <img src="${isValidUrl ? imageUrl : '/loginLogo.png'}" alt="image" class="card-img-top"
          onerror="this.onerror=null;this.src='/loginLogo.png';">
-        <div class="card-header"><strong>${label}</strong></div>
-        <div class="card-body">
-            <div><strong>타경번호:</strong> ${item.no ?? ''}</div>
-            <div><strong>물건종류:</strong> ${item.category ?? ''}</div>
-            <div><strong>소재지:</strong> ${item.location ?? ''}</div>
-            <div><strong>감정가:</strong> ${item.price?.toLocaleString() ?? ''}원</div>
-            <div><strong>최저가:</strong> ${item.minPrice?.toLocaleString() ?? ''}원</div>
-            <div><strong>예상 낙찰가:</strong> ${item.expectedPrice?.toLocaleString() ?? ''}원</div>
-            <div><strong>매각 기일:</strong> ${item.saleDate ?? ''}</div>
-            <div><strong>담당자:</strong> ${item.managerName ?? ''}</div>
-            <div><strong>담당자 연락처:</strong> ${item.managerPhone ?? ''}</div>
-            <div><strong>링크:</strong> <a href="${item.link ?? '#'}" target="_blank">상세 보기</a></div>
-            <div><strong>작성자:</strong> ${item.memberId ?? ''}</div>
-            <div><strong>작성일:</strong> ${item.createDate ?? ''}</div>
-        </div>
-    `;
+    <div class="card-header"><strong>${label}</strong></div>
+    <div class="card-body">
+        <div><strong>타경번호:</strong> ${item.no ?? ''}</div>
+        <div><strong>물건종류:</strong> ${item.category ?? ''}</div>
+        <div><strong>소재지:</strong> ${item.location ?? ''}</div>
+        <div><strong>감정가:</strong> ${item.price ? item.price.toLocaleString() + '원' : ''}</div>
+        <div><strong>현시세:</strong> ${item.currentPrice ? item.currentPrice.toLocaleString() : ''}</div>
+        <div><strong>최저가:</strong> ${item.minPrice ? item.minPrice.toLocaleString() + '원' : ''}</div>
+        <div><strong>예상 낙찰가:</strong> ${item.expectedPrice ? item.expectedPrice.toLocaleString() + '원' : ''}</div>
+        <div><strong>매각 기일:</strong> ${item.saleDate ?? ''}</div>
+        <div><strong>담당자:</strong> ${item.managerName ?? ''}</div>
+        <div><strong>담당자 연락처:</strong> ${item.managerPhone ?? ''}</div>
+        <div><strong>장단점:</strong> ${item.description ?? ''}</div>
+        <div><strong>링크:</strong> <a href="${item.link ?? '#'}" target="_blank">상세 보기</a></div>
+        <div><strong>작성자:</strong> ${item.memberId ?? ''}</div>
+        <div><strong>작성일:</strong> ${item.createDate ?? ''}</div>
+    </div>
+`;
 
     // 🚀 선택 매물은 상단에, 일반 매물은 하단에 추가
     if (isSelected) {
