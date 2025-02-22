@@ -26,11 +26,10 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class ImageController {
 
-    @GetMapping("{dirName}/{subDirName}/{receiptNumber}/{imageName}")
+    @GetMapping("{dirName}/{subDirName}/{imageName}")
     public ResponseEntity<byte[]> getImage(
             @PathVariable("dirName") String dirName,
             @PathVariable("subDirName") String subDirName,
-            @PathVariable("receiptNumber") String receiptNumber,
             @PathVariable("imageName") String imageName) {
         try {
             // URL 디코딩: imageName에 인코딩된 공백(%20) 등의 문자를 실제 문자로 변환
@@ -40,7 +39,6 @@ public class ImageController {
             Path basePath = Paths.get("images").toAbsolutePath();
             Path imagePath = basePath.resolve(dirName)
                     .resolve(subDirName)
-                    .resolve(receiptNumber)
                     .resolve(decodedImageName)
                     .normalize();
 
