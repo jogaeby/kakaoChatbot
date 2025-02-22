@@ -13,6 +13,19 @@ const realEstateCategories = [
     { name: '매각기일', value: 'saleDate' },
     { name: '등록일', value: 'createDate' }
 ];
+
+const todayKST = (() => {
+    const now = new Date();
+    // 현재 로컬 시간과 UTC 시간의 차이를 분 단위로 가져옴
+    const localOffset = now.getTimezoneOffset() * 60000;
+    // UTC 시간에 9시간(한국 시간 차이)을 더함
+    const koreaTime = new Date(now.getTime() - localOffset + 9 * 3600000);
+    const year = koreaTime.getFullYear();
+    const month = String(koreaTime.getMonth() + 1).padStart(2, '0');
+    const day = String(koreaTime.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+})();
+
 function renderCategoriesToRealEstate() {
     const selectElement = document.getElementById('categorySelect');
 
@@ -67,19 +80,6 @@ function parseJWT(token) {
         return null;
     }
 }
-
-// function createTableHeader(headers) {
-//
-//     const thead = $('<thead style="background-color: #e9ecef;">');
-//     const headerRow = $('<tr>');
-//
-//     headers.forEach(header => {
-//         headerRow.append($('<th>').text(header));
-//     });
-//
-//     thead.append(headerRow);
-//     return thead;
-// }
 
 function createTableHeader(headers, sortableColumns  = []) {
     const thead = $('<thead style="background-color: #e9ecef;">');
@@ -180,14 +180,13 @@ function getProduct(productId) {
 
 function openUpdateModal(data) {
     const displayDate = data.displayDate;
-    const today = new Date().toISOString().split('T')[0];
 
     // 디스플레이 날짜가 오늘 또는 이전이거나 상태가 "이전매물"이면 노출 날짜 input을 readonly로 설정
-    if ((displayDate && displayDate <= today) || data.status === "이전매물") {
+    if ((displayDate && displayDate <= todayKST) || data.status === "이전매물") {
         $('#updateProductDisplayDate').attr('readonly', true);
     } else {
         $('#updateProductDisplayDate').removeAttr('readonly');
-        $('#updateProductDisplayDate').attr('min', today);
+        $('#updateProductDisplayDate').attr('min', todayKST);
     }
 
     // 기존 이미지 데이터에 따라 이미지 입력 방식 결정

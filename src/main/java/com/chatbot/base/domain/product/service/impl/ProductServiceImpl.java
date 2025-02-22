@@ -63,15 +63,19 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductDTO> searchProducts(String category, String input) {
-        Specification<Product> spec = ProductSpecification.withDynamicQuery(category, input);
+    public List<ProductDTO> searchProducts(String category, String input, ProductStatus status) {
+        Specification<Product> spec = ProductSpecification.withDynamicQuery(category, input)
+                .and((root, query, cb) -> cb.equal(root.get("status"), status));
+
         List<Product> products = productRepository.findAll(spec);
+
         return products.stream()
                 .map(Product::toDTO)
                 .sorted(Comparator.comparing(ProductDTO::getCreateDate).reversed()
                         .thenComparing(ProductDTO::getStatusPriority))
                 .collect(Collectors.toList());
     }
+
 
     @Override
     public Page<ProductDTO> getProductList(ProductStatus status, int pageNum, int pageSize) {

@@ -16,7 +16,7 @@ public interface ProductService {
 
     List<ProductDTO> getProductList(Pageable pageable);
 
-    List<ProductDTO> searchProducts(String category, String input);
+    List<ProductDTO> searchProducts(String category, String input,ProductStatus status);
 
     Page<ProductDTO> getProductList(ProductStatus status, int pageNum,int pageSize);
 

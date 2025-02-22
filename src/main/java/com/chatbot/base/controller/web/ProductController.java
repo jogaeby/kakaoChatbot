@@ -65,17 +65,15 @@ public class ProductController {
 
     @PassAuth
     @GetMapping("previous")
-    public ResponseEntity getPreviousProducts(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+    public ResponseEntity getPreviousProducts(
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size) {
         try {
-            Page<ProductDTO> productList = productService.getProductList(ProductStatus.PRE_DISPLAY,page,size);
-
-            return ResponseEntity
-                    .ok(productList);
-        }catch (Exception e) {
-            log.error("{}",e.getMessage(),e);
-            return ResponseEntity
-                    .status(400)
-                    .build();
+            Page<ProductDTO> productList = productService.getProductList(ProductStatus.PRE_DISPLAY, page, size);
+            return ResponseEntity.ok(productList);
+        } catch (Exception e) {
+            log.error("{}", e.getMessage(), e);
+            return ResponseEntity.status(400).build();
         }
     }
 
@@ -96,9 +94,9 @@ public class ProductController {
     }
     @PassAuth
     @GetMapping("search")
-    public ResponseEntity getPreviousProducts(@RequestParam String input, @RequestParam String category) {
+    public ResponseEntity getPreviousProducts(@RequestParam(name = "input") String input, @RequestParam(name = "category") String category) {
         try {
-            List<ProductDTO> productDTOS = productService.searchProducts(category, input);
+            List<ProductDTO> productDTOS = productService.searchProducts(category, input,ProductStatus.PRE_DISPLAY);
             return ResponseEntity
                     .ok(productDTOS);
         }catch (Exception e) {

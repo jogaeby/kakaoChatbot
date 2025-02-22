@@ -108,14 +108,10 @@ async function fetchData() {
     try {
         const response = await fetch(`/product/previous?page=${page}&size=10`);
         const data = await response.json();
-
-        // 일반 매물 렌더링
         if (data.content && data.content.length > 0) {
             data.content.forEach(item => renderCard(item));
             page++;  // 다음 페이지로 이동
         }
-
-        // 마지막 페이지 여부
         if (data.last) {
             hasMore = false;
             loading.innerText = '✅ 모든 데이터를 불러왔습니다.';
@@ -126,6 +122,10 @@ async function fetchData() {
         isLoading = false;
         loading.style.display = 'none';
         observeLastCard(); // 마지막 카드 감지
+        // 추가: 만약 카드 수가 적어 스크롤이 발생하지 않는 경우 자동 추가 호출
+        if (document.body.scrollHeight <= window.innerHeight && hasMore) {
+            fetchData();
+        }
     }
 }
 // 🚩 마지막 상품 감지 (IntersectionObserver 사용)
@@ -140,17 +140,10 @@ function observeLastCard() {
             observer.disconnect(); // 중복 호출 방지
             fetchData();
         }
-    }, { threshold: 1.0 });
+    }, { threshold: 0.5 }); // threshold를 0.5로 변경 (화면의 50%만 보여도 동작)
 
     observer.observe(lastCard);
 }
-// 🚩 무한 스크롤 감지
-// window.addEventListener('scroll', () => {
-//     if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 10) {
-//         console.log("scroll")
-//         fetchData();
-//     }
-// });
 
 
 $("#searchButton").on("click",function () {

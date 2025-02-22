@@ -70,9 +70,10 @@ $(document).ready(function() {
         $('#addModal').find('input').not('[name="imageInputType"]').val('');
 
         const addDateInput = $('#addProductDisplayDate');
-        const today = new Date().toISOString().split('T')[0]; // yyyy-mm-dd 형식의 오늘 날짜 구하기
-        addDateInput.attr('min', today); // today를 최소값으로 설정
-        addDateInput.val(today); // 기본값으로 today 설정
+        todayKST
+        console.log(todayKST)
+        addDateInput.attr('min', todayKST); // today를 최소값으로 설정
+        addDateInput.val(todayKST); // 기본값으로 today 설정
 
         $('#addModal').modal('show');
     });
@@ -372,7 +373,6 @@ $(document).ready(function() {
                 console.log(error);
             });
     }
-
 
     function addProduct(imageUrl, imageFile, memo, no, category, location, price, currentPrice, minPrice, expectedPrice, saleDate, managerName, managerPhone, description, link, displayDate) {
         const formData = new FormData();
