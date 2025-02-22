@@ -8,7 +8,28 @@ let itemIndex = 1;     // 순번 (1부터 시작)
 // 📍 URL에서 상품 ID 가져오기
 const urlParams = new URLSearchParams(window.location.search);
 const productId = urlParams.get('id');  // 예: ?id=123
+function getSaleDateColor(saleDate) {
+    if (!saleDate) return '#000'; // 날짜가 없으면 기본 검정색 반환
+    const sale = new Date(saleDate);
+    const today = new Date();
+    // 시간 요소 제거 (날짜만 비교)
+    today.setHours(0, 0, 0, 0);
+    sale.setHours(0, 0, 0, 0);
 
+    const diffDays = (sale - today) / (1000 * 60 * 60 * 24);
+
+    if (diffDays < 0) {
+        return '#9E9E9E'; // 과거: 회색
+    } else if (diffDays === 0) {
+        return '#ff0000'; // 오늘: 빨간색
+    } else if (diffDays <= 7) {
+        return '#ff5722'; // 7일 이내: 주황색
+    } else if (diffDays <= 14) {
+        return '#ff9800'; // 14일 이내: 연한 주황색
+    } else {
+        return '#4caf50'; // 그 외: 초록색
+    }
+}
 // 🚩 카드 렌더링 함수 (특정 상품은 '선택 매물' 표시)
 function renderCard(item, isSelected = false) {
     const card = document.createElement('div');
@@ -16,7 +37,7 @@ function renderCard(item, isSelected = false) {
     card.setAttribute('data-product-id', item.productId ?? '');
     console.log(item)
     // 🏷️ 순번 또는 '선택 매물' 표시
-    const label = isSelected ? '선택 매물' : `No: ${itemIndex++}`;
+    const label = isSelected ? '선택 매물' : `순번: ${itemIndex++}`;
     const imageUrl = item.images?.[0] ?? '/loginLogo.png';
     const isValidUrl = imageUrl && imageUrl.startsWith('http');
     card.innerHTML = `
@@ -24,6 +45,9 @@ function renderCard(item, isSelected = false) {
          onerror="this.onerror=null;this.src='/loginLogo.png';">
     <div class="card-header"><strong>${label}</strong></div>
     <div class="card-body">
+        <div style="color: ${getSaleDateColor(item.saleDate)}; font-weight: bold">
+            <strong>매각 기일:</strong> ${item.saleDate ?? ''}
+        </div>
         <div><strong>타경번호:</strong> ${item.no ?? ''}</div>
         <div><strong>물건종류:</strong> ${item.category ?? ''}</div>
         <div><strong>소재지:</strong> ${item.location ?? ''}</div>
@@ -31,7 +55,6 @@ function renderCard(item, isSelected = false) {
         <div><strong>현시세:</strong> ${item.currentPrice ? item.currentPrice.toLocaleString() : ''}</div>
         <div><strong>최저가:</strong> ${item.minPrice ? item.minPrice.toLocaleString() + '원' : ''}</div>
         <div><strong>예상 낙찰가:</strong> ${item.expectedPrice ? item.expectedPrice.toLocaleString() + '원' : ''}</div>
-        <div><strong>매각 기일:</strong> ${item.saleDate ?? ''}</div>
         <div><strong>담당자:</strong> ${item.managerName ?? ''}</div>
         <div><strong>담당자 연락처:</strong> ${item.managerPhone ?? ''}</div>
         <div><strong>장단점:</strong> ${item.description ?? ''}</div>

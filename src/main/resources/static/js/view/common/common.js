@@ -146,8 +146,8 @@ function sortTableByColumn(column, order) {
         $(row).find('td[data-column="Index"]').text(index + 1);
     });
     // ✅ 이벤트 위임 방식으로 모달 이벤트 유지
-    $('#dataTable tbody').off('click', 'td[data-column="Title"]');
-    $('#dataTable tbody').on('click', 'td[data-column="Title"]', function () {
+    $('#dataTable tbody').off('click', 'td[data-column="Memo"]');
+    $('#dataTable tbody').on('click', 'td[data-column="Memo"]', function () {
         const productId = $(this).closest('tr').attr('id');
 
         getProduct(productId).then(product => {
@@ -177,12 +177,12 @@ function getProduct(productId) {
             return null;
         });
 }
+
 function openUpdateModal(data) {
     const displayDate = data.displayDate;
     const today = new Date().toISOString().split('T')[0];
-
     // 디스플레이 날짜가 오늘 또는 이전이면 readonly, 아니면 readonly 해제
-    if (displayDate && displayDate <= today) {
+    if ((displayDate && displayDate <= today) || data.status == "이전매물") {
         $('#updateProductDisplayDate').attr('readonly', true);
     } else {
         $('#updateProductDisplayDate').removeAttr('readonly');
