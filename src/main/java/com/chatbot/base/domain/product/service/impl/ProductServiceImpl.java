@@ -126,13 +126,22 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional
     @Override
-    public void updateProduct(ProductDTO productDTO) {
+    public void updateProduct(ProductDTO productDTO, MultipartFile imageFile) {
         String id = productDTO.getId();
 
         Product product = productRepository.findById(UUID.fromString(id))
                 .orElseThrow(() -> new NoSuchElementException("Product not found / id = " + id));
-
         product.update(productDTO);
+
+        // 이미지 파일이 존재하면 저장 처리
+        if (imageFile != null && !imageFile.isEmpty()) {
+            try {
+                String savedFileUrl = imageUtil.saveFile(imageFile, product.getUuid().toString());
+                product.updateImageUrls(savedFileUrl);
+            } catch (IOException e) {
+                throw new RuntimeException("이미지 파일 저장 중 오류 발생", e);
+            }
+        }
     }
 
     @Transactional

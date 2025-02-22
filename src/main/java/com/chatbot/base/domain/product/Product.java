@@ -201,4 +201,8 @@ public class Product extends BaseEntity {
     public void addImageUrl(String imageUrl) {
         this.images.add(imageUrl);
     }
+
+    public void updateImageUrls(String imageUrl) {
+        this.images = List.of(imageUrl);
+    }
 }

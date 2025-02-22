@@ -167,8 +167,29 @@
                                 <div class="form-group">
                                     <input type="hidden" id="updateProductId">
 
-                                    <label for="updateProductImageUrl">이미지 URL:</label>
-                                    <input type="text" class="form-control mb-3" id="updateProductImageUrl" placeholder="이미지 URL을 입력하세요.">
+                                    <div class="form-group mb-3">
+                                        <label>이미지 입력 방법:</label>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="updateImageInputType" id="updateImageUrlOption" value="url" checked>
+                                            <label class="form-check-label" for="updateImageUrlOption">이미지 URL</label>
+
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="updateImageInputType" id="updateImageFileOption" value="file">
+                                            <label class="form-check-label" for="updateImageFileOption">이미지 파일</label>
+                                        </div>
+                                    </div>
+                                    <!-- 이미지 URL 입력 -->
+                                    <div class="form-group mb-3" id="updateImageUrlGroup">
+                                        <label for="addProductImageUrl">이미지 URL:</label>
+                                        <input type="text" class="form-control" id="updateProductImageUrl" placeholder="이미지 URL을 입력하세요.">
+                                    </div>
+
+                                    <!-- 이미지 파일 입력 -->
+                                    <div class="form-group mb-3" id="updateImageFileGroup" style="display: none;">
+                                        <label for="addProductImageFile">이미지 파일:</label>
+                                        <input type="file" class="form-control" id="updateProductImageFile" accept="image/*">
+                                    </div>
 
                                     <label for="updateProductMemo">메모:</label>
                                     <input type="text" class="form-control mb-3" id="updateProductMemo" placeholder="메모를 입력하세요.">

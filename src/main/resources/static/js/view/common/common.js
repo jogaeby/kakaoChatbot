@@ -181,20 +181,33 @@ function getProduct(productId) {
 function openUpdateModal(data) {
     const displayDate = data.displayDate;
     const today = new Date().toISOString().split('T')[0];
-    // 디스플레이 날짜가 오늘 또는 이전이면 readonly, 아니면 readonly 해제
-    if ((displayDate && displayDate <= today) || data.status == "이전매물") {
+
+    // 디스플레이 날짜가 오늘 또는 이전이거나 상태가 "이전매물"이면 노출 날짜 input을 readonly로 설정
+    if ((displayDate && displayDate <= today) || data.status === "이전매물") {
         $('#updateProductDisplayDate').attr('readonly', true);
     } else {
         $('#updateProductDisplayDate').removeAttr('readonly');
-
-        const updateDateInput = $('#updateProductDisplayDate');
-        const today = new Date().toISOString().split('T')[0]; // yyyy-mm-dd 형식의 오늘 날짜 구하기
-        updateDateInput.attr('min', today); // today를 최소값으로 설정
+        $('#updateProductDisplayDate').attr('min', today);
     }
 
-    // 모달에 데이터 채우기
+    // 기존 이미지 데이터에 따라 이미지 입력 방식 결정
+    if (data.images && (Array.isArray(data.images) ? data.images.length > 0 : data.images !== '')) {
+        // data.images가 배열인 경우 첫 번째 값을 사용하고, 문자열인 경우 그대로 사용
+        const imageUrl = Array.isArray(data.images) ? data.images[0] : data.images;
+        $("input[name='updateImageInputType'][value='url']").prop('checked', true);
+        $('#updateImageUrlGroup').show();
+        $('#updateImageFileGroup').hide();
+        $("#updateProductImageUrl").val(imageUrl);
+    } else {
+        // 기존 이미지가 없으면 파일 입력 방식을 기본으로 선택
+        $("input[name='updateImageInputType'][value='file']").prop('checked', true);
+        $('#updateImageUrlGroup').hide();
+        $('#updateImageFileGroup').show();
+        $("#updateProductImageFile").val('');
+    }
+
+    // 나머지 데이터 채우기
     $('#updateProductId').val(data.id);
-    $('#updateProductImageUrl').val(data.images);
     $('#updateProductMemo').val(data.memo);
     $('#updateProductNo').val(data.no);
     $('#updateProductCategory').val(data.category);
@@ -211,7 +224,7 @@ function openUpdateModal(data) {
     $('#updateProductMemberId').val(data.memberId);
     $('#updateProductDisplayDate').val(displayDate);
 
-    // 모달 열기
+    // 업데이트 모달 열기
     $('#updateModal').modal('show');
 }
 

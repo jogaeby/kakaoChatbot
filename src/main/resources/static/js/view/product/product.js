@@ -13,21 +13,37 @@ $(document).ready(function() {
     renderCategories()
 
     $(document).ready(function () {
-        // 이미지 입력 방식 변경 시, 해당 입력창 보이기/숨기기
+        // 추가 모달: 이미지 입력 방식 변경 시, 해당 입력창 보이기/숨기기
         $('input[name="imageInputType"]').on('change', function () {
             if ($(this).val() === 'url') {
                 $("#addProductImageUrl").val('');
-                $("#addProductImageFile").val('')
+                $("#addProductImageFile").val('');
                 $('#imageUrlGroup').show();
                 $('#imageFileGroup').hide();
             } else if ($(this).val() === 'file') {
-                $("#addProductImageFile").val('')
                 $("#addProductImageUrl").val('');
+                $("#addProductImageFile").val('');
                 $('#imageUrlGroup').hide();
                 $('#imageFileGroup').show();
             }
         });
+
+        // 업데이트 모달: 이미지 입력 방식 변경 시, 해당 입력창 보이기/숨기기
+        $('input[name="updateImageInputType"]').on('change', function () {
+            if ($(this).val() === 'url') {
+                $("#updateProductImageUrl").val('');
+                $("#updateProductImageFile").val('');
+                $('#updateImageUrlGroup').show();
+                $('#updateImageFileGroup').hide();
+            } else if ($(this).val() === 'file') {
+                $("#updateProductImageUrl").val('');
+                $("#updateProductImageFile").val('');
+                $('#updateImageUrlGroup').hide();
+                $('#updateImageFileGroup').show();
+            }
+        });
     });
+
     $("#searchButton").on("click", function () {
         const searchInput = $('#searchInput').val();
         const category = $('#categorySelect').val();
@@ -50,13 +66,14 @@ $(document).ready(function() {
     })
 
     $("#addProductModalButton").on("click", function () {
-// name이 "imageInputType"인 input을 제외한 모든 input 초기화
+        // name이 "imageInputType"인 input을 제외한 모든 input 초기화
         $('#addModal').find('input').not('[name="imageInputType"]').val('');
 
         const addDateInput = $('#addProductDisplayDate');
         const today = new Date().toISOString().split('T')[0]; // yyyy-mm-dd 형식의 오늘 날짜 구하기
         addDateInput.attr('min', today); // today를 최소값으로 설정
         addDateInput.val(today); // 기본값으로 today 설정
+
         $('#addModal').modal('show');
     });
 
@@ -152,7 +169,9 @@ $(document).ready(function() {
 
 
         const productId = $('#updateProductId').val();
-        const imageUrl = $('#updateProductImageUrl').val();
+        const imageUrl = $("#updateProductImageUrl").val();
+        const imageFile = $('#updateProductImageFile')[0].files[0];
+
         const memo = $('#updateProductMemo').val();
         const no = $('#updateProductNo').val();
         const category = $('#updateProductCategory').val();
@@ -174,9 +193,9 @@ $(document).ready(function() {
             return;
         }
 
-        if (!imageUrl) {
-            alert("이미지 URL을 입력하세요.");
-            return;
+        if (!imageUrl && !imageFile) {
+            alert("이미지를 입력하세요.")
+            return
         }
 
         if (!memo) {
@@ -238,7 +257,7 @@ $(document).ready(function() {
             alert("링크를 입력하세요.");
             return;
         }
-        updateProduct(productId, imageUrl, memo, no, category, location, price, currentPrice, minPrice, expectedPrice, saleDate, managerName, managerPhone, description, link, memberId, displayDate);
+        updateProduct(productId, imageUrl, imageFile, memo, no, category, location, price, currentPrice, minPrice, expectedPrice, saleDate, managerName, managerPhone, description, link, memberId, displayDate);
     });
 
     function searchProducts(searchInput, searchCategory) {
@@ -309,48 +328,51 @@ $(document).ready(function() {
         return row;
     }
 
-    function updateProduct(productId, imageUrl, memo, no, category, location, price, currentPrice, minPrice, expectedPrice, saleDate, managerName, managerPhone, description, link, memberId, displayDate) {
-        const data = JSON.stringify({
-            id: productId,
-            images: [imageUrl],
-            memo: memo,
-            no: no,
-            category: category,
-            location: location,
-            price: price,
-            currentPrice: currentPrice,
-            minPrice: minPrice,
-            expectedPrice: expectedPrice,
-            saleDate: saleDate,
-            managerName: managerName,
-            managerPhone: managerPhone,
-            description: description,
-            link: link,
-            memberId: memberId,
-            displayDate: displayDate
-        });
+    function updateProduct(productId, imageUrl, imageFile, memo, no, category, location, price, currentPrice, minPrice, expectedPrice, saleDate, managerName, managerPhone, description, link, memberId, displayDate) {
+        const formData = new FormData();
+
+        formData.append('id', productId);
+
+        // 이미지 파일이 선택되었으면 추가
+        if (imageFile) {
+            formData.append('imageFile', imageFile);
+        }
+
+        formData.append('imageUrl', imageUrl);
+        formData.append('memo', memo);
+        formData.append('no', no);
+        formData.append('category', category);
+        formData.append('location', location);
+        formData.append('price', price);
+        formData.append('currentPrice', currentPrice);
+        formData.append('minPrice', minPrice);
+        formData.append('expectedPrice', expectedPrice);
+        formData.append('saleDate', saleDate);
+        formData.append('managerName', managerName);
+        formData.append('managerPhone', managerPhone);
+        formData.append('description', description);
+        formData.append('link', link);
+        formData.append('memberId', memberId);
+        formData.append('displayDate', displayDate);
 
         fetch(`/product`, {
             method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: data
+            body: formData  // 브라우저가 자동으로 multipart/form-data 설정
         })
             .then(response => {
                 if (response.ok) {
-                    alert("성공적으로 수정하였습니다.")
+                    alert("성공적으로 수정하였습니다.");
                     $('#updateModal').modal('hide');
-                    getProducts()
+                    getProducts();
                 } else {
-                    alert("수정을 실패하였습니다.")
+                    alert("수정을 실패하였습니다.");
                 }
-
             })
             .catch(error => {
-                console.log(error)
+                console.log(error);
             });
     }
+
 
     function addProduct(imageUrl, imageFile, memo, no, category, location, price, currentPrice, minPrice, expectedPrice, saleDate, managerName, managerPhone, description, link, displayDate) {
         const formData = new FormData();

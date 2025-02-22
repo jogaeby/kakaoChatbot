@@ -28,7 +28,7 @@ public interface ProductService {
 
     boolean isOwnerProduct(String productId, String memberId);
 
-    void updateProduct(ProductDTO productDTO);
+    void updateProduct(ProductDTO productDTO, MultipartFile imageFile);
 
     void updateProductStatus(LocalDateTime localDateTime);
 }

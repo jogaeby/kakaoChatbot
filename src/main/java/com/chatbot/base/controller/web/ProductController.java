@@ -126,12 +126,14 @@ public class ProductController {
     }
 
     @PatchMapping()
-    public ResponseEntity updateProduct(@RequestBody ProductDTO productDTO)
+    public ResponseEntity updateProduct(
+            @ModelAttribute ProductDTO productDTO,
+            @RequestParam(value = "imageFile", required = false) MultipartFile imageFile)
     {
         try {
             if (httpService.isAdmin() || productService.isOwnerProduct(productDTO.getId(),httpService.getMemberDTOFromHttpRequest().getId())) {
 
-                productService.updateProduct(productDTO);
+                productService.updateProduct(productDTO,imageFile);
 
                 return ResponseEntity
                         .ok()
