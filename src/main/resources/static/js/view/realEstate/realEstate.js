@@ -27,9 +27,9 @@ function getSaleDateColor(saleDate) {
     } else if (diffDays <= 7) {
         return '#ff7e22'; // 7일 이내: 주황색
     } else if (diffDays <= 14) {
-        return '#4caf50'; // 14일 이내: 연한 주황색
+        return '#4caf50'; // 14일 이내: 초록
     } else {
-        return '#2139dc'; // 그 외: 초록색
+        return '#2139dc'; // 그 외: 파란
     }
 }
 // 🚩 카드 렌더링 함수 (특정 상품은 '선택 매물' 표시)
