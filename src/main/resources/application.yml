@@ -1,5 +1,5 @@
 host:
-  ip: localhost
+  ip: http://211.188.58.30
   port: 8080
 spring:
   data:
