@@ -5,6 +5,7 @@ import com.chatbot.base.domain.product.constant.ProductStatus;
 import com.chatbot.base.domain.product.dto.ProductDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -21,7 +22,7 @@ public interface ProductService {
 
     ProductDTO getProduct(String productId);
 
-    void addProduct(ProductDTO productDTO, String memberId);
+    void addProduct(ProductDTO productDTO, String memberId, MultipartFile imageFile);
 
     void deleteProduct(String productId);
 

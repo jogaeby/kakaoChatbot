@@ -32,6 +32,7 @@ services:
       - redis
       - mysql
     volumes:
+      - ./images:/images
       - ./uploads:/uploads
 volumes:
   mysql_data:

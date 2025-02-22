@@ -1,5 +1,6 @@
 package com.chatbot.base.domain.product.service.impl;
 
+import com.chatbot.base.common.ImageUtil;
 import com.chatbot.base.domain.member.Member;
 import com.chatbot.base.domain.member.service.MemberService;
 import com.chatbot.base.domain.product.Product;
@@ -17,7 +18,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -33,6 +36,7 @@ import java.util.stream.Collectors;
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final MemberService memberService;
+    private final ImageUtil imageUtil;
 
     @Override
     public List<ProductDTO> getProductListByMember(Pageable pageable, String memberId) {
@@ -86,15 +90,22 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional
     @Override
-    public void addProduct(ProductDTO productDTO, String memberId) {
+    public void addProduct(ProductDTO productDTO, String memberId, MultipartFile imageFile) {
         Member member = memberService.getMemberById(memberId);
-        Product product = Product.of(productDTO,member);
-
-//        if (!isFullDisplayProduct(LocalDateTime.now())) {
-//            product.updateStatus(ProductStatus.DISPLAY);
-//        }
-
+        Product product = Product.of(productDTO, member);
         productRepository.save(product);
+
+        // 이미지 파일이 존재하면 저장 처리
+        if (imageFile != null && !imageFile.isEmpty()) {
+            try {
+                String savedFileUrl = imageUtil.saveFile(imageFile, product.getUuid().toString());
+                product.addImageUrl(savedFileUrl);
+            } catch (IOException e) {
+                throw new RuntimeException("이미지 파일 저장 중 오류 발생", e);
+            }
+        }
+
+
     }
 
     @Transactional

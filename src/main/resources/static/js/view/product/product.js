@@ -1,6 +1,6 @@
-$(document).ready(function(){
+$(document).ready(function() {
     const headers = [
-        'No', '메모', '작성자','상태','매각 기일','등록일','기타'
+        'No', '메모', '작성자', '상태', '매각 기일', '등록일', '기타'
     ];
     const sortableColumns = ["매각 기일", "등록일"];
 
@@ -12,7 +12,23 @@ $(document).ready(function(){
     getProducts()
     renderCategories()
 
-    $("#searchButton").on("click",function () {
+    $(document).ready(function () {
+        // 이미지 입력 방식 변경 시, 해당 입력창 보이기/숨기기
+        $('input[name="imageInputType"]').on('change', function () {
+            if ($(this).val() === 'url') {
+                $("#addProductImageUrl").val('');
+                $("#addProductImageFile").val('')
+                $('#imageUrlGroup').show();
+                $('#imageFileGroup').hide();
+            } else if ($(this).val() === 'file') {
+                $("#addProductImageFile").val('')
+                $("#addProductImageUrl").val('');
+                $('#imageUrlGroup').hide();
+                $('#imageFileGroup').show();
+            }
+        });
+    });
+    $("#searchButton").on("click", function () {
         const searchInput = $('#searchInput').val();
         const category = $('#categorySelect').val();
 
@@ -30,11 +46,13 @@ $(document).ready(function(){
             return;
         }
 
-        searchProducts(searchInput,category)
+        searchProducts(searchInput, category)
     })
 
     $("#addProductModalButton").on("click", function () {
-        $('#addModal').find('input').val('');
+// name이 "imageInputType"인 input을 제외한 모든 input 초기화
+        $('#addModal').find('input').not('[name="imageInputType"]').val('');
+
         const addDateInput = $('#addProductDisplayDate');
         const today = new Date().toISOString().split('T')[0]; // yyyy-mm-dd 형식의 오늘 날짜 구하기
         addDateInput.attr('min', today); // today를 최소값으로 설정
@@ -42,8 +60,9 @@ $(document).ready(function(){
         $('#addModal').modal('show');
     });
 
-    $("#addProductButton").on("click",function () {
+    $("#addProductButton").on("click", function () {
         const imageUrl = $("#addProductImageUrl").val();
+        const imageFile = $('#addProductImageFile')[0].files[0];
         const memo = $("#addProductMemo").val();
         const no = $("#addProductNo").val();
         const category = $("#addProductCategory").val();
@@ -59,8 +78,8 @@ $(document).ready(function(){
         const link = $("#addProductLink").val();
         const displayDate = $("#addProductDisplayDate").val();
 
-        if (!imageUrl) {
-            alert("이미지 URL을 입력하세요.")
+        if (!imageUrl && !imageFile) {
+            alert("이미지를 입력하세요.")
             return
         }
 
@@ -126,7 +145,7 @@ $(document).ready(function(){
             return
         }
 
-        addProduct(imageUrl,memo,no, category, location, price, currentPrice,minPrice, expectedPrice, saleDate, managerName, managerPhone, description,link,displayDate)
+        addProduct(imageUrl, imageFile, memo, no, category, location, price, currentPrice, minPrice, expectedPrice, saleDate, managerName, managerPhone, description, link, displayDate)
     })
 
     $("#updateProductButton").on("click", function () {
@@ -219,7 +238,7 @@ $(document).ready(function(){
             alert("링크를 입력하세요.");
             return;
         }
-        updateProduct(productId, imageUrl, memo, no, category, location, price, currentPrice, minPrice, expectedPrice, saleDate, managerName, managerPhone, description, link, memberId,displayDate);
+        updateProduct(productId, imageUrl, memo, no, category, location, price, currentPrice, minPrice, expectedPrice, saleDate, managerName, managerPhone, description, link, memberId, displayDate);
     });
 
     function searchProducts(searchInput, searchCategory) {
@@ -232,7 +251,7 @@ $(document).ready(function(){
             .then(response => {
                 return response.json()
             }).then(data => {
-            renderTable(data, headers, createTableRow,sortableColumns)
+            renderTable(data, headers, createTableRow, sortableColumns)
         })
             .catch(error => {
                 console.log(error)
@@ -253,7 +272,7 @@ $(document).ready(function(){
             .then(response => {
                 return response.json()
             }).then(data => {
-            renderTable(data,headers,createTableRow,sortableColumns)
+            renderTable(data, headers, createTableRow, sortableColumns)
         })
             .catch(error => {
                 console.log(error)
@@ -266,7 +285,7 @@ $(document).ready(function(){
         row.append($('<td data-column="Index">').text(index + 1));
 
         const idCell = $('<td data-column="Memo">').text(data.memo)
-            .css({ cursor: 'pointer', color: 'blue' });
+            .css({cursor: 'pointer', color: 'blue'});
 
         idCell.on('click', () => openUpdateModal(data));
 
@@ -290,25 +309,25 @@ $(document).ready(function(){
         return row;
     }
 
-    function updateProduct(productId,imageUrl,memo,no, category, location, price, currentPrice, minPrice, expectedPrice, saleDate, managerName, managerPhone, description, link,memberId,displayDate) {
+    function updateProduct(productId, imageUrl, memo, no, category, location, price, currentPrice, minPrice, expectedPrice, saleDate, managerName, managerPhone, description, link, memberId, displayDate) {
         const data = JSON.stringify({
-            id:productId,
-            images:[imageUrl],
-            memo:memo,
-            no:no,
-            category:category,
-            location:location,
-            price:price,
-            currentPrice:currentPrice,
-            minPrice:minPrice,
-            expectedPrice:expectedPrice,
-            saleDate:saleDate,
-            managerName:managerName,
-            managerPhone:managerPhone,
-            description:description,
-            link:link,
-            memberId:memberId,
-            displayDate:displayDate
+            id: productId,
+            images: [imageUrl],
+            memo: memo,
+            no: no,
+            category: category,
+            location: location,
+            price: price,
+            currentPrice: currentPrice,
+            minPrice: minPrice,
+            expectedPrice: expectedPrice,
+            saleDate: saleDate,
+            managerName: managerName,
+            managerPhone: managerPhone,
+            description: description,
+            link: link,
+            memberId: memberId,
+            displayDate: displayDate
         });
 
         fetch(`/product`, {
@@ -316,14 +335,14 @@ $(document).ready(function(){
             headers: {
                 'Content-Type': 'application/json'
             },
-            body:data
+            body: data
         })
             .then(response => {
-                if (response.ok){
+                if (response.ok) {
                     alert("성공적으로 수정하였습니다.")
                     $('#updateModal').modal('hide');
                     getProducts()
-                }else {
+                } else {
                     alert("수정을 실패하였습니다.")
                 }
 
@@ -333,49 +352,50 @@ $(document).ready(function(){
             });
     }
 
-    function addProduct(imageUrl,memo,no, category, location, price, currentPrice, minPrice, expectedPrice, saleDate, managerName, managerPhone, description,link,displayDate) {
-        const data = JSON.stringify({
-            images:[imageUrl],
-            memo:memo,
-            no:no,
-            category:category,
-            location:location,
-            price:price,
-            currentPrice:currentPrice,
-            minPrice:minPrice,
-            expectedPrice:expectedPrice,
-            saleDate:saleDate,
-            managerName:managerName,
-            managerPhone:managerPhone,
-            description:description,
-            link:link,
-            displayDate:displayDate
-        });
+    function addProduct(imageUrl, imageFile, memo, no, category, location, price, currentPrice, minPrice, expectedPrice, saleDate, managerName, managerPhone, description, link, displayDate) {
+        const formData = new FormData();
+        // 이미지 파일이 선택된 경우에만 파일 데이터를 추가 (둘 중 하나만 선택하도록 설계된 경우)
+        console.log(imageFile)
+
+        if (imageFile) {
+            formData.append('imageFile', imageFile);
+        }
+        formData.append('images', imageUrl);
+        formData.append('memo', memo);
+        formData.append('no', no);
+        formData.append('category', category);
+        formData.append('location', location);
+        formData.append('price', price);
+        formData.append('currentPrice', currentPrice);
+        formData.append('minPrice', minPrice);
+        formData.append('expectedPrice', expectedPrice);
+        formData.append('saleDate', saleDate);
+        formData.append('managerName', managerName);
+        formData.append('managerPhone', managerPhone);
+        formData.append('description', description);
+        formData.append('link', link);
+        formData.append('displayDate', displayDate);
 
         fetch(`/product`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body:data
+            body: formData  // Content-Type은 브라우저가 자동으로 multipart/form-data로 설정합니다.
         })
             .then(response => {
-                if (response.ok){
-                    alert("성공적으로 추가하였습니다.")
+                if (response.ok) {
+                    alert("성공적으로 추가하였습니다.");
                     $('#addModal').modal('hide');
-                    getProducts()
-                }else {
-                    alert("추가를 실패하였습니다.")
+                    getProducts();
+                } else {
+                    alert("추가를 실패하였습니다.");
                 }
-
             })
             .catch(error => {
-                console.log(error)
+                console.log(error);
             });
     }
 
-    function deleteButton (data) {
-        return  $('<button>').text('삭제').addClass('btn btn-danger mx-lg-1 btn-sm').on('click',function (){
+    function deleteButton(data) {
+        return $('<button>').text('삭제').addClass('btn btn-danger mx-lg-1 btn-sm').on('click', function () {
             if (confirm(`${data.title}을 삭제하시겠습니까?`)) {
                 deleteProduct(data.id)
             }
@@ -390,10 +410,10 @@ $(document).ready(function(){
             }
         })
             .then(response => {
-                if (response.ok){
+                if (response.ok) {
                     alert("성공적으로 삭제하였습니다.")
                     getProducts()
-                }else {
+                } else {
                     alert("삭제를 실패하였습니다.")
                 }
             })

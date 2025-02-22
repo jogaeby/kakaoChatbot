@@ -23,7 +23,6 @@ public class InterceptorConfig implements WebMvcConfigurer {
                         "/favicon.ico",
                         "/logo.png",
                         "/loginLogo.png",
-                        "/reservation/**",
                         "/kakao/chatbot/**"); // 정적 리소스 제외
     }
 }

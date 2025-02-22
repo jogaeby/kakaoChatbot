@@ -13,9 +13,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -106,21 +108,20 @@ public class ProductController {
                     .build();
         }
     }
-    @PostMapping()
-    public ResponseEntity addProduct(@RequestBody ProductDTO productDTO) {
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> addProduct(
+            @ModelAttribute ProductDTO productDTO,
+            @RequestParam(value = "imageFile", required = false) MultipartFile imageFile) {
         try {
             MemberDTO member = httpService.getMemberDTOFromHttpRequest();
 
-            productService.addProduct(productDTO,member.getId());
+            // 서비스 계층에서 imageFile과 productDTO를 함께 처리하도록 수정해야 합니다.
+            productService.addProduct(productDTO, member.getId(),imageFile);
 
-            return ResponseEntity
-                    .ok()
-                    .build();
-        }catch (Exception e) {
-            log.error("{}",e.getMessage(),e);
-            return ResponseEntity
-                    .status(400)
-                    .build();
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            log.error("{}", e.getMessage(), e);
+            return ResponseEntity.status(400).build();
         }
     }
 

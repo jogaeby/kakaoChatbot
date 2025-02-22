@@ -1,3 +1,6 @@
+host:
+  ip: localhost
+  port: 8080
 spring:
   data:
     redis:

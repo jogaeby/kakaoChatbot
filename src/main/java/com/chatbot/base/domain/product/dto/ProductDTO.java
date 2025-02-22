@@ -44,7 +44,7 @@ public class ProductDTO {
 
     private String status;
 
-    private int statusPriority;
+    private Integer statusPriority;
 
     private LocalDate createDate;
 
