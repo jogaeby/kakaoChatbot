@@ -146,18 +146,15 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional
     @Override
-    public void updateProductStatus(LocalDateTime localDateTime) {
-        LocalDateTime startDate = localDateTime.with(LocalTime.MIN);
-        LocalDateTime endDate = localDateTime.with(LocalTime.MAX);
-        log.info("상품 상태 업데이트 날짜 범위 {} ~ {}", startDate, endDate);
+    public void updateProductStatus(LocalDate localDate) {
 
         // 상태 변경을 각 메서드로 분리 (순서 중요)
         updateDisplayToPreDisplay();
-        updateRegistrationToDisplay(startDate, endDate);
+        updateRegistrationToDisplay(localDate);
     }
 
-    private void updateRegistrationToDisplay(LocalDateTime startDate, LocalDateTime endDate) {
-        List<Product> currentProducts = productRepository.findByStatusAndDisplayDateBetween(ProductStatus.REGISTRATION, startDate, endDate);
+    private void updateRegistrationToDisplay(LocalDate localDate) {
+        List<Product> currentProducts = productRepository.findByStatusAndDisplayDate(ProductStatus.REGISTRATION,localDate);
         log.info("REGISTRATION -> DISPLAY 상태 변경 대상 수: {}", currentProducts.size());
 
         currentProducts.forEach(currentProduct -> {
@@ -187,20 +184,5 @@ public class ProductServiceImpl implements ProductService {
         });
 
         productRepository.saveAll(preDisplayProducts);  // 상태 변경 후 저장
-    }
-
-    private boolean isFullDisplayProduct(LocalDateTime date) {
-        LocalDateTime startDate = date.with(LocalTime.MIN);
-        LocalDateTime endDate = date.with(LocalTime.MAX);
-
-        List<Product> displayProducts = productRepository.findByStatusAndDisplayDateBetween(ProductStatus.DISPLAY, startDate, endDate);
-
-//        if (displayProducts.size() < 10) {
-//           return false;
-//        }
-//
-//        return true;
-
-        return false;
     }
 }

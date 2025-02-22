@@ -15,13 +15,13 @@ import java.util.UUID;
 
 public interface ProductRepository extends JpaRepository<Product, UUID>, JpaSpecificationExecutor<Product> {
 
-    List<Product> findByStatusAndDisplayDateBetween(ProductStatus status, LocalDateTime startDate, LocalDateTime endDate);
+    List<Product> findByStatusAndDisplayDate(ProductStatus status, LocalDate localDate);
 
     List<Product> findByStatus(ProductStatus status);
 
     Page<Product> findByStatus(ProductStatus status, Pageable pageable);
 
-    Page<Product> findByStatusAndSaleDateGreaterThanEqual(ProductStatus status, LocalDate today, Pageable pageable);
+    Page<Product> findByStatusAndSaleDateGreaterThanEqual(ProductStatus status, LocalDate localDate, Pageable pageable);
 
     Page<Product> findAllByMember(Member member, Pageable pageable);
 

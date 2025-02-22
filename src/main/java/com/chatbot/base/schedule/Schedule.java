@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StopWatch;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Slf4j
@@ -21,7 +22,7 @@ public class Schedule {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
         log.info("[{}] 상품 상태변경 스케줄 실행",stopWatch.getTotalTimeSeconds());
-        productService.updateProductStatus(LocalDateTime.now());
+        productService.updateProductStatus(LocalDate.now().plusDays(1));
         stopWatch.stop();
         log.info("[{}] 상품 상태변경 스케줄 종료",stopWatch.getTotalTimeSeconds());
     }

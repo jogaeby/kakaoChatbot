@@ -30,5 +30,5 @@ public interface ProductService {
 
     void updateProduct(ProductDTO productDTO, MultipartFile imageFile);
 
-    void updateProductStatus(LocalDateTime localDateTime);
+    void updateProductStatus(LocalDate localDate);
 }
