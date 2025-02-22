@@ -10,8 +10,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
@@ -26,7 +24,6 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Product extends BaseEntity {
 
-    private static final Logger log = LoggerFactory.getLogger(Product.class);
     @Column(nullable = false)
     private String memo;
 
@@ -178,7 +175,6 @@ public class Product extends BaseEntity {
     public void update(ProductDTO productDTO) {
         ProductStatus updatedStatus = productDTO.getDisplayDate().equals(LocalDate.now())
                 ? ProductStatus.DISPLAY : this.status;
-        log.error("@@@@@@@@@@@@@{}",productDTO.getImages());
         this.memo = productDTO.getMemo();
         this.no = productDTO.getNo();
         this.category = productDTO.getCategory();
