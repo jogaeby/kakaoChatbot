@@ -41,16 +41,18 @@ $(document).ready(function(){
 
     $("#addProductButton").on("click",function () {
         const imageUrl = $("#addProductImageUrl").val();
-        const title = $("#addProductTitle").val();
+        const memo = $("#addProductMemo").val();
         const no = $("#addProductNo").val();
         const category = $("#addProductCategory").val();
         const location = $("#addProductLocation").val();
         const price = $("#addProductPrice").val();
+        const currentPrice = $("#addProductCurrentPrice").val();
         const minPrice = $("#addProductMinPrice").val();
         const expectedPrice = $("#addProductExpectedPrice").val();
         const saleDate = $("#addProductSaleDate").val();
         const managerName = $("#addProductManagerName").val();
         const managerPhone = $("#addProductManagerPhone").val();
+        const description = $("#addProductDescription").val();
         const link = $("#addProductLink").val();
 
         if (!imageUrl) {
@@ -58,7 +60,7 @@ $(document).ready(function(){
             return
         }
 
-        if (!title) {
+        if (!memo) {
             alert("메모를 입력하세요.")
             return
         }
@@ -78,6 +80,10 @@ $(document).ready(function(){
         }
         if (!price) {
             alert("감정가를 입력하세요.")
+            return
+        }
+        if (!currentPrice) {
+            alert("현시세를 입력하세요.")
             return
         }
         if (!minPrice) {
@@ -101,27 +107,34 @@ $(document).ready(function(){
             alert("담당자 연락처를 입력하세요.")
             return
         }
+
+        if (!description) {
+            alert("장단점을 입력하세요.")
+            return
+        }
         if (!link) {
             alert("링크를 입력하세요.")
             return
         }
 
-        addProduct(imageUrl,title,no, category, location, price, minPrice, expectedPrice, saleDate, managerName, managerPhone, link)
+        addProduct(imageUrl,memo,no, category, location, price, currentPrice,minPrice, expectedPrice, saleDate, managerName, managerPhone, description,link)
     })
 
     $("#updateProductButton").on("click",function () {
         const productId = $('#updateProductId').val();
         const imageUrl = $('#updateProductImageUrl').val();
-        const title = $('#updateProductTitle').val();
+        const memo = $('#updateProductMemo').val();
         const no = $('#updateProductNo').val();
         const category = $('#updateProductCategory').val();
         const location = $('#updateProductLocation').val();
         const price = $('#updateProductPrice').val();
+        const currentPrice = $('#updateProductCurrentPrice').val();
         const minPrice = $('#updateProductMinPrice').val();
         const expectedPrice = $('#updateProductExpectedPrice').val();
         const saleDate = $('#updateProductSaleDate').val();
         const managerName = $('#updateProductManagerName').val();
         const managerPhone = $('#updateProductManagerPhone').val();
+        const description = $('#updateProductDescription').val();
         const link = $('#updateProductLink').val();
         const memberId = $('#updateProductMemberId').val();
 
@@ -135,7 +148,7 @@ $(document).ready(function(){
             return
         }
 
-        if (!title) {
+        if (!memo) {
             alert("메모를 입력하세요.")
             return
         }
@@ -155,6 +168,10 @@ $(document).ready(function(){
         }
         if (!price) {
             alert("감정가를 입력하세요.")
+            return
+        }
+        if (!currentPrice) {
+            alert("현시세를 입력하세요.")
             return
         }
         if (!minPrice) {
@@ -178,13 +195,18 @@ $(document).ready(function(){
             alert("담당자 연락처를 입력하세요.")
             return
         }
+        if (!description) {
+            alert("장단점을 입력하세요.")
+            return
+        }
         if (!link) {
             alert("링크를 입력하세요.")
             return
         }
 
-        updateProduct(productId,imageUrl,title,no, category, location, price, minPrice, expectedPrice, saleDate, managerName, managerPhone, link,memberId)
+        updateProduct(productId,imageUrl,memo,no, category, location, price, currentPrice, minPrice, expectedPrice, saleDate, managerName, managerPhone, description, link,memberId)
     })
+
     function searchProducts(searchInput, searchCategory) {
         fetch(`/product/search?input=${searchInput}&category=${searchCategory}`, {
             method: 'GET',
@@ -201,6 +223,7 @@ $(document).ready(function(){
                 console.log(error)
             });
     }
+
     function getProducts() {
         const page = 0
         const size = 20
@@ -227,7 +250,7 @@ $(document).ready(function(){
 
         row.append($('<td data-column="Index">').text(index + 1));
 
-        const idCell = $('<td data-column="Title">').text(data.title)
+        const idCell = $('<td data-column="Memo">').text(data.memo)
             .css({ cursor: 'pointer', color: 'blue' });
 
         idCell.on('click', () => openUpdateModal(data));
@@ -252,20 +275,22 @@ $(document).ready(function(){
         return row;
     }
 
-    function updateProduct(productId,imageUrl,title,no, category, location, price, minPrice, expectedPrice, saleDate, managerName, managerPhone, link,memberId) {
+    function updateProduct(productId,imageUrl,memo,no, category, location, price, currentPrice, minPrice, expectedPrice, saleDate, managerName, managerPhone, description, link,memberId) {
         const data = JSON.stringify({
             id:productId,
             images:[imageUrl],
-            title:title,
+            memo:memo,
             no:no,
             category:category,
             location:location,
             price:price,
+            currentPrice:currentPrice,
             minPrice:minPrice,
             expectedPrice:expectedPrice,
             saleDate:saleDate,
             managerName:managerName,
             managerPhone:managerPhone,
+            description:description,
             link:link,
             memberId:memberId
         });
@@ -292,19 +317,21 @@ $(document).ready(function(){
             });
     }
 
-    function addProduct(imageUrl,title,no, category, location, price, minPrice, expectedPrice, saleDate, managerName, managerPhone, link) {
+    function addProduct(imageUrl,memo,no, category, location, price, currentPrice, minPrice, expectedPrice, saleDate, managerName, managerPhone, description,link) {
         const data = JSON.stringify({
             images:[imageUrl],
-            title:title,
+            memo:memo,
             no:no,
             category:category,
             location:location,
             price:price,
+            currentPrice:currentPrice,
             minPrice:minPrice,
             expectedPrice:expectedPrice,
             saleDate:saleDate,
             managerName:managerName,
             managerPhone:managerPhone,
+            description:description,
             link:link,
         });
 

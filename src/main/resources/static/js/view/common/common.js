@@ -181,16 +181,18 @@ function openUpdateModal(data) {
     // 모달에 데이터 채우기
     $('#updateProductId').val(data.id);
     $('#updateProductImageUrl').val(data.images);
-    $('#updateProductTitle').val(data.title);
+    $('#updateProductMemo').val(data.memo);
     $('#updateProductNo').val(data.no);
     $('#updateProductCategory').val(data.category);
     $('#updateProductLocation').val(data.location);
     $('#updateProductPrice').val(data.price);
+    $('#updateProductCurrentPrice').val(data.currentPrice);
     $('#updateProductMinPrice').val(data.minPrice);
     $('#updateProductExpectedPrice').val(data.expectedPrice);
     $('#updateProductSaleDate').val(data.saleDate);
     $('#updateProductManagerName').val(data.managerName);
     $('#updateProductManagerPhone').val(data.managerPhone);
+    $('#updateProductDescription').val(data.description);
     $('#updateProductLink').val(data.link);
     $('#updateProductMemberId').val(data.memberId);
     // 모달 열기

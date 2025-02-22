@@ -14,7 +14,7 @@ import java.util.List;
 public class ProductDTO {
     private String id;
 
-    private String title;
+    private String memo;
 
     private String no;
 
@@ -23,6 +23,8 @@ public class ProductDTO {
     private String location;
 
     private String price;
+
+    private String currentPrice;
 
     private String minPrice;
 
@@ -33,6 +35,8 @@ public class ProductDTO {
     private String managerName;
 
     private String managerPhone;
+
+    private String description;
 
     private String link;
 

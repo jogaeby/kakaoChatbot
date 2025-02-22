@@ -18,8 +18,8 @@ public class ProductSpecification {
             }
 
             switch (category) {
-                case "title":
-                    return criteriaBuilder.like(root.get("title"), "%" + input + "%");
+                case "memo":
+                    return criteriaBuilder.like(root.get("memo"), "%" + input + "%");
                 case "no":
                     return criteriaBuilder.like(root.get("no"), "%" + input + "%");
                 case "category":
