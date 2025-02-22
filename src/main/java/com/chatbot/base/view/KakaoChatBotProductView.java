@@ -110,6 +110,8 @@ public class KakaoChatBotProductView {
                 .append("\n\n")
                 .append("감정가: "+productDTO.getPrice())
                 .append("\n")
+                .append("현시세: "+productDTO.getCurrentPrice())
+                .append("\n")
                 .append("최저가: "+productDTO.getMinPrice())
                 .append("\n")
                 .append("예상 낙찰가: "+productDTO.getExpectedPrice())
@@ -120,6 +122,7 @@ public class KakaoChatBotProductView {
                 .append("\n")
                 .append("담당자 연락처: "+productDTO.getManagerPhone())
                 .append("\n")
+                .append("장단점: "+productDTO.getDescription())
         ;
 
         basicCard.setThumbnail(productDTO.getImages().get(0));
