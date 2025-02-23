@@ -16,10 +16,8 @@ const realEstateCategories = [
 
 const todayKST = (() => {
     const now = new Date();
-    // 현재 로컬 시간과 UTC 시간의 차이를 분 단위로 가져옴
-    const localOffset = now.getTimezoneOffset() * 60000;
-    // UTC 시간에 9시간(한국 시간 차이)을 더함
-    const koreaTime = new Date(now.getTime() - localOffset + 9 * 3600000);
+    // (9*60 + now.getTimezoneOffset())는 두 시간대 간의 차이를 분 단위로 계산합니다.
+    const koreaTime = new Date(now.getTime() + (9 * 60 + now.getTimezoneOffset()) * 60000);
     const year = koreaTime.getFullYear();
     const month = String(koreaTime.getMonth() + 1).padStart(2, '0');
     const day = String(koreaTime.getDate()).padStart(2, '0');

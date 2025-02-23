@@ -70,8 +70,7 @@ $(document).ready(function() {
         $('#addModal').find('input').not('[name="imageInputType"]').val('');
 
         const addDateInput = $('#addProductDisplayDate');
-        todayKST
-        console.log(todayKST)
+
         addDateInput.attr('min', todayKST); // today를 최소값으로 설정
         addDateInput.val(todayKST); // 기본값으로 today 설정
 

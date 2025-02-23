@@ -9,21 +9,23 @@ let itemIndex = 1;     // 순번 (1부터 시작)
 const urlParams = new URLSearchParams(window.location.search);
 const productId = urlParams.get('id');  // 예: ?id=123
 
-
 function getSaleDateColor(saleDate) {
     if (!saleDate) return '#000'; // 날짜가 없으면 기본 검정색 반환
+
     const sale = new Date(saleDate);
-    const today = new Date();
-    // 시간 요소 제거 (날짜만 비교)
-    today.setHours(0, 0, 0, 0);
+    // todayKST 문자열("YYYY-MM-DD")를 분해하여 KST 기준의 Date 객체 생성
+    const [year, month, day] = todayKST.split('-');
+    const today = new Date(year, month - 1, day); // 월은 0부터 시작
+
+    // sale의 시간 요소 제거 (날짜만 비교)
     sale.setHours(0, 0, 0, 0);
 
     const diffDays = (sale - today) / (1000 * 60 * 60 * 24);
 
     if (diffDays < 0) {
         return '#9E9E9E'; // 과거: 회색
-    } else if (diffDays === 0) {
-        return '#ff0000'; // 오늘: 빨간색
+    } else if (diffDays <= 1) {
+        return '#ff0000'; // 오늘 또는 하루전: 빨간색
     } else if (diffDays <= 7) {
         return '#ff7e22'; // 7일 이내: 주황색
     } else if (diffDays <= 14) {
@@ -32,6 +34,7 @@ function getSaleDateColor(saleDate) {
         return '#2139dc'; // 그 외: 파란
     }
 }
+
 // 🚩 카드 렌더링 함수 (특정 상품은 '선택 매물' 표시)
 function renderCard(item, isSelected = false) {
     const card = document.createElement('div');
@@ -41,13 +44,36 @@ function renderCard(item, isSelected = false) {
     const label = isSelected ? '선택 매물' : `순번: ${itemIndex++}`;
     const imageUrl = item.images?.[0] ?? '/loginLogo.png';
     const isValidUrl = imageUrl && imageUrl.startsWith('http');
+
+    // todayKST는 "YYYY-MM-DD" 형식 문자열로 이미 정의되어 있다고 가정합니다.
+    // saleDate를 Date 객체로 만들고, 시간 요소를 제거합니다.
+    const saleDateObj = new Date(item.saleDate);
+    saleDateObj.setHours(0, 0, 0, 0);
+
+    // todayKST 문자열을 분해하여 KST 기준의 Date 객체 생성
+    const [year, month, day] = todayKST.split('-');
+    const todayKSTDate = new Date(year, month - 1, day);
+
+    // 두 날짜의 차이를 일(day) 단위로 계산합니다.
+    // (오늘 - 매각일)이 양수이면 과거, 음수이면 미래, 0이면 오늘입니다.
+    const diffDays = Math.round((todayKSTDate - saleDateObj) / (1000 * 60 * 60 * 24));
+    let diffText;
+    if (diffDays > 0) {
+        diffText = `(${diffDays}일전)`;
+    } else if (diffDays < 0) {
+        diffText = `(${Math.abs(diffDays)}일후)`;
+    } else {
+        diffText = '(오늘)';
+    }
+    const saleDateDisplay = item.saleDate ? `${item.saleDate} ${diffText}` : '';
+
     card.innerHTML = `
     <img src="${isValidUrl ? imageUrl : '/loginLogo.png'}" alt="image" class="card-img-top"
          onerror="this.onerror=null;this.src='/loginLogo.png';">
     <div class="card-header"><strong>${label}</strong></div>
     <div class="card-body">
         <div style="color: ${getSaleDateColor(item.saleDate)}; font-weight: bold">
-            <strong>매각 기일:</strong> ${item.saleDate ?? ''}
+            <strong>매각 기일:</strong> ${saleDateDisplay}
         </div>
         <div><strong>타경번호:</strong> ${item.no ?? ''}</div>
         <div><strong>물건종류:</strong> ${item.category ?? ''}</div>
@@ -63,7 +89,7 @@ function renderCard(item, isSelected = false) {
         <div><strong>작성자:</strong> ${item.memberId ?? ''}</div>
         <div><strong>작성일:</strong> ${item.createDate ?? ''}</div>
     </div>
-`;
+    `;
 
     // 🚀 선택 매물은 상단에, 일반 매물은 하단에 추가
     if (isSelected) {
@@ -196,6 +222,7 @@ if (productId) {
 }
 
 fetchData();  // 일반 매물 로딩
+
 $(document).ready(function(){
     renderCategoriesToRealEstate()
 })
