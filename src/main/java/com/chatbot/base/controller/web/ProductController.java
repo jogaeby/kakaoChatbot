@@ -2,9 +2,7 @@ package com.chatbot.base.controller.web;
 
 import com.chatbot.base.annotation.PassAuth;
 import com.chatbot.base.common.HttpService;
-import com.chatbot.base.domain.member.constant.MemberRole;
 import com.chatbot.base.domain.member.dto.MemberDTO;
-import com.chatbot.base.domain.product.Product;
 import com.chatbot.base.domain.product.constant.ProductStatus;
 import com.chatbot.base.domain.product.dto.ProductDTO;
 import com.chatbot.base.domain.product.service.ProductService;
@@ -13,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -65,15 +64,21 @@ public class ProductController {
 
     @PassAuth
     @GetMapping("previous")
-    public ResponseEntity getPreviousProducts(
+    public ResponseEntity<?> getPreviousProducts(
             @RequestParam(name = "page", defaultValue = "0") int page,
-            @RequestParam(name = "size", defaultValue = "10") int size) {
+            @RequestParam(name = "size", defaultValue = "10") int size,
+            @RequestParam(name = "sort", defaultValue = "createDate") String sort,
+            @RequestParam(name = "direction", defaultValue = "desc") String direction) {
+
         try {
-            Page<ProductDTO> productList = productService.getProductList(ProductStatus.PRE_DISPLAY, page, size);
+            Sort sortOrder = direction.equalsIgnoreCase("asc") ? Sort.by(sort).ascending() : Sort.by(sort).descending();
+            Page<ProductDTO> productList = productService.getProductList(ProductStatus.PRE_DISPLAY, page, size, sortOrder);
             return ResponseEntity.ok(productList);
         } catch (Exception e) {
-            log.error("{}", e.getMessage(), e);
-            return ResponseEntity.status(400).build();
+            log.error("Error fetching previous products: {}", e.getMessage(), e);
+            return ResponseEntity
+                    .status(400)
+                    .build();
         }
     }
 

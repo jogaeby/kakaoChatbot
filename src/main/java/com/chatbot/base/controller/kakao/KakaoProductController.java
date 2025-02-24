@@ -1,6 +1,5 @@
 package com.chatbot.base.controller.kakao;
 
-import com.chatbot.base.domain.product.Product;
 import com.chatbot.base.domain.product.constant.ProductStatus;
 import com.chatbot.base.domain.product.dto.ProductDTO;
 import com.chatbot.base.domain.product.service.ProductService;
@@ -8,16 +7,14 @@ import com.chatbot.base.dto.kakao.request.ChatBotRequest;
 import com.chatbot.base.dto.kakao.response.ChatBotExceptionResponse;
 import com.chatbot.base.dto.kakao.response.ChatBotResponse;
 import com.chatbot.base.view.KakaoChatBotProductView;
-import com.chatbot.base.view.KakaoChatBotView;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -37,8 +34,8 @@ public class KakaoProductController {
     public ChatBotResponse getProductsByToday(@RequestBody ChatBotRequest chatBotRequest) {
         try {
             int pageNumber = chatBotRequest.getPageNumber();
-
-            Page<ProductDTO> productList = productService.getProductList(ProductStatus.DISPLAY, pageNumber,10);
+            Sort sortOrder = Sort.by("createDate").descending();
+            Page<ProductDTO> productList = productService.getProductList(ProductStatus.DISPLAY, pageNumber,10,sortOrder);
 
             return kakaoChatBotProductView.productView(productList,"67a3fb6e38e4386089f9fa44");
         }catch (Exception e) {
@@ -51,8 +48,8 @@ public class KakaoProductController {
     public ChatBotResponse getProductsByDayBefore(@RequestBody ChatBotRequest chatBotRequest) {
         try {
             int pageNumber = chatBotRequest.getPageNumber();
-
-            Page<ProductDTO> productList = productService.getProductList(ProductStatus.PRE_DISPLAY, pageNumber,10);
+            Sort sortOrder = Sort.by("createDate").descending();
+            Page<ProductDTO> productList = productService.getProductList(ProductStatus.PRE_DISPLAY, pageNumber,10,sortOrder);
 
             return kakaoChatBotProductView.productView(productList,"67a3ff73cf3be837a5176214");
         }catch (Exception e) {

@@ -24,7 +24,11 @@ public class MemberController {
 
     @GetMapping("")
     public String getPage() {
-        return "member";
+        if (httpService.isAdmin()) {
+            return "member";
+        }
+        log.warn("권한이 없습니다");
+        return "product";
     }
 
     @GetMapping("list")

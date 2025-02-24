@@ -1,14 +1,13 @@
 package com.chatbot.base.domain.product.service;
 
-import com.chatbot.base.domain.product.Product;
 import com.chatbot.base.domain.product.constant.ProductStatus;
 import com.chatbot.base.domain.product.dto.ProductDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ProductService {
@@ -18,7 +17,7 @@ public interface ProductService {
 
     List<ProductDTO> searchProducts(String category, String input,ProductStatus status);
 
-    Page<ProductDTO> getProductList(ProductStatus status, int pageNum,int pageSize);
+    Page<ProductDTO> getProductList(ProductStatus status, int pageNum, int pageSize,  Sort sort);
 
     ProductDTO getProduct(String productId);
 
