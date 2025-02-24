@@ -46,12 +46,12 @@ $('#sortCreateDateButton').on('click', function () {
         createDateSortOrder = 'asc';
         $(this)
 
-            .html('매각기일 ▲'); // 오름차순: ▲ 표시
+            .html('등록일순 ▲'); // 오름차순: ▲ 표시
     } else {
         createDateSortOrder = 'desc';
         $(this)
 
-            .html('매각기일 ▼'); // 내림차순: ▼ 표시
+            .html('등록일순 ▼'); // 내림차순: ▼ 표시
     }
 
     // 기존 데이터를 초기화
