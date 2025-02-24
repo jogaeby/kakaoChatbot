@@ -6,7 +6,7 @@ let hasMore = true;    // 더 불러올 데이터 여부
 let itemIndex = 1;     // 순번 (1부터 시작)
 // 초기 정렬 순서 (내림차순)
 let saleDateSortOrder = 'desc';
-
+let createDateSortOrder = 'desc';
 // 📍 URL에서 상품 ID 가져오기
 const urlParams = new URLSearchParams(window.location.search);
 const productId = urlParams.get('id');  // 예: ?id=123
@@ -37,8 +37,32 @@ function getSaleDateColor(saleDate) {
     }
 }
 
-$('#sortSaleDateButton').html('매각기일 ▼');
+$('#sortSaleDateButton').html('매각기일순 ▼');
+$('#sortCreateDateButton').html('등록일순 ▼');
 
+$('#sortCreateDateButton').on('click', function () {
+    // 정렬 순서 토글 및 버튼 색, 화살표 업데이트
+    if (createDateSortOrder === 'desc') {
+        createDateSortOrder = 'asc';
+        $(this)
+
+            .html('매각기일 ▲'); // 오름차순: ▲ 표시
+    } else {
+        createDateSortOrder = 'desc';
+        $(this)
+
+            .html('매각기일 ▼'); // 내림차순: ▼ 표시
+    }
+
+    // 기존 데이터를 초기화
+    $(cardContainer).empty();
+    page = 0;
+    hasMore = true;
+    itemIndex = 1;
+
+    // saleDate 기준 정렬로 데이터 불러오기
+    fetchData("createDate", createDateSortOrder);
+});
 $('#sortSaleDateButton').on('click', function () {
     // 정렬 순서 토글 및 버튼 색, 화살표 업데이트
     if (saleDateSortOrder === 'desc') {
