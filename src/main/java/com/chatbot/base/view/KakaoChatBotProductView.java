@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -65,7 +66,12 @@ public class KakaoChatBotProductView {
                     .append("특이사항: "+productDTO.getDescription())
             ;
 
-            basicCard.setThumbnail(productDTO.getImages().get(0));
+            String thumbnail = Optional.ofNullable(productDTO.getImages())
+                    .filter(images -> !images.isEmpty())
+                    .map(images -> images.get(0))
+                    .orElse("http://211.188.58.30:8080/loginLogo.png");
+
+            basicCard.setThumbnail(thumbnail);
             basicCard.setDescription(message.toString());
             basicCard.setButton(detailButton);
             if (productDTO.getStatus().equals(ProductStatus.PRE_DISPLAY.getName())) {
@@ -125,7 +131,12 @@ public class KakaoChatBotProductView {
                 .append("특이사항: "+productDTO.getDescription())
         ;
 
-        basicCard.setThumbnail(productDTO.getImages().get(0));
+        String thumbnail = Optional.ofNullable(productDTO.getImages())
+                .filter(images -> !images.isEmpty())
+                .map(images -> images.get(0))
+                .orElse("http://211.188.58.30:8080/loginLogo.png");
+
+        basicCard.setThumbnail(thumbnail);
         basicCard.setDescription(message.toString());
         basicCard.setButton(linkButton);
         if (productDTO.getStatus().equals(ProductStatus.PRE_DISPLAY.getName())) {
