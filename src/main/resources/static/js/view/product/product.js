@@ -68,12 +68,14 @@ $(document).ready(function() {
     $("#addProductModalButton").on("click", function () {
         // name이 "imageInputType"인 input을 제외한 모든 input 초기화
         $('#addModal').find('input').not('[name="imageInputType"]').val('');
+        $('#addModal').find('textarea').val('');
 
         const addDateInput = $('#addProductDisplayDate');
 
         addDateInput.attr('min', todayKST); // today를 최소값으로 설정
         addDateInput.val(todayKST); // 기본값으로 today 설정
-
+        $("#addProductManagerName").val(payload.name)
+        $("#addProductManagerPhone").val(payload.phone)
         $('#addModal').modal('show');
     });
 
@@ -84,10 +86,10 @@ $(document).ready(function() {
         const no = $("#addProductNo").val();
         const category = $("#addProductCategory").val();
         const location = $("#addProductLocation").val();
-        const price = $("#addProductPrice").val();
-        const currentPrice = $("#addProductCurrentPrice").val();
-        const minPrice = $("#addProductMinPrice").val();
-        const expectedPrice = $("#addProductExpectedPrice").val();
+        const price = $("#addProductPrice").val().replace(/,/g, '');;
+        const currentPrice = $("#addProductCurrentPrice").val().replace(/,/g, '');;
+        const minPrice = $("#addProductMinPrice").val().replace(/,/g, '');;
+        const expectedPrice = $("#addProductExpectedPrice").val().replace(/,/g, '');;
         const saleDate = $("#addProductSaleDate").val();
         const managerName = $("#addProductManagerName").val();
         const managerPhone = $("#addProductManagerPhone").val();
@@ -143,8 +145,13 @@ $(document).ready(function() {
             alert("담당자 이름을 입력하세요.")
             return
         }
-        if (!managerPhone) {
+        if (!managerPhone ) {
             alert("담당자 연락처를 입력하세요.")
+            return
+        }
+
+        if (!validatePhoneNumber(managerPhone)) {
+            alert("연락처 형식을 맞춰주세요. 예)01055557777")
             return
         }
 
@@ -176,10 +183,10 @@ $(document).ready(function() {
         const no = $('#updateProductNo').val();
         const category = $('#updateProductCategory').val();
         const location = $('#updateProductLocation').val();
-        const price = $('#updateProductPrice').val();
-        const currentPrice = $('#updateProductCurrentPrice').val();
-        const minPrice = $('#updateProductMinPrice').val();
-        const expectedPrice = $('#updateProductExpectedPrice').val();
+        const price = $('#updateProductPrice').val().replace(/,/g, '');;
+        const currentPrice = $('#updateProductCurrentPrice').val().replace(/,/g, '');;
+        const minPrice = $('#updateProductMinPrice').val().replace(/,/g, '');;
+        const expectedPrice = $('#updateProductExpectedPrice').val().replace(/,/g, '');;
         const saleDate = $('#updateProductSaleDate').val();
         const managerName = $('#updateProductManagerName').val();
         const managerPhone = $('#updateProductManagerPhone').val();
@@ -245,6 +252,12 @@ $(document).ready(function() {
             alert("담당자 연락처를 입력하세요.");
             return;
         }
+
+        if (!validatePhoneNumber(managerPhone)) {
+            alert("연락처 형식을 맞춰주세요. 예)01055557777")
+            return
+        }
+
         if (!description) {
             alert("장단점을 입력하세요.");
             return;

@@ -24,6 +24,43 @@ const todayKST = (() => {
     return `${year}-${month}-${day}`;
 })();
 
+function validatePhoneNumber(phoneNumber) {
+    const regex = /^010\d{8}$/;
+    return regex.test(phoneNumber);
+}
+
+$(document).ready(function() {
+    // 숫자 입력 및 천 단위 콤마 처리 함수
+    function applyNumberInputFormat(className) {
+        $(`.${className}`).on('input', function() {
+            let value = $(this).val().replace(/[^0-9]/g, ''); // 숫자만 허용
+            $(this).val(value.replace(/\B(?=(\d{3})+(?!\d))/g, ',')); // 천 단위 콤마
+        });
+
+        // 포커스 해제 시 최종 포맷
+        $(`.${className}`).on('blur', function() {
+            let value = $(this).val().replace(/[^0-9]/g, '');
+            $(this).val(value ? parseInt(value, 10).toLocaleString() : '');
+        });
+    }
+
+    // 함수 호출
+    applyNumberInputFormat('number-input');
+});
+
+function formatNumberWithComma(number) {
+    if (typeof number !== 'number' && typeof number !== 'string') {
+        return '';
+    }
+
+    // 숫자로 변환하고, 천 단위 콤마 적용
+    const num = parseFloat(number.toString().replace(/[^0-9]/g, ''));
+
+    return isNaN(num) ? '' : num.toLocaleString();
+}
+
+
+
 function renderCategoriesToRealEstate() {
     const selectElement = document.getElementById('categorySelect');
 
@@ -209,10 +246,10 @@ function openUpdateModal(data) {
     $('#updateProductNo').val(data.no);
     $('#updateProductCategory').val(data.category);
     $('#updateProductLocation').val(data.location);
-    $('#updateProductPrice').val(data.price);
-    $('#updateProductCurrentPrice').val(data.currentPrice);
-    $('#updateProductMinPrice').val(data.minPrice);
-    $('#updateProductExpectedPrice').val(data.expectedPrice);
+    $('#updateProductPrice').val(formatNumberWithComma(data.price));
+    $('#updateProductCurrentPrice').val(formatNumberWithComma(data.currentPrice));
+    $('#updateProductMinPrice').val(formatNumberWithComma(data.minPrice));
+    $('#updateProductExpectedPrice').val(formatNumberWithComma(data.expectedPrice));
     $('#updateProductSaleDate').val(data.saleDate);
     $('#updateProductManagerName').val(data.managerName);
     $('#updateProductManagerPhone').val(data.managerPhone);

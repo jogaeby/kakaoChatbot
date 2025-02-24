@@ -42,19 +42,19 @@ public class KakaoChatBotProductView {
             detailButton.setExtra(ButtonParamKey.choice, blockId);
             StringBuilder message = new StringBuilder();
             message
-                    .append("타경번호: " + productDTO.getNo())
-                    .append("\n")
-                    .append("물건종류: " + productDTO.getCategory())
-                    .append("\n")
-                    .append("소재지: " + productDTO.getLocation())
-                    .append("\n\n")
                     .append("감정가: " + productDTO.getPrice())
-                    .append("\n")
-                    .append("현시세: " + productDTO.getCurrentPrice())
                     .append("\n")
                     .append("최저가: " + productDTO.getMinPrice())
                     .append("\n")
+                    .append("소재지: " + productDTO.getLocation())
+                    .append("\n")
                     .append("예상 낙찰가: " + productDTO.getExpectedPrice())
+                    .append("\n")
+                    .append("현시세: " + productDTO.getCurrentPrice())
+                    .append("\n")
+                    .append("타경번호: " + productDTO.getNo())
+                    .append("\n")
+                    .append("물건종류: " + productDTO.getCategory())
                     .append("\n")
                     .append("매각 기일: " + productDTO.getSaleDate())
                     .append("\n")
@@ -62,7 +62,7 @@ public class KakaoChatBotProductView {
                     .append("\n")
                     .append("담당자 연락처: "+productDTO.getManagerPhone())
                     .append("\n")
-                    .append("장단점: "+productDTO.getDescription())
+                    .append("특이사항: "+productDTO.getDescription())
             ;
 
             basicCard.setThumbnail(productDTO.getImages().get(0));
@@ -102,27 +102,27 @@ public class KakaoChatBotProductView {
 
         StringBuilder message = new StringBuilder();
         message
-                .append("타경번호: "+productDTO.getNo())
+                .append("감정가: " + productDTO.getPrice())
                 .append("\n")
-                .append("물건종류: "+productDTO.getCategory())
+                .append("최저가: " + productDTO.getMinPrice())
                 .append("\n")
-                .append("소재지: "+productDTO.getLocation())
+                .append("소재지: " + productDTO.getLocation())
                 .append("\n\n")
-                .append("감정가: "+productDTO.getPrice())
+                .append("예상 낙찰가: " + productDTO.getExpectedPrice())
                 .append("\n")
-                .append("현시세: "+productDTO.getCurrentPrice())
+                .append("현시세: " + productDTO.getCurrentPrice())
                 .append("\n")
-                .append("최저가: "+productDTO.getMinPrice())
+                .append("타경번호: " + productDTO.getNo())
                 .append("\n")
-                .append("예상 낙찰가: "+productDTO.getExpectedPrice())
+                .append("물건종류: " + productDTO.getCategory())
                 .append("\n")
-                .append("매각 기일: "+productDTO.getSaleDate())
+                .append("매각 기일: " + productDTO.getSaleDate())
                 .append("\n")
-                .append("담당자: "+productDTO.getManagerName())
+                .append("담당자: " + productDTO.getManagerName())
                 .append("\n")
                 .append("담당자 연락처: "+productDTO.getManagerPhone())
                 .append("\n")
-                .append("장단점: \n"+productDTO.getDescription())
+                .append("특이사항: "+productDTO.getDescription())
         ;
 
         basicCard.setThumbnail(productDTO.getImages().get(0));

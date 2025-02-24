@@ -95,7 +95,7 @@
                                 <!-- 이미지 URL 입력 -->
                                 <div class="form-group mb-3" id="imageUrlGroup">
                                     <label for="addProductImageUrl">이미지 URL:</label>
-                                    <input type="text" class="form-control" id="addProductImageUrl" placeholder="이미지 URL을 입력하세요.">
+                                    <input type="text" class="form-control" id="addProductImageUrl">
                                 </div>
 
                                 <!-- 이미지 파일 입력 -->
@@ -105,46 +105,46 @@
                                 </div>
 
                                 <label for="addProductMemo">메모:</label>
-                                <input type="text" class="form-control mb-3" id="addProductMemo" placeholder="메모를 입력하세요.">
+                                <input type="text" class="form-control mb-3" id="addProductMemo">
 
                                 <label for="addProductNo">타경번호:</label>
-                                <input type="text" class="form-control mb-3" id="addProductNo" placeholder="타경번호를 입력하세요.">
+                                <input type="text" class="form-control mb-3" id="addProductNo">
 
                                 <label for="addProductCategory">물건종류:</label>
-                                <input type="text" class="form-control mb-3" id="addProductCategory" placeholder="물건종류를 입력하세요.">
+                                <input type="text" class="form-control mb-3" id="addProductCategory">
 
                                 <label for="addProductLocation">소재지:</label>
-                                <input type="text" class="form-control mb-3" id="addProductLocation" placeholder="소재지를 입력하세요.">
+                                <input type="text" class="form-control mb-3" id="addProductLocation">
 
                                 <label for="addProductPrice">감정가:</label>
-                                <input type="text" class="form-control mb-3" id="addProductPrice" placeholder="감정가를 입력하세요.">
+                                <input type="text" class="form-control mb-3 number-input" id="addProductPrice">
 
                                 <label for="addProductCurrentPrice">현시세:</label>
-                                <input type="text" class="form-control mb-3" id="addProductCurrentPrice" placeholder="현시세를 입력하세요.">
+                                <input type="text" class="form-control mb-3 number-input" id="addProductCurrentPrice">
 
                                 <label for="addProductMinPrice">최저가:</label>
-                                <input type="text" class="form-control mb-3" id="addProductMinPrice" placeholder="최저가를 입력하세요.">
+                                <input type="text" class="form-control mb-3 number-input" id="addProductMinPrice">
 
                                 <label for="addProductExpectedPrice">예상 낙찰가:</label>
-                                <input type="text" class="form-control mb-3" id="addProductExpectedPrice" placeholder="예상 낙찰가를 입력하세요.">
+                                <input type="text" class="form-control mb-3 number-input" id="addProductExpectedPrice">
 
                                 <label for="addProductSaleDate">매각 기일:</label>
-                                <input type="date" class="form-control mb-3" id="addProductSaleDate" placeholder="매각 기일을 선택하세요.">
+                                <input type="date" class="form-control mb-3" id="addProductSaleDate">
 
                                 <label for="addProductManagerName">담당자:</label>
-                                <input type="text" class="form-control mb-3" id="addProductManagerName" placeholder="담당자 이름을 입력하세요.">
+                                <input type="text" class="form-control mb-3" id="addProductManagerName">
 
                                 <label for="addProductManagerPhone">담당자 연락처:</label>
-                                <input type="text" class="form-control mb-3" id="addProductManagerPhone" placeholder="01055557777">
+                                <input type="text" class="form-control mb-3" id="addProductManagerPhone">
 
-                                <label for="addProductDescription">장단점:</label>
-                                <textarea class="form-control mb-3" id="addProductDescription" placeholder="장단점을 입력하세요."></textarea>
+                                <label for="addProductDescription">특이사항:</label>
+                                <textarea class="form-control mb-3" id="addProductDescription"></textarea>
 
                                 <label for="addProductLink">링크:</label>
-                                <input type="text" class="form-control mb-3" id="addProductLink" placeholder="링크를 입력하세요.">
+                                <input type="text" class="form-control mb-3" id="addProductLink">
 
                                 <label for="addProductDisplayDate">노출 날짜:</label>
-                                <input type="date" class="form-control mb-3" id="addProductDisplayDate" placeholder="노출 날짜를 선택하세요.">
+                                <input type="date" class="form-control mb-3" id="addProductDisplayDate">
                             </div>
 
                             <div class="d-flex align-items-center justify-content-center mt-3 mb-3 gap-3">
@@ -154,8 +154,6 @@
                         </div>
                     </div>
                 </div>
-
-
 
                 <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
@@ -181,57 +179,57 @@
                                     </div>
                                     <!-- 이미지 URL 입력 -->
                                     <div class="form-group mb-3" id="updateImageUrlGroup">
-                                        <label for="addProductImageUrl">이미지 URL:</label>
-                                        <input type="text" class="form-control" id="updateProductImageUrl" placeholder="이미지 URL을 입력하세요.">
+                                        <label for="updateProductImageUrl">이미지 URL:</label>
+                                        <input type="text" class="form-control" id="updateProductImageUrl">
                                     </div>
 
                                     <!-- 이미지 파일 입력 -->
                                     <div class="form-group mb-3" id="updateImageFileGroup" style="display: none;">
-                                        <label for="addProductImageFile">이미지 파일:</label>
+                                        <label for="updateProductImageFile">이미지 파일:</label>
                                         <input type="file" class="form-control" id="updateProductImageFile" accept="image/*">
                                     </div>
 
                                     <label for="updateProductMemo">메모:</label>
-                                    <input type="text" class="form-control mb-3" id="updateProductMemo" placeholder="메모를 입력하세요.">
+                                    <input type="text" class="form-control mb-3" id="updateProductMemo">
 
-                                    <label for="addProductNo">타경번호:</label>
-                                    <input type="text" class="form-control mb-3" id="updateProductNo" placeholder="타경번호를 입력하세요.">
+                                    <label for="updateProductNo">타경번호:</label>
+                                    <input type="text" class="form-control mb-3" id="updateProductNo">
 
-                                    <label for="addProductCategory">물건종류:</label>
-                                    <input type="text" class="form-control mb-3" id="updateProductCategory" placeholder="물건종류를 입력하세요.">
+                                    <label for="updateProductCategory">물건종류:</label>
+                                    <input type="text" class="form-control mb-3" id="updateProductCategory">
 
-                                    <label for="addProductLocation">소재지:</label>
-                                    <input type="text" class="form-control mb-3" id="updateProductLocation" placeholder="소재지를 입력하세요.">
+                                    <label for="updateProductLocation">소재지:</label>
+                                    <input type="text" class="form-control mb-3" id="updateProductLocation">
 
-                                    <label for="addProductPrice">감정가:</label>
-                                    <input type="text" class="form-control mb-3" id="updateProductPrice" placeholder="감정가를 입력하세요.">
+                                    <label for="updateProductPrice">감정가:</label>
+                                    <input type="text" class="form-control mb-3 number-input" id="updateProductPrice">
 
                                     <label for="updateProductCurrentPrice">현시세:</label>
-                                    <input type="text" class="form-control mb-3" id="updateProductCurrentPrice" placeholder="현시세를 입력하세요.">
+                                    <input type="text" class="form-control mb-3 number-input" id="updateProductCurrentPrice">
 
-                                    <label for="addProductMinPrice">최저가:</label>
-                                    <input type="text" class="form-control mb-3" id="updateProductMinPrice" placeholder="최저가를 입력하세요.">
+                                    <label for="updateProductMinPrice">최저가:</label>
+                                    <input type="text" class="form-control mb-3 number-input" id="updateProductMinPrice">
 
-                                    <label for="addProductExpectedPrice">예상 낙찰가:</label>
-                                    <input type="text" class="form-control mb-3" id="updateProductExpectedPrice" placeholder="예상 낙찰가를 입력하세요.">
+                                    <label for="updateProductExpectedPrice">예상 낙찰가:</label>
+                                    <input type="text" class="form-control mb-3 number-input" id="updateProductExpectedPrice">
 
-                                    <label for="addProductSaleDate">매각 기일:</label>
-                                    <input type="date" class="form-control mb-3" id="updateProductSaleDate" placeholder="매각 기일을 선택하세요.">
+                                    <label for="updateProductSaleDate">매각 기일:</label>
+                                    <input type="date" class="form-control mb-3" id="updateProductSaleDate">
 
-                                    <label for="addProductManagerName">담당자:</label>
-                                    <input type="text" class="form-control mb-3" id="updateProductManagerName" placeholder="담당자 이름을 입력하세요.">
+                                    <label for="updateProductManagerName">담당자:</label>
+                                    <input type="text" class="form-control mb-3" id="updateProductManagerName">
 
-                                    <label for="addProductManagerName">담당자 연락처:</label>
-                                    <input type="text" class="form-control mb-3" id="updateProductManagerPhone" placeholder="01055557777">
+                                    <label for="updateProductManagerPhone">담당자 연락처:</label>
+                                    <input type="text" class="form-control mb-3" id="updateProductManagerPhone">
 
-                                    <label for="updateProductDescription">장단점:</label>
-                                    <textarea class="form-control mb-3" id="updateProductDescription" placeholder="장단점을 입력하세요." style="height: 150px; resize: none;"></textarea>
+                                    <label for="updateProductDescription">특이사항:</label>
+                                    <textarea class="form-control mb-3" id="updateProductDescription" style="height: 150px; resize: none;"></textarea>
 
                                     <label for="updateProductLink">링크:</label>
-                                    <input type="text" class="form-control mb-3" id="updateProductLink" placeholder="링크를 입력하세요.">
+                                    <input type="text" class="form-control mb-3" id="updateProductLink">
 
                                     <label for="updateProductDisplayDate">노출 날짜:</label>
-                                    <input type="date" class="form-control mb-3" id="updateProductDisplayDate" placeholder="노출 날짜를 선택하세요.">
+                                    <input type="date" class="form-control mb-3" id="updateProductDisplayDate">
 
                                     <label for="updateProductMemberId">작성자:</label>
                                     <input type="text" class="form-control mb-3" id="updateProductMemberId" readonly>
