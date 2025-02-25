@@ -1,5 +1,6 @@
 package com.chatbot.base.view;
 
+import com.chatbot.base.common.StringUtil;
 import com.chatbot.base.domain.product.Product;
 import com.chatbot.base.domain.product.constant.ProductStatus;
 import com.chatbot.base.domain.product.dto.ProductDTO;
@@ -43,15 +44,15 @@ public class KakaoChatBotProductView {
             detailButton.setExtra(ButtonParamKey.choice, blockId);
             StringBuilder message = new StringBuilder();
             message
-                    .append("감정가: " + productDTO.getPrice())
+                    .append("감정가: " + StringUtil.formatCurrency(productDTO.getPrice()))
                     .append("\n")
-                    .append("최저가: " + productDTO.getMinPrice())
+                    .append("최저가: " + StringUtil.formatCurrency(productDTO.getMinPrice()))
                     .append("\n")
-                    .append("소재지: " + productDTO.getLocation())
+                    .append("소재지: " + StringUtil.formatCurrency(productDTO.getLocation()))
+                    .append("\n\n")
+                    .append("예상가: " + StringUtil.formatCurrency(productDTO.getExpectedPrice()))
                     .append("\n")
-                    .append("예상 낙찰가: " + productDTO.getExpectedPrice())
-                    .append("\n")
-                    .append("현시세: " + productDTO.getCurrentPrice())
+                    .append("현시세: " + StringUtil.formatCurrency(productDTO.getCurrentPrice()))
                     .append("\n")
                     .append("타경번호: " + productDTO.getNo())
                     .append("\n")
@@ -59,9 +60,9 @@ public class KakaoChatBotProductView {
                     .append("\n")
                     .append("매각 기일: " + productDTO.getSaleDate())
                     .append("\n")
-                    .append("담당자: " + productDTO.getManagerName())
+                    .append("권리분석사: " + productDTO.getManagerName())
                     .append("\n")
-                    .append("담당자 연락처: "+productDTO.getManagerPhone())
+                    .append("상담전화: "+productDTO.getManagerPhone())
                     .append("\n")
                     .append("특이사항: "+productDTO.getDescription())
             ;
@@ -108,15 +109,15 @@ public class KakaoChatBotProductView {
 
         StringBuilder message = new StringBuilder();
         message
-                .append("감정가: " + productDTO.getPrice())
+                .append("감정가: " + StringUtil.formatCurrency(productDTO.getPrice()))
                 .append("\n")
-                .append("최저가: " + productDTO.getMinPrice())
+                .append("최저가: " + StringUtil.formatCurrency(productDTO.getMinPrice()))
                 .append("\n")
-                .append("소재지: " + productDTO.getLocation())
+                .append("소재지: " + StringUtil.formatCurrency(productDTO.getLocation()))
                 .append("\n\n")
-                .append("예상 낙찰가: " + productDTO.getExpectedPrice())
+                .append("예상가: " + StringUtil.formatCurrency(productDTO.getExpectedPrice()))
                 .append("\n")
-                .append("현시세: " + productDTO.getCurrentPrice())
+                .append("현시세: " + StringUtil.formatCurrency(productDTO.getCurrentPrice()))
                 .append("\n")
                 .append("타경번호: " + productDTO.getNo())
                 .append("\n")
@@ -124,9 +125,9 @@ public class KakaoChatBotProductView {
                 .append("\n")
                 .append("매각 기일: " + productDTO.getSaleDate())
                 .append("\n")
-                .append("담당자: " + productDTO.getManagerName())
+                .append("권리분석사: " + productDTO.getManagerName())
                 .append("\n")
-                .append("담당자 연락처: "+productDTO.getManagerPhone())
+                .append("상담전화: "+productDTO.getManagerPhone())
                 .append("\n")
                 .append("특이사항: "+productDTO.getDescription())
         ;

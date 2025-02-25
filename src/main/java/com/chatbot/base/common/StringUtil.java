@@ -40,11 +40,13 @@ public class StringUtil {
     }
 
     public static String formatCurrency(String amount) {
-        if (amount == null || amount.equals("0")) {
-            return "골프장 공지가";
+        try {
+            // 천단위 콤마 추가
+            return String.format("%,d", Long.parseLong(amount)) + "원";
+        } catch (NumberFormatException e) {
+            // 예외 발생 시 입력값 그대로 반환
+            return amount;
         }
-        // 금액을 문자열로 변환 후, 콤마 추가
-        return String.format("%,d", Long.parseLong(amount))+"원";
     }
 
     public static String formatAddress(String address) {
