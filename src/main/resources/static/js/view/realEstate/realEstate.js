@@ -136,9 +136,11 @@ function renderCard(item, isSelected = false) {
             <div class="info-item"><strong>현시세:</strong> ${item.currentPrice ? formatNumberWithComma(item.currentPrice) + '원' : ''}</div>
             <div class="info-item"><strong>최저가:</strong> ${item.minPrice ? formatNumberWithComma(item.minPrice) + '원' : ''}</div>
             <div class="info-item" style="color:#dc3545"><strong>예상가:</strong> ${item.expectedPrice ? formatNumberWithComma(item.expectedPrice) + '원' : ''}</div>
+            <br>
             <div class="info-item"><strong>소재지:</strong> ${item.location ?? ''}</div>
             <div class="info-item"><strong>타경번호:</strong> ${item.no ?? ''}</div>
             <div class="info-item"><strong>물건종류:</strong> ${item.category ?? ''}</div>
+            <br>
             <div class="info-item"><strong>권리분석사:</strong> ${item.managerName ?? ''}</div>
             <div class="info-item"><strong>상담전화:</strong> ${item.managerPhone ?? ''}</div>
             <div class="info-item"><strong>특이사항:</strong> ${item.description ?? ''}</div>
