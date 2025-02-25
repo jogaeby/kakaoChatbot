@@ -90,8 +90,13 @@ $('#sortSaleDateButton').on('click', function () {
 // 🚩 카드 렌더링 함수 (특정 상품은 '선택 매물' 표시)
 function renderCard(item, isSelected = false) {
     const card = document.createElement('div');
-    card.className = 'card shadow-lg border-0 rounded-lg mt-3';
-    card.setAttribute('data-product-id', item.productId ?? '');
+    card.className = 'card shadow-lg rounded-lg mt-5';
+    card.setAttribute('data-product-id', item.id ?? '');
+    card.style.borderWidth = '3px';  // 두께 조절
+    card.style.borderStyle = 'solid';
+    card.style.borderColor = '#ff6600';  // 주황색 테두리
+
+
     // 🏷️ 순번 또는 '선택 매물' 표시
     const label = isSelected ? '선택 매물' : `순번: ${itemIndex++}`;
     const imageUrl = item.images?.[0] ?? '/loginLogo.png';
@@ -126,16 +131,16 @@ function renderCard(item, isSelected = false) {
             <div style="color: ${getSaleDateColor(item.saleDate)}; font-weight: bold">
                 <strong>매각 기일:</strong> ${saleDateDisplay}
             </div>
-            <div><strong>타경번호:</strong> ${item.no ?? ''}</div>
-            <div><strong>물건종류:</strong> ${item.category ?? ''}</div>
-            <div><strong>소재지:</strong> ${item.location ?? ''}</div>
             <div><strong>감정가:</strong> ${item.price ? item.price.toLocaleString() + '원' : ''}</div>
             <div><strong>현시세:</strong> ${item.currentPrice ? item.currentPrice.toLocaleString() : ''}</div>
             <div><strong>최저가:</strong> ${item.minPrice ? item.minPrice.toLocaleString() + '원' : ''}</div>
-            <div><strong>예상 낙찰가:</strong> ${item.expectedPrice ? item.expectedPrice.toLocaleString() + '원' : ''}</div>
-            <div><strong>담당자:</strong> ${item.managerName ?? ''}</div>
-            <div><strong>담당자 연락처:</strong> ${item.managerPhone ?? ''}</div>
-            <div><strong>장단점:</strong> ${item.description ?? ''}</div>
+            <div><strong>예상가:</strong> ${item.expectedPrice ? item.expectedPrice.toLocaleString() + '원' : ''}</div>
+            <div><strong>소재지:</strong> ${item.location ?? ''}</div>
+            <div><strong>타경번호:</strong> ${item.no ?? ''}</div>
+            <div><strong>물건종류:</strong> ${item.category ?? ''}</div>
+            <div><strong>권리분석사:</strong> ${item.managerName ?? ''}</div>
+            <div><strong>상담전화:</strong> ${item.managerPhone ?? ''}</div>
+            <div><strong>특이사항:</strong> ${item.description ?? ''}</div>
             <div><strong>링크:</strong> <a href="${item.link ?? '#'}" target="_blank">상세 보기</a></div>
             <div><strong>작성자:</strong> ${item.memberId ?? ''}</div>
             <div><strong>작성일:</strong> ${item.createDate ?? ''}</div>
