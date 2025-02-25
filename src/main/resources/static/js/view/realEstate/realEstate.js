@@ -89,7 +89,6 @@ $('#sortSaleDateButton').on('click', function () {
 
 // 🚩 카드 렌더링 함수 (특정 상품은 '선택 매물' 표시)
 function renderCard(item, isSelected = false) {
-    console.log(item)
     const card = document.createElement('div');
     card.className = 'card shadow-lg rounded-lg mt-5';
     card.setAttribute('data-product-id', item.id ?? '');
