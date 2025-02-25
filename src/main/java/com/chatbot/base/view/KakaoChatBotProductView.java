@@ -115,6 +115,7 @@ public class KakaoChatBotProductView {
         message
                 .append("매각 기일: " + productDTO.getSaleDate())
                 .append("\n")
+                .append("\n")
                 .append("감정가: " + StringUtil.formatCurrency(productDTO.getPrice()))
                 .append("\n")
                 .append("현시세: " + StringUtil.formatCurrency(productDTO.getCurrentPrice()))
