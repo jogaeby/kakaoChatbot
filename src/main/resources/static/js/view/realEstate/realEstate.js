@@ -126,7 +126,7 @@ function renderCard(item, isSelected = false) {
     card.innerHTML = `
         <img src="${isValidUrl ? imageUrl : '/loginLogo.png'}" alt="image" class="card-img-top"
              onerror="this.onerror=null;this.src='/loginLogo.png';" referrerpolicy="no-referrer">
-        <div class="card-header"><strong>${label}</strong></div>
+<!--        <div class="card-header"><strong>${label}</strong></div>-->
         <div class="card-body">
            <div class="info-item" style="color: ${getSaleDateColor(item.saleDate)}; font-weight: bold;">
                 <strong>매각 기일:</strong> ${saleDateDisplay}
