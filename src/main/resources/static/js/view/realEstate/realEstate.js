@@ -132,13 +132,14 @@ function renderCard(item, isSelected = false) {
                 <strong>매각 기일:</strong> ${saleDateDisplay}
             </div>
             <div class="info-item"><strong>감정가:</strong> ${item.price ? formatNumberWithComma(item.price) + '원' : ''}</div>
-            <div class="info-item"><strong>현시세:</strong> ${item.currentPrice ? formatNumberWithComma(item.currentPrice) + '원' : ''}</div>
             <div class="info-item"><strong>최저가:</strong> ${item.minPrice ? formatNumberWithComma(item.minPrice) + '원' : ''}</div>
-            <div class="info-item" style="color:#dc3545"><strong>예상가:</strong> ${item.expectedPrice ? formatNumberWithComma(item.expectedPrice) + '원' : ''}</div>
             <br>
             <div class="info-item"><strong>타경번호:</strong> ${item.no ?? ''}</div>
             <div class="info-item"><strong>물건종류:</strong> ${item.category ?? ''}</div>
             <div class="info-item"><strong>소재지:</strong> ${item.location ?? ''}</div>
+            <br>
+            <div class="info-item"><strong>현시세:</strong> ${item.currentPrice ? formatNumberWithComma(item.currentPrice) + '원' : ''}</div>
+            <div class="info-item" style="color:#dc3545"><strong>예상가:</strong> ${item.expectedPrice ? formatNumberWithComma(item.expectedPrice) + '원' : ''}</div>
             <br>
             <div class="info-item"><strong>특이사항:</strong> ${item.description ?? ''}</div>
             <div class="info-item"><strong>링크:</strong> <a href="${item.link ?? '#'}" target="_blank">상세 보기</a></div>
