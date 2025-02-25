@@ -50,7 +50,7 @@ $(document).ready(function() {
 
 function formatNumberWithComma(number) {
     if (typeof number !== 'number' && typeof number !== 'string') {
-        return '';
+        return number;
     }
 
     // 숫자로 변환하고, 천 단위 콤마 적용

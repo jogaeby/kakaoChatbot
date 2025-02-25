@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -144,6 +145,7 @@ public class Product extends BaseEntity {
      * Product 엔티티를 DTO로 변환.
      */
     public ProductDTO toDTO() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         return ProductDTO.builder()
                 .id(getUuid().toString())
                 .memo(memo)
@@ -164,7 +166,7 @@ public class Product extends BaseEntity {
                 .statusPriority(status.getPriority())
                 .memberId(member.getId())
                 .displayDate(displayDate)
-                .createDate(getCreateDate().toLocalDate())
+                .createDate(getCreateDate().format(formatter))
                 .build();
     }
 

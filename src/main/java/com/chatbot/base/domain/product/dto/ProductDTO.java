@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.ToString;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @ToString
@@ -46,7 +47,7 @@ public class ProductDTO {
 
     private Integer statusPriority;
 
-    private LocalDate createDate;
+    private String createDate;
 
     private String memberId;
 
