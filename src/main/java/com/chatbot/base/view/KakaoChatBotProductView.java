@@ -39,7 +39,7 @@ public class KakaoChatBotProductView {
         productDTOList.forEach(productDTO -> {
             BasicCard basicCard = new BasicCard();
             Button linkButton = new Button("링크 바로가기", ButtonAction.웹링크연결, productDTO.getLink());
-            Button webDetailButton = new Button("웹으로 보기",ButtonAction.웹링크연결,url+productDTO.getId());
+            Button profileButton = new Button("분석사 프로필 ",ButtonAction.블럭이동,"67a41f7602a8246bb95aa121");
             Button detailButton = new Button("상세보기", ButtonAction.블럭이동, "67a3fb7863e1a53ac8d17145", ButtonParamKey.productId, productDTO.getId());
             detailButton.setExtra(ButtonParamKey.choice, blockId);
             StringBuilder message = new StringBuilder();
@@ -78,12 +78,10 @@ public class KakaoChatBotProductView {
 
             basicCard.setThumbnail(thumbnail);
             basicCard.setDescription(message.toString());
-            basicCard.setButton(detailButton);
-            if (productDTO.getStatus().equals(ProductStatus.PRE_DISPLAY.getName())) {
-                basicCard.setButton(webDetailButton);
-            }
-            basicCard.setButton(linkButton);
 
+            basicCard.setButton(detailButton);
+            basicCard.setButton(linkButton);
+            basicCard.setButton(profileButton);
 
             carousel.addComponent(basicCard);
         });
@@ -109,7 +107,7 @@ public class KakaoChatBotProductView {
         String url = "http://211.188.58.30:8080/product/realEstate?id=";
         BasicCard basicCard = new BasicCard();
         Button linkButton = new Button("링크 바로가기",ButtonAction.웹링크연결,productDTO.getLink());
-        Button webDetailButton = new Button("웹으로 보기",ButtonAction.웹링크연결,url+productDTO.getId());
+        Button profileButton = new Button("분석사 프로필 ",ButtonAction.블럭이동,"67a41f7602a8246bb95aa121");
 
         StringBuilder message = new StringBuilder();
         message
@@ -145,9 +143,8 @@ public class KakaoChatBotProductView {
         basicCard.setThumbnail(thumbnail);
         basicCard.setDescription(message.toString());
         basicCard.setButton(linkButton);
-        if (productDTO.getStatus().equals(ProductStatus.PRE_DISPLAY.getName())) {
-            basicCard.setButton(webDetailButton);
-        }
+        basicCard.setButton(profileButton);
+
         response.addBasicCard(basicCard);
         response.addQuickButton("이전으로",ButtonAction.블럭이동,blockId);
         return response;
