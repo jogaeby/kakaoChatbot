@@ -26,11 +26,15 @@ $(document).ready(function(){
             menuHtml += `   
                  <div class="nav">
                  
-                    <a class="nav-link" href="/product" >
+                    <a class="nav-link" href="/reservation" >
                         <div class="sb-nav-link-icon"><i class='far fa-calendar-alt'></i></div>
                         예약접수
                     </a>
-                    
+                    <a class="nav-link" href="/product" >
+                        <div class="sb-nav-link-icon"><i class='far fa-calendar-alt'></i></div>
+                        예약내역
+                    </a>
+                 
 <!--                    <a class="nav-link" href="/members" >-->
 <!--                        <div class="sb-nav-link-icon"><i class="fa-sharp fa-light fa-user"></i></div>-->
 <!--                        회원관리-->
