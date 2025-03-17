@@ -34,9 +34,9 @@ spring:
           time_zone: Asia/Seoul
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://211.188.58.30:3306/dao
-    username: dao
-    password: dao2024!
+    url: jdbc:mysql://host.docker.internal:3306/elviolin
+    username: elviolin
+    password: elviolin2025!
     hikari:
       maximum-pool-size: 10
       minimum-idle: 5

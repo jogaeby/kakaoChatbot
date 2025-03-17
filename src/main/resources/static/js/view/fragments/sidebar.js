@@ -12,14 +12,14 @@ $(document).ready(function(){
         let menuHtml = '';
 
         if (userRole != '관리자') {
-            menuHtml += `   
-                 <div class="nav">
-                    <a class="nav-link" href="/product" >
-                        <div class="sb-nav-link-icon"><i class='far fa-calendar-alt'></i></div>
-                        매물등록
-                    </a>
-                </div>     
-                `;
+            // menuHtml += `
+            //      <div class="nav">
+            //         <a class="nav-link" href="/product" >
+            //             <div class="sb-nav-link-icon"><i class='far fa-calendar-alt'></i></div>
+            //             매물등록
+            //         </a>
+            //     </div>
+            //     `;
         }
 
         if (userRole === '관리자') {
@@ -28,13 +28,13 @@ $(document).ready(function(){
                  
                     <a class="nav-link" href="/product" >
                         <div class="sb-nav-link-icon"><i class='far fa-calendar-alt'></i></div>
-                        매물등록
+                        예약접수
                     </a>
                     
-                    <a class="nav-link" href="/members" >
-                        <div class="sb-nav-link-icon"><i class="fa-sharp fa-light fa-user"></i></div>
-                        회원관리
-                    </a>
+<!--                    <a class="nav-link" href="/members" >-->
+<!--                        <div class="sb-nav-link-icon"><i class="fa-sharp fa-light fa-user"></i></div>-->
+<!--                        회원관리-->
+<!--                    </a>-->
                 </div>     
                 `;
         }

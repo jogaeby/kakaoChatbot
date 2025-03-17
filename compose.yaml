@@ -3,10 +3,10 @@ services:
     image: 'mysql:8.0'
     container_name: mysql-container
     environment:
-      - 'MYSQL_DATABASE=dao'
-      - 'MYSQL_PASSWORD=dao2024!'
-      - 'MYSQL_ROOT_PASSWORD=dao2024!'
-      - 'MYSQL_USER=dao'
+      - 'MYSQL_DATABASE=elviolin'
+      - 'MYSQL_USER=elviolin'
+      - 'MYSQL_PASSWORD=elviolin2025!'
+      - 'MYSQL_ROOT_PASSWORD=elviolin2025!'
     ports:
       - '3306:3306'
     volumes:
@@ -21,9 +21,9 @@ services:
       dockerfile: Dockerfile
     container_name: spring_app_prod
     environment:
-      - 'SPRING_DATASOURCE_URL=jdbc:mysql://mysql-container:3306/dao'
-      - 'SPRING_DATASOURCE_USERNAME=dao'
-      - 'SPRING_DATASOURCE_PASSWORD=dao2024!'
+      - 'SPRING_DATASOURCE_URL=jdbc:mysql://mysql-container:3306/elviolin'
+      - 'SPRING_DATASOURCE_USERNAME=elviolin'
+      - 'SPRING_DATASOURCE_PASSWORD=elviolin2025!'
       - 'SPRING_DATA_REDIS_HOST=redis'
       - 'SPRING_DATA_REDIS_PORT=6379'
     ports:
