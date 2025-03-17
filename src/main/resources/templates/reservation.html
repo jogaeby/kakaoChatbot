@@ -52,41 +52,40 @@
                             <div class="card">
                                 <div class="card-body" >
                                     <form id="liveBlogRankForm">
-                                        <label>수강생 명:</label>
+                                        <label for="studentName">수강생 명:</label>
                                         <div class="form-floating mb-3">
                                             <input class="form-control" id="studentName" type="text" placeholder="매장명 예) 올어바웃로컬 (최대 1개)" required="">
                                             <label for="studentName">수강생 이름을 입력해주세요.</label>
                                         </div>
 
-                                        <label>수강생 연락처:</label>
+                                        <label for="studentPhone">수강생 연락처:</label>
                                         <div class="form-floating mb-3">
                                             <input class="form-control" id="studentPhone" type="text" placeholder="메인 키워드 예) OOO맛집 (최대 1개)" required="">
                                             <label for="studentPhone">수강생 연락처를 "-" 없이 입력해주세요.</label>
                                         </div>
 
-                                        <label>선생님 명:</label>
+                                        <label for="teacherName">선생님 명:</label>
                                         <div class="form-floating mb-3">
                                             <input class="form-control" id="teacherName" type="text" placeholder="메인 키워드 예) OOO맛집 (최대 1개)" required="">
                                             <label for="teacherName">선생님 이름을 입력해주세요.</label>
                                         </div>
 
-                                        <label>선생님 연락처:</label>
+                                        <label for="teacherPhone">선생님 연락처:</label>
                                         <div class="form-floating mb-3">
                                             <input class="form-control" id="teacherPhone" type="text" placeholder="메인 키워드 예) OOO맛집 (최대 1개)">
                                             <label for="teacherPhone">선생님 연락처를 "-" 없이 입력해주세요.</label>
                                         </div>
 
-                                        <label>체험 일시:</label>
+                                        <label for="reservationDate">체험 일시:</label>
                                         <div class="form-floating mb-3">
-                                            <input class="form-control" id="date" type="date">
-                                            <label for="date">체험 날짜를 선택해주세요.</label>
+                                            <input class="form-control" id="reservationDate" type="datetime-local">
+                                            <label for="reservationDate">체험 날짜를 선택해주세요.</label>
                                         </div>
 
-                                        <label>수강생 정보:</label>
+                                        <label for="studentInfo">수강생 정보:</label>
                                         <div class="form-floating mb-3">
                                             <textarea class="form-control" id="studentInfo" style="height: 300px; resize: none">
                                             </textarea>
-                                            <label for="studentInfo">수강생 정보를 입력해주세요.</label>
                                         </div>
 
                                         <div class="" style="display: flex; justify-content: center;">
@@ -108,6 +107,6 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
-        <script th:src="@{/js/view/product/product.js}"></script>
+        <script th:src="@{/js/view/reservation/reservation.js}"></script>
     </body>
 </html>
