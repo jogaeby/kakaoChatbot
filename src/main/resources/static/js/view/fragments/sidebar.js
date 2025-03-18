@@ -28,11 +28,11 @@ $(document).ready(function(){
                  
                     <a class="nav-link" href="/reservation" >
                         <div class="sb-nav-link-icon"><i class='far fa-calendar-alt'></i></div>
-                        예약접수
+                        체험레슨 예약접수
                     </a>
-                    <a class="nav-link" href="/product" >
+                    <a class="nav-link" href="/reservation/list" >
                         <div class="sb-nav-link-icon"><i class='far fa-calendar-alt'></i></div>
-                        예약내역
+                        체험레슨 예약내역
                     </a>
                  
 <!--                    <a class="nav-link" href="/members" >-->

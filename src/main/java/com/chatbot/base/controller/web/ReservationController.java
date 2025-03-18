@@ -6,6 +6,7 @@ import com.chatbot.base.domain.member.dto.MemberDTO;
 import com.chatbot.base.domain.product.constant.ProductStatus;
 import com.chatbot.base.domain.product.dto.ProductDTO;
 import com.chatbot.base.domain.product.service.ProductService;
+import com.chatbot.base.domain.reservation.constant.ReservationType;
 import com.chatbot.base.domain.reservation.dto.ReservatonDTO;
 import com.chatbot.base.domain.reservation.service.ReservationService;
 import lombok.RequiredArgsConstructor;
@@ -30,8 +31,13 @@ public class ReservationController {
     private final ReservationService reservationService;
 
     @GetMapping()
-    public String getProductPage() {
+    public String getPage() {
         return "reservation";
+    }
+
+    @GetMapping("list")
+    public String getListPage() {
+        return "reservationList";
     }
 
     @PostMapping(name = "trial",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -41,6 +47,19 @@ public class ReservationController {
             reservationService.saveTrialReservation(reservatonDTO);
 
             return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            log.error("{}", e.getMessage(), e);
+            return ResponseEntity.status(400).build();
+        }
+    }
+
+    @GetMapping("trial/list")
+    public ResponseEntity<List<ReservatonDTO>> getTrialProductList(Pageable pageable) {
+        try {
+            List<ReservatonDTO> reservationDTOS = reservationService.getAllByType(ReservationType.TRIAL, pageable);
+
+
+            return ResponseEntity.ok(reservationDTOS);
         } catch (Exception e) {
             log.error("{}", e.getMessage(), e);
             return ResponseEntity.status(400).build();

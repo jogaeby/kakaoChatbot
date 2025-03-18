@@ -6,8 +6,12 @@ import com.chatbot.base.domain.reservation.dto.ReservatonDTO;
 import com.chatbot.base.domain.reservation.repository.ReservationRepository;
 import com.chatbot.base.domain.reservation.service.ReservationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -21,5 +25,12 @@ public class ReservationServiceImpl implements ReservationService {
         Reservation reservation = reservatonDTO.toEntity(ReservationType.TRIAL);
 
         return reservationRepository.save(reservation);
+    }
+
+    @Override
+    public List<ReservatonDTO> getAllByType(ReservationType type, Pageable pageable) {
+        return reservationRepository.findAllByType(type,pageable).stream()
+                .map(Reservation::toDto)
+                .collect(Collectors.toList());
     }
 }
