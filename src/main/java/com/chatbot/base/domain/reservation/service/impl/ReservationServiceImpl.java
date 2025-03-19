@@ -1,15 +1,22 @@
 package com.chatbot.base.domain.reservation.service.impl;
 
+import com.chatbot.base.domain.product.Product;
+import com.chatbot.base.domain.product.ProductSpecification;
+import com.chatbot.base.domain.product.dto.ProductDTO;
 import com.chatbot.base.domain.reservation.Reservation;
+import com.chatbot.base.domain.reservation.ReservationSpecification;
 import com.chatbot.base.domain.reservation.constant.ReservationType;
 import com.chatbot.base.domain.reservation.dto.ReservatonDTO;
 import com.chatbot.base.domain.reservation.repository.ReservationRepository;
 import com.chatbot.base.domain.reservation.service.ReservationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -43,6 +50,19 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public List<ReservatonDTO> getAllByType(ReservationType type, Pageable pageable) {
         return reservationRepository.findAllByType(type,pageable).stream()
+                .map(Reservation::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ReservatonDTO> search(String category, String input, ReservationType type) {
+        Specification<Reservation> spec = ReservationSpecification.withDynamicQuery(category, input)
+                .and((root, query, cb) -> cb.equal(root.get("type"), type));
+
+        List<Reservation> reservations = reservationRepository.findAll(spec);
+
+
+        return reservations.stream()
                 .map(Reservation::toDto)
                 .collect(Collectors.toList());
     }

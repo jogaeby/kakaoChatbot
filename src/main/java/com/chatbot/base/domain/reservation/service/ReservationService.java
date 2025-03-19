@@ -15,4 +15,6 @@ public interface ReservationService {
     void delete(String id);
 
     List<ReservatonDTO> getAllByType(ReservationType type, Pageable pageable);
+
+    List<ReservatonDTO> search(String category, String input, ReservationType type);
 }

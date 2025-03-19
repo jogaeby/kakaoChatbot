@@ -7,11 +7,10 @@ const categories = [
     { name: '접수일', value: 'createDate' }
 ];
 const realEstateCategories = [
-    { name: '타경번호', value: 'no' },
-    { name: '물건종류', value: 'category' },
-    { name: '소재지', value: 'location' },
-    { name: '매각기일', value: 'saleDate' },
-    { name: '등록일', value: 'createDate' }
+    { name: '선생님 이름', value: 'teacherName' },
+    { name: '선생님 연락처', value: 'teacherPhone' },
+    { name: '면접일시', value: 'reservationDate' },
+    { name: '접수일', value: 'createDate' }
 ];
 
 const todayKST = (() => {

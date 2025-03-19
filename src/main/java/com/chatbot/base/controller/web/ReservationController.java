@@ -111,4 +111,21 @@ public class ReservationController {
             return ResponseEntity.status(400).build();
         }
     }
+
+    @GetMapping("search")
+    public ResponseEntity searchReservations(@RequestParam(name = "input") String input, @RequestParam(name = "category") String category, @RequestParam(name = "type") String type) {
+        try {
+
+            ReservationType reservationType = ReservationType.fromString(type);
+
+            List<ReservatonDTO> search = reservationService.search(category, input, reservationType);
+            return ResponseEntity
+                    .ok(search);
+        }catch (Exception e) {
+            log.error("{}",e.getMessage(),e);
+            return ResponseEntity
+                    .status(400)
+                    .build();
+        }
+    }
 }
