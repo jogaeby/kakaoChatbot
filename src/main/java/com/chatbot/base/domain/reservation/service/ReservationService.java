@@ -9,5 +9,10 @@ import java.util.List;
 
 public interface ReservationService {
     Reservation saveTrialReservation(ReservatonDTO reservatonDTO);
+
+    Reservation saveInterviewReservation(ReservatonDTO reservatonDTO);
+
+    void delete(String id);
+
     List<ReservatonDTO> getAllByType(ReservationType type, Pageable pageable);
 }

@@ -1,10 +1,10 @@
 const categories = [
-    { name: '메모', value: 'title' },
-    { name: '타경번호', value: 'no' },
-    { name: '물건종류', value: 'category' },
-    { name: '소재지', value: 'location' },
-    { name: '매각기일', value: 'saleDate' },
-    { name: '등록일', value: 'createDate' }
+    { name: '수강생 이름', value: 'studentName' },
+    { name: '수강생 연락처', value: 'studentPhone' },
+    { name: '선생님 이름', value: 'teacherName' },
+    { name: '선생님 연락처', value: 'teacherPhone' },
+    { name: '체험일시', value: 'reservationDate' },
+    { name: '접수일', value: 'createDate' }
 ];
 const realEstateCategories = [
     { name: '타경번호', value: 'no' },
@@ -61,7 +61,7 @@ function formatNumberWithComma(number) {
 
 
 
-function renderCategoriesToRealEstate() {
+function renderCategoriesToInterview() {
     const selectElement = document.getElementById('categorySelect');
 
     // 기존 옵션 제거 (기본 선택 옵션 제외)

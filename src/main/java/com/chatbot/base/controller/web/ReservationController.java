@@ -21,6 +21,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Slf4j
@@ -34,13 +35,21 @@ public class ReservationController {
     public String getPage() {
         return "reservation";
     }
+    @GetMapping("interview")
+    public String getInterviewPage() {
+        return "interview";
+    }
+    @GetMapping("interviewList")
+    public String getInterviewListPage() {
+        return "interviewList";
+    }
 
     @GetMapping("list")
     public String getListPage() {
         return "reservationList";
     }
 
-    @PostMapping(name = "trial",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/trial",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> addReservation(@ModelAttribute ReservatonDTO reservatonDTO) {
         try {
 
@@ -52,9 +61,46 @@ public class ReservationController {
             return ResponseEntity.status(400).build();
         }
     }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteReservation(@PathVariable String id) {
+        try {
+
+            reservationService.delete(id);
+
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            log.error("{}", e.getMessage(), e);
+            return ResponseEntity.status(400).build();
+        }
+    }
+
+    @PostMapping(value = "/interview",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> addInterviewReservation(@ModelAttribute ReservatonDTO reservatonDTO) {
+        try {
+
+            reservationService.saveInterviewReservation(reservatonDTO);
+
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            log.error("{}", e.getMessage(), e);
+            return ResponseEntity.status(400).build();
+        }
+    }
+
+    @GetMapping("interview/list")
+    public ResponseEntity<List<ReservatonDTO>> getInterviewReservationList(Pageable pageable) {
+        try {
+            List<ReservatonDTO> reservationDTOS = reservationService.getAllByType(ReservationType.INTERVIEW, pageable);
+
+            return ResponseEntity.ok(reservationDTOS);
+        } catch (Exception e) {
+            log.error("{}", e.getMessage(), e);
+            return ResponseEntity.status(400).build();
+        }
+    }
 
     @GetMapping("trial/list")
-    public ResponseEntity<List<ReservatonDTO>> getTrialProductList(Pageable pageable) {
+    public ResponseEntity<List<ReservatonDTO>> getTrialReservationList(Pageable pageable) {
         try {
             List<ReservatonDTO> reservationDTOS = reservationService.getAllByType(ReservationType.TRIAL, pageable);
 

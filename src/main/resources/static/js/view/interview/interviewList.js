@@ -1,6 +1,6 @@
 $(document).ready(function() {
     const headers = [
-        'No', '수강생 이름', '수강생 연락처', '선생님 이름', '선생님 연락처', '수강생 정보','체험일시','접수일', '기타'
+        'No', '선생님 이름', '선생님 연락처','면접일시','접수일', '기타'
     ];
     const sortableColumns = ["매각 기일", "등록일"];
 
@@ -10,7 +10,7 @@ $(document).ready(function() {
     const id = payload.id;
 
     getData()
-    renderCategories()
+    renderCategoriesToInterview()
 
     $(document).ready(function () {
         // 추가 모달: 이미지 입력 방식 변경 시, 해당 입력창 보이기/숨기기
@@ -295,7 +295,7 @@ $(document).ready(function() {
         const size = 20
         const sort = 'reservationDate,desc'
 
-        fetch(`/reservation/trial/list?page=${page}&size=${size}&sort=${sort}`, {
+        fetch(`/reservation/interview/list?page=${page}&size=${size}&sort=${sort}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -317,18 +317,10 @@ $(document).ready(function() {
         const formattedReservationDate = formatDate(data.reservationDate);
         const row = $(`<tr id = ${data.id}>`);
         row.append($('<td data-column="Index">').text(index + 1));
-        //
-        // const idCell = $('<td data-column="Memo">').text(data.studentName)
-        //     .css({cursor: 'pointer', color: 'blue'});
-        // idCell.on('click', () => openUpdateModal(data));
-        //
-        // row.append(idCell);
-        row.append($('<td data-column="studentName">').text(data.studentName));
-        row.append($('<td data-column="studentPhone">').text(data.studentPhone));
-        row.append($('<td data-column="teacherName">').text(data.teacherName));
-        row.append($('<td data-column="teacherPhone">').text(data.teacherPhone));
-        row.append($('<td data-column="studentInfo">').text(data.studentInfo));
-        row.append($('<td data-column="formattedReservationDate">').text(formattedReservationDate));
+
+        row.append($('<td data-column="Status">').text(data.teacherName));
+        row.append($('<td data-column="Status">').text(data.teacherPhone));
+        row.append($('<td data-column="Status">').text(formattedReservationDate));
         // 날짜 포맷 변경 (YYYY-MM-DD)
 
         row.append($('<td data-column="등록일">').text(formattedCreateDate));
@@ -430,7 +422,7 @@ $(document).ready(function() {
 
     function deleteButton(data) {
         return $('<button>').text('삭제').addClass('btn btn-danger mx-lg-1 btn-sm').on('click', function () {
-            if (confirm(`[${data.studentName}]의 [${data.reservationDate}] 예약을 삭제하시겠습니까?`)) {
+            if (confirm(`[${data.teacherName}]의 [${data.reservationDate}] 예약을 삭제하시겠습니까?`)) {
                 deleteProduct(data.id)
             }
         })

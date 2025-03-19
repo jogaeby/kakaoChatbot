@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,6 +26,18 @@ public class ReservationServiceImpl implements ReservationService {
         Reservation reservation = reservatonDTO.toEntity(ReservationType.TRIAL);
 
         return reservationRepository.save(reservation);
+    }
+    @Transactional
+    @Override
+    public Reservation saveInterviewReservation(ReservatonDTO reservatonDTO) {
+        Reservation reservation = reservatonDTO.toEntity(ReservationType.INTERVIEW);
+
+        return reservationRepository.save(reservation);
+    }
+    @Transactional
+    @Override
+    public void delete(String id) {
+        reservationRepository.deleteById(UUID.fromString(id));
     }
 
     @Override
