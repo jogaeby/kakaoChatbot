@@ -1,5 +1,5 @@
 host:
-  ip: http://211.188.58.30
+  ip: http://3.34.199.230
   port: 8080
 spring:
   servlet:

@@ -1,6 +1,6 @@
 $(document).ready(function() {
     const headers = [
-        'No', '선생님 이름', '선생님 연락처','면접일시','접수일', '기타'
+        'No', '선생님 이름', '선생님 연락처','면접일시','줌 주소','접수일', '기타'
     ];
     const sortableColumns = ["매각 기일", "등록일"];
 
@@ -72,17 +72,16 @@ $(document).ready(function() {
     }
 
     function createTableRow(data, index) {
-        const formattedCreateDate = formatDate(data.createDate);
-        const formattedReservationDate = formatDate(data.reservationDate);
+        const formattedCreateDate = formatDateTime(data.createDate);
+        const formattedReservationDate = formatDateTime(data.reservationDate);
         const row = $(`<tr id = ${data.id}>`);
-        row.append($('<td data-column="Index">').text(index + 1));
+        row.append($('<td data-column="index">').text(index + 1));
 
-        row.append($('<td data-column="Status">').text(data.teacherName));
-        row.append($('<td data-column="Status">').text(data.teacherPhone));
-        row.append($('<td data-column="Status">').text(formattedReservationDate));
-        // 날짜 포맷 변경 (YYYY-MM-DD)
-
-        row.append($('<td data-column="등록일">').text(formattedCreateDate));
+        row.append($('<td data-column="teacherName">').text(data.teacherName));
+        row.append($('<td data-column="teacherPhone">').text(data.teacherPhone));
+        row.append($('<td data-column="reservationDate">').text(formattedReservationDate));
+        row.append($('<td data-column="zoomUrl">').text(data.zoomUrl));
+        row.append($('<td data-column="createDate">').text(formattedCreateDate));
 
         if (userRole == '관리자' || id == data.memberId) {
             row.append($('<td style="display: flex; justify-content: center;" data-column="Actions">').append(deleteButton(data)));

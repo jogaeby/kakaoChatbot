@@ -1,8 +1,5 @@
 package com.chatbot.base.domain.reservation.service.impl;
 
-import com.chatbot.base.domain.product.Product;
-import com.chatbot.base.domain.product.ProductSpecification;
-import com.chatbot.base.domain.product.dto.ProductDTO;
 import com.chatbot.base.domain.reservation.Reservation;
 import com.chatbot.base.domain.reservation.ReservationSpecification;
 import com.chatbot.base.domain.reservation.constant.ReservationType;
@@ -15,8 +12,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;

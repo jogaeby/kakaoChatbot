@@ -54,13 +54,13 @@
                                     <form id="liveBlogRankForm">
                                         <label for="teacherName">선생님 명:</label>
                                         <div class="form-floating mb-3">
-                                            <input class="form-control" id="teacherName" type="text" placeholder="메인 키워드 예) OOO맛집 (최대 1개)" required="">
+                                            <input class="form-control" id="teacherName" type="text" required="">
                                             <label for="teacherName">선생님 이름을 입력해주세요.</label>
                                         </div>
 
                                         <label for="teacherPhone">선생님 연락처:</label>
                                         <div class="form-floating mb-3">
-                                            <input class="form-control" id="teacherPhone" type="text" placeholder="메인 키워드 예) OOO맛집 (최대 1개)">
+                                            <input class="form-control" id="teacherPhone" type="text" >
                                             <label for="teacherPhone">선생님 연락처를 "-" 없이 입력해주세요.</label>
                                         </div>
 
@@ -68,6 +68,12 @@
                                         <div class="form-floating mb-3">
                                             <input class="form-control" id="reservationDate" type="datetime-local">
                                             <label for="reservationDate">체험 날짜를 선택해주세요.</label>
+                                        </div>
+
+                                        <label for="zoomUrl">Zoom 주소:</label>
+                                        <div class="form-floating mb-3">
+                                            <input class="form-control" id="zoomUrl" type="text">
+                                            <label for="zoomUrl">줌 주소를 입력해주세요. 예) https://url.kr/p8s8wt </label>
                                         </div>
                                         <div class="" style="display: flex; justify-content: center;">
                                             <button class="btn btn-primary" id="reservationButton" type="button">예약하기</button>

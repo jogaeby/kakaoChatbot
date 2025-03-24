@@ -1,14 +1,11 @@
 package com.chatbot.base.domain.reservation;
 
-import com.chatbot.base.domain.product.Product;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class ReservationSpecification {
 

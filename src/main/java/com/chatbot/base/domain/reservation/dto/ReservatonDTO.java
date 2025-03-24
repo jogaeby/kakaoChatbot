@@ -20,9 +20,11 @@ public class ReservatonDTO {
     private LocalDateTime reservationDate;
     private String studentInfo;
     private String createDate;
+    private String zoomUrl;
 
     public Reservation toEntity(ReservationType type) {
         return Reservation.builder()
+                .zoomUrl(zoomUrl)
                 .studentName(studentName)
                 .studentPhone(studentPhone)
                 .teacherName(teacherName)

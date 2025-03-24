@@ -76,7 +76,7 @@ public class ReservationController {
     public ResponseEntity<?> addInterviewReservation(@ModelAttribute ReservatonDTO reservatonDTO) {
         try {
             try {
-                MultipleDetailMessageSentResponse multipleDetailMessageSentResponse = alarmTalkService.sendInterviewReceipt(reservatonDTO.getTeacherPhone(), "", reservatonDTO.getReservationDate());
+                MultipleDetailMessageSentResponse multipleDetailMessageSentResponse = alarmTalkService.sendInterviewReceipt(reservatonDTO.getTeacherPhone(), reservatonDTO.getZoomUrl(), reservatonDTO.getReservationDate());
 
                 if (multipleDetailMessageSentResponse.getFailedMessageList().isEmpty()) {
                     reservationService.saveInterviewReservation(reservatonDTO);

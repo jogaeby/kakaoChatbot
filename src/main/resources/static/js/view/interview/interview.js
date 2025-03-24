@@ -1,10 +1,9 @@
 $(document).ready(function() {
     $("#reservationButton").on("click", function () {
-
         const teacherName = $('#teacherName').val();
         const teacherPhone = $('#teacherPhone').val();
         const reservationDate = $('#reservationDate').val();
-
+        const zoomUrl = $('#zoomUrl').val();
 
 
         if (!teacherName) {
@@ -21,10 +20,16 @@ $(document).ready(function() {
             return
         }
 
+        if (!zoomUrl) {
+            alert("줌 주소를 선택해주세요.")
+            return
+        }
+
         const formData = new FormData();
         formData.append('teacherName', teacherName);
         formData.append('teacherPhone', teacherPhone);
         formData.append('reservationDate', reservationDate);
+        formData.append('zoomUrl', zoomUrl);
 
         sendReservation(formData)
     })
@@ -42,6 +47,7 @@ function sendReservation(formData){
                 $('#teacherName').val("");
                 $('#teacherPhone').val("");
                 $('#reservationDate').val("");
+                $('#zoomUrl').val("");
 
             } else {
                 alert("예약을 실패하였습니다.");

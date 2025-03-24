@@ -20,17 +20,19 @@ public class Reservation extends BaseEntity {
     private String studentPhone;
     private String teacherName;
     private String teacherPhone;
+    private String zoomUrl;
     private LocalDateTime reservationDate;
     private String studentInfo;
     @Enumerated(EnumType.STRING)
     private ReservationType type;
 
     @Builder
-    public Reservation(String studentName, String studentPhone, String teacherName, String teacherPhone, LocalDateTime reservationDate, String studentInfo, ReservationType type) {
+    public Reservation(String studentName, String studentPhone, String teacherName, String teacherPhone, String zoomUrl, LocalDateTime reservationDate, String studentInfo, ReservationType type) {
         this.studentName = studentName;
         this.studentPhone = studentPhone;
         this.teacherName = teacherName;
         this.teacherPhone = teacherPhone;
+        this.zoomUrl = zoomUrl;
         this.reservationDate = reservationDate;
         this.studentInfo = studentInfo;
         this.type = type;
@@ -39,13 +41,14 @@ public class Reservation extends BaseEntity {
     public ReservatonDTO toDto() {
         return ReservatonDTO.builder()
                 .id(getUuid().toString())
+                .zoomUrl(zoomUrl)
                 .studentName(studentName)
                 .studentPhone(studentPhone)
                 .teacherName(teacherName)
                 .teacherPhone(teacherPhone)
                 .reservationDate(reservationDate)
                 .studentInfo(studentInfo)
-                .createDate(getCreateDate().toLocalDate().toString())
+                .createDate(getCreateDate().toString())
                 .build();
     }
 }

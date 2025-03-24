@@ -74,8 +74,8 @@ $(document).ready(function() {
     }
 
     function createTableRow(data, index) {
-        const formattedCreateDate = formatDate(data.createDate);
-        const formattedReservationDate = formatDate(data.reservationDate);
+        const formattedCreateDate = formatDateTime(data.createDate);
+        const formattedReservationDate = formatDateTime(data.reservationDate);
         const row = $(`<tr id = ${data.id}>`);
         row.append($('<td data-column="Index">').text(index + 1));
         //

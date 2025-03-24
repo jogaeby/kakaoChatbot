@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 
 @Slf4j
@@ -54,7 +55,7 @@ public class AlarmTalkService {
 
         HashMap<String, String> variables = new HashMap<>();
         variables.put("#{수강생명}", studentName);
-        variables.put("#{체험일시}", date.toString());
+        variables.put("#{체험일시}", date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
         kakaoOption.setVariables(variables);
 
@@ -76,7 +77,7 @@ public class AlarmTalkService {
     }
 
     @Async
-    public void sendTrialBefore(String phone, String studentName, LocalDate date) {
+    public void sendTrialBefore(String phone, String studentName, LocalDateTime date) {
         DefaultMessageService messageService =  NurigoApp.INSTANCE.initialize(API_KEY, API_SECRET_KEY, "https://api.solapi.com");
 
         KakaoOption kakaoOption = new KakaoOption();
@@ -86,7 +87,7 @@ public class AlarmTalkService {
 
         HashMap<String, String> variables = new HashMap<>();
         variables.put("#{수강생명}", studentName);
-        variables.put("#{체험일시}", date.toString());
+        variables.put("#{체험일시}", date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
         kakaoOption.setVariables(variables);
 
@@ -145,7 +146,7 @@ public class AlarmTalkService {
 
         HashMap<String, String> variables = new HashMap<>();
         variables.put("#{zoomUrl}", zoomUrl);
-        variables.put("#{인터뷰일시}", date.toString());
+        variables.put("#{인터뷰일시}", date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
         kakaoOption.setVariables(variables);
 
@@ -167,7 +168,7 @@ public class AlarmTalkService {
     }
 
     @Async
-    public void sendInterviewBefore(String phone, String zoomUrl, LocalDate date) {
+    public void sendInterviewBefore(String teacherName, String phone, String zoomUrl, LocalDateTime date) {
         DefaultMessageService messageService =  NurigoApp.INSTANCE.initialize(API_KEY, API_SECRET_KEY, "https://api.solapi.com");
 
         KakaoOption kakaoOption = new KakaoOption();
@@ -176,8 +177,9 @@ public class AlarmTalkService {
         kakaoOption.setDisableSms(true);
 
         HashMap<String, String> variables = new HashMap<>();
+        variables.put("#선생님 명}", teacherName);
         variables.put("#{zoomUrl}", zoomUrl);
-        variables.put("#{체험일시}", date.toString());
+        variables.put("#{체험일시}", date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
         kakaoOption.setVariables(variables);
 
