@@ -24,6 +24,10 @@ public class AlarmTalkService {
     private final String TRIAL_BEFORE_TEMPLATE_ID = "KA01TP250321050528900Qt9AwWcle10";
     private final String TRIAL_AFTER_TEMPLATE_ID = "KA01TP250321051103334qqdDFrYQfbE";
 
+    private final String TRIAL_RECEIPT_TEACHER_TEMPLATE_ID = "KA01TP250325001619484yPNcVGOXTF4";
+    private final String TRIAL_BEFORE_TEACHER_TEMPLATE_ID = "KA01TP250325001824569KxxfDfrskOU";
+    private final String TRIAL_AFTER_TEACHER_TEMPLATE_ID = "KA01TP250325001953519BEeXaabM2zZ";
+
     private final String INTERVIEW_RECEIPT_TEMPLATE_ID = "KA01TP250321051403956Og0ws8YQEkI";
     private final String INTERVIEW_BEFORE_TEMPLATE_ID = "KA01TP250321051451962lar8z6U9X9L";
     private final String INTERVIEW_AFTER_TEMPLATE_ID = "KA01TP2503210515594919RLvL8gLazj";
@@ -107,7 +111,7 @@ public class AlarmTalkService {
     }
 
     @Async
-    public void sendTrialAfter(String phone, String studentName, LocalDate date) {
+    public void sendTrialAfter(String phone, String studentName) {
         DefaultMessageService messageService =  NurigoApp.INSTANCE.initialize(API_KEY, API_SECRET_KEY, "https://api.solapi.com");
 
         KakaoOption kakaoOption = new KakaoOption();
@@ -117,6 +121,97 @@ public class AlarmTalkService {
 
         HashMap<String, String> variables = new HashMap<>();
         variables.put("#{수강생명}", studentName);
+
+        kakaoOption.setVariables(variables);
+
+        Message message = new Message();
+        message.setFrom(CALLER_1_ID);
+        message.setTo(phone);
+        message.setKakaoOptions(kakaoOption);
+
+        try {
+            // send 메소드로 ArrayList<Message> 객체를 넣어도 동작합니다!
+            MultipleDetailMessageSentResponse send = messageService.send(message);
+        } catch (NurigoMessageNotReceivedException e) {
+            log.error("{} {}",e.getFailedMessageList(),e.getMessage());
+        } catch (Exception e) {
+            log.error("{} {}",e.getMessage(),e.getStackTrace());
+        }
+    }
+
+    public MultipleDetailMessageSentResponse sendTrialTeacherReceipt(String phone, String studentName, LocalDateTime date, String studentInfo) {
+        DefaultMessageService messageService =  NurigoApp.INSTANCE.initialize(API_KEY, API_SECRET_KEY, "https://api.solapi.com");
+
+        KakaoOption kakaoOption = new KakaoOption();
+        kakaoOption.setPfId(CHANNEL_ID);
+        kakaoOption.setTemplateId(TRIAL_RECEIPT_TEACHER_TEMPLATE_ID);
+        kakaoOption.setDisableSms(true);
+
+        HashMap<String, String> variables = new HashMap<>();
+        variables.put("#{선생님 이름}", studentName);
+        variables.put("#{체험일시}", date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        variables.put("#{수강생 정보}", studentInfo);
+
+        kakaoOption.setVariables(variables);
+
+        Message message = new Message();
+        message.setFrom(CALLER_1_ID);
+        message.setTo(phone);
+        message.setKakaoOptions(kakaoOption);
+
+        try {
+            // send 메소드로 ArrayList<Message> 객체를 넣어도 동작합니다!
+            return messageService.send(message);
+        } catch (NurigoMessageNotReceivedException e) {
+            log.error("{} {}",e.getFailedMessageList(),e.getMessage());
+            throw new RuntimeException(e.getMessage());
+        } catch (Exception e) {
+            log.error("{} {}",e.getMessage(),e.getStackTrace());
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    @Async
+    public void sendTrialTeacherBefore(String phone, String teacherName, LocalDateTime date) {
+        DefaultMessageService messageService =  NurigoApp.INSTANCE.initialize(API_KEY, API_SECRET_KEY, "https://api.solapi.com");
+
+        KakaoOption kakaoOption = new KakaoOption();
+        kakaoOption.setPfId(CHANNEL_ID);
+        kakaoOption.setTemplateId(TRIAL_BEFORE_TEACHER_TEMPLATE_ID);
+        kakaoOption.setDisableSms(true);
+
+        HashMap<String, String> variables = new HashMap<>();
+        variables.put("#{선생님 이름}", teacherName);
+        variables.put("#{체험일시}", date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+
+        kakaoOption.setVariables(variables);
+
+        Message message = new Message();
+        message.setFrom(CALLER_1_ID);
+        message.setTo(phone);
+        message.setKakaoOptions(kakaoOption);
+
+        try {
+            // send 메소드로 ArrayList<Message> 객체를 넣어도 동작합니다!
+            MultipleDetailMessageSentResponse send = messageService.send(message);
+        } catch (NurigoMessageNotReceivedException e) {
+            log.error("{} {}",e.getFailedMessageList(),e.getMessage());
+        } catch (Exception e) {
+            log.error("{} {}",e.getMessage(),e.getStackTrace());
+        }
+    }
+
+    @Async
+    public void sendTrialTeacherAfter(String phone, String teacherName) {
+        DefaultMessageService messageService =  NurigoApp.INSTANCE.initialize(API_KEY, API_SECRET_KEY, "https://api.solapi.com");
+
+        KakaoOption kakaoOption = new KakaoOption();
+        kakaoOption.setPfId(CHANNEL_ID);
+        kakaoOption.setTemplateId(TRIAL_AFTER_TEACHER_TEMPLATE_ID);
+        kakaoOption.setDisableSms(true);
+
+        HashMap<String, String> variables = new HashMap<>();
+        variables.put("#{선생님 이름}", teacherName);
 
         kakaoOption.setVariables(variables);
 

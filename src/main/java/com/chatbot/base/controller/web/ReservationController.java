@@ -45,8 +45,10 @@ public class ReservationController {
     public ResponseEntity<?> addReservation(@ModelAttribute ReservatonDTO reservatonDTO) {
         try {
             try {
-                MultipleDetailMessageSentResponse multipleDetailMessageSentResponse = alarmTalkService.sendTrialReceipt(reservatonDTO.getStudentPhone(), reservatonDTO.getStudentName(), reservatonDTO.getReservationDate());
-                if (multipleDetailMessageSentResponse.getFailedMessageList().isEmpty()) {
+                MultipleDetailMessageSentResponse sendStudent = alarmTalkService.sendTrialReceipt(reservatonDTO.getStudentPhone(), reservatonDTO.getStudentName(), reservatonDTO.getReservationDate());
+                MultipleDetailMessageSentResponse sendTeacher = alarmTalkService.sendTrialTeacherReceipt(reservatonDTO.getTeacherPhone(), reservatonDTO.getTeacherName(), reservatonDTO.getReservationDate(), reservatonDTO.getStudentInfo());
+                log.info("학생 발송 실패 사유 개수 {} 선생님 발송 실패 사유 개수 {}",sendStudent.getFailedMessageList().size(),sendTeacher.getFailedMessageList().size());
+                if (sendStudent.getFailedMessageList().isEmpty() && sendTeacher.getFailedMessageList().isEmpty()) {
                     reservationService.saveTrialReservation(reservatonDTO);
                     return ResponseEntity.ok().build();
                 }

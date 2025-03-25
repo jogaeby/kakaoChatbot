@@ -13,6 +13,7 @@ import java.util.UUID;
 
 public interface ReservationRepository extends JpaRepository<Reservation, UUID>, JpaSpecificationExecutor<Reservation> {
     Page<Reservation> findAllByType(ReservationType type, Pageable pageable);
+    List<Reservation> findAllByTypeAndReservationDateBetween(ReservationType type,LocalDateTime start, LocalDateTime end);
     List<Reservation> findAllByReservationDateBetween(LocalDateTime start, LocalDateTime end);
 
 }

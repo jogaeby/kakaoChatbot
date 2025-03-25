@@ -18,8 +18,13 @@ class ScheduleTest {
 
 
     @Test
-    void updateProductStatus() {
+    void sendBeforeAlarmTalk() {
         schedule.sendBeforeAlarmTalk();
+    }
+
+    @Test
+    void sendBeforeInterviewAlarmTalk() {
+        schedule.sendBeforeInterviewAlarmTalk();
     }
 
     @Test
