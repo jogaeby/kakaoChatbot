@@ -87,7 +87,7 @@ public class Schedule {
         stopWatch.start();
         log.info("[{}] 50분 후 알람톡 실행", stopWatch.getTotalTimeSeconds());
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime targetTimeStart = now.minusMinutes(50).truncatedTo(ChronoUnit.MINUTES); // 50분 전 (정확한 분 단위)
+        LocalDateTime targetTimeStart = now.plusMinutes(50).truncatedTo(ChronoUnit.MINUTES); // 50분 후 (정확한 분 단위)
         LocalDateTime targetTimeEnd = targetTimeStart.plusSeconds(59).plusNanos(999_999_999); // 59.999초까지 포함
         log.info("{} ~ {}",targetTimeStart,targetTimeEnd);
         List<Reservation> reservations = reservationRepository.findAllByReservationDateBetween(targetTimeStart,targetTimeEnd);
