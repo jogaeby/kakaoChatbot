@@ -12,6 +12,12 @@ $(document).ready(function() {
     getData()
     renderCategoriesToInterview()
 
+    $('#searchDate').on('change', function () {
+        const selectedDate = $(this).val();
+
+        searchProducts(selectedDate,"reservationDate")
+    });
+
     $("#searchButton").on("click", function () {
         const searchInput = $('#searchInput').val();
         const category = $('#categorySelect').val();
@@ -92,8 +98,8 @@ $(document).ready(function() {
     }
 
     function deleteButton(data) {
-        return $('<button>').text('삭제').addClass('btn btn-danger mx-lg-1 btn-sm').on('click', function () {
-            if (confirm(`[${data.teacherName}]의 [${data.reservationDate}] 예약을 삭제하시겠습니까?`)) {
+        return $('<button>').text('취소').addClass('btn btn-danger mx-lg-1 btn-sm').on('click', function () {
+            if (confirm(`예약을 취소할까요?\n\n확인 시 예약 취소 연락이 전달되며\n재예약시 처음부터 다시시도 해야합니다.`)) {
                 deleteProduct(data.id)
             }
         })
@@ -108,10 +114,10 @@ $(document).ready(function() {
         })
             .then(response => {
                 if (response.ok) {
-                    alert("성공적으로 삭제하였습니다.")
+                    alert("예약이 성공적으로 취소되었습니다.")
                     getData()
                 } else {
-                    alert("삭제를 실패하였습니다.")
+                    alert("예약 취소를 실패하였습니다.")
                 }
             })
             .catch(error => {

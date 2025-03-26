@@ -69,7 +69,7 @@ function sendReservation(formData){
     })
         .then(response => {
             if (response.ok) {
-                alert("성공적으로 예약하였습니다.");
+                alert("예약이 성공적으로 접수되었습니다.");
                 $('#studentName').val("");
                 $('#studentPhone').val("");
                 $('#teacherName').val("");
