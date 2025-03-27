@@ -41,23 +41,14 @@ $(document).ready(function() {
         sendReservation(formData)
     })
 
-    $("#studentInfo").on("input", function() {
-        let textarea = $(this)[0]; // DOM 요소 가져오기
-        let value = textarea.value; // 현재 입력된 값
-        let cursorPos = textarea.selectionStart; // 현재 커서 위치
+    $("#studentInfo").on("focus", function () {
+        const $this = $(this);
+        setTimeout(() => {
+            if ($this.val().length === 0) {
 
-        // 특정 조건을 만족할 때 커서를 처음으로 이동
-        if (value === "") {
-            textarea.setSelectionRange(0, 0);
-        }
-
-        // 예: 특정 문자열 입력 시 커서 이동 (줄 바꿈 후 자동 들여쓰기 예제)
-        if (value[cursorPos - 1] === "\n") {
-            let spaces = "    "; // 4칸 스페이스 들여쓰기
-            let newValue = value.substring(0, cursorPos) + spaces + value.substring(cursorPos);
-            $(this).val(newValue);
-            textarea.setSelectionRange(cursorPos + spaces.length, cursorPos + spaces.length);
-        }
+                $this[0].setSelectionRange(0, 0); // 텍스트가 없으면 맨 앞으로 이동
+            }
+        }, 0);
     });
 
 })
