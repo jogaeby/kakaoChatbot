@@ -4,7 +4,7 @@ $(document).ready(function() {
         const studentPhone = $('#studentPhone').val();
         const teacherName = $('#teacherName').val();
         const teacherPhone = $('#teacherPhone').val();
-        const reservationDate = $('#reservationDate').val();
+        const reservationDate = parseKoreanDateTime($('#reservationDate').val())
         const studentInfo = $('#studentInfo').val();
 
         if (!studentName) {
@@ -54,6 +54,7 @@ $(document).ready(function() {
 })
 
 function sendReservation(formData){
+    $('#loadingOverlay').show();
     fetch(`/reservation/trial`, {
         method: 'POST',
         body: formData  // Content-Type은 브라우저가 자동으로 multipart/form-data로 설정합니다.
@@ -70,6 +71,7 @@ function sendReservation(formData){
             } else {
                 alert("예약을 실패하였습니다.");
             }
+            $('#loadingOverlay').hide();
         })
         .catch(error => {
             console.log(error);

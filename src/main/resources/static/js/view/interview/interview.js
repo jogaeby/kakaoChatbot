@@ -2,9 +2,9 @@ $(document).ready(function() {
     $("#reservationButton").on("click", function () {
         const teacherName = $('#teacherName').val();
         const teacherPhone = $('#teacherPhone').val();
-        const reservationDate = $('#reservationDate').val();
+        const reservationDate = parseKoreanDateTime($('#reservationDate').val())
         const zoomUrl = $('#zoomUrl').val();
-
+        console.log(reservationDate)
 
         if (!teacherName) {
             alert("선생님 이름을 입력해주세요.")
@@ -37,6 +37,7 @@ $(document).ready(function() {
 })
 
 function sendReservation(formData){
+    $('#loadingOverlay').show();
     fetch(`/reservation/interview`, {
         method: 'POST',
         body: formData  // Content-Type은 브라우저가 자동으로 multipart/form-data로 설정합니다.
@@ -52,6 +53,7 @@ function sendReservation(formData){
             } else {
                 alert("예약을 실패하였습니다.");
             }
+            $('#loadingOverlay').hide();
         })
         .catch(error => {
             console.log(error);
