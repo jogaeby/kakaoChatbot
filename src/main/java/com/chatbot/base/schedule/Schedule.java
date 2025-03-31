@@ -57,13 +57,17 @@ public class Schedule {
 
     @Scheduled(cron = "0 0 * * * *") // 매 시간 0분 0초마다 실행
     public void sendBeforeInterviewAlarmTalk() {
+        /**
+         * 예 현재시간 3월 1일 10:00
+         * 3월 1일 11:00 ~11:59 범위 조회
+         */
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
         log.info("[{}] 1시간 전 알람톡 실행",stopWatch.getTotalTimeSeconds());
 
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime nextHourStart = now.plusHours(1).truncatedTo(ChronoUnit.HOURS);
-        LocalDateTime nextHourEnd = nextHourStart.plusMinutes(59).plusSeconds(59);
+        LocalDateTime nextHourEnd = nextHourStart.plusMinutes(59).plusSeconds(59).plusNanos(999_999_999);
         log.info("{} ~ {}",nextHourStart,nextHourEnd);
         List<Reservation> reservations = reservationRepository.findAllByTypeAndReservationDateBetween(ReservationType.INTERVIEW,nextHourStart, nextHourEnd);
         log.info("총 알림톡 대상자 {}",reservations.size());
@@ -85,9 +89,9 @@ public class Schedule {
     public void sendAfterAlarmTalk() {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
-        log.info("[{}] 50분 후 알람톡 실행", stopWatch.getTotalTimeSeconds());
+        log.info("[{}] 40분 후 알람톡 실행", stopWatch.getTotalTimeSeconds());
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime targetTimeStart = now.minusMinutes(40).truncatedTo(ChronoUnit.MINUTES); // 50분 전 (정확한 분 단위)
+        LocalDateTime targetTimeStart = now.minusMinutes(40).truncatedTo(ChronoUnit.MINUTES); // 40분 전 (정확한 분 단위)
         LocalDateTime targetTimeEnd = targetTimeStart.plusSeconds(59).plusNanos(999_999_999); // 59.999초까지 포함
         log.info("{} ~ {}",targetTimeStart,targetTimeEnd);
         List<Reservation> reservations = reservationRepository.findAllByReservationDateBetween(targetTimeStart,targetTimeEnd);
@@ -114,6 +118,6 @@ public class Schedule {
         });
 
         stopWatch.stop();
-        log.info("[{}] 50분 후 알람톡 종료", stopWatch.getTotalTimeSeconds());
+        log.info("[{}] 40분 후 알람톡 종료", stopWatch.getTotalTimeSeconds());
     }
 }
