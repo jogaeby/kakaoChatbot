@@ -54,28 +54,28 @@
                             </div>
                             <div class="card">
                                 <div class="card-body" >
-                                    <form id="liveBlogRankForm">
+                                    <form id="reservationForm">
                                         <label for="studentName">수강생 명:</label>
                                         <div class="form-floating mb-3">
-                                            <input class="form-control" id="studentName" type="text" placeholder="매장명 예) 올어바웃로컬 (최대 1개)" required="">
+                                            <input class="form-control" id="studentName" type="text">
                                             <label for="studentName">수강생 이름을 입력해주세요.</label>
                                         </div>
 
                                         <label for="studentPhone">수강생 연락처:</label>
                                         <div class="form-floating mb-3">
-                                            <input class="form-control" id="studentPhone" type="text" placeholder="메인 키워드 예) OOO맛집 (최대 1개)" required="">
+                                            <input class="form-control" id="studentPhone" type="text">
                                             <label for="studentPhone">수강생 연락처를 "-" 없이 입력해주세요.</label>
                                         </div>
 
                                         <label for="teacherName">선생님 명:</label>
                                         <div class="form-floating mb-3">
-                                            <input class="form-control" id="teacherName" type="text" placeholder="메인 키워드 예) OOO맛집 (최대 1개)" required="">
+                                            <input class="form-control" id="teacherName" type="text">
                                             <label for="teacherName">선생님 이름을 입력해주세요.</label>
                                         </div>
 
                                         <label for="teacherPhone">선생님 연락처:</label>
                                         <div class="form-floating mb-3">
-                                            <input class="form-control" id="teacherPhone" type="text" placeholder="메인 키워드 예) OOO맛집 (최대 1개)">
+                                            <input class="form-control" id="teacherPhone" type="text">
                                             <label for="teacherPhone">선생님 연락처를 "-" 없이 입력해주세요.</label>
                                         </div>
 
@@ -88,6 +88,7 @@
                                         <label for="studentInfo">수강생 정보:</label>
                                         <div class="form-floating mb-3">
                                             <textarea class="form-control" id="studentInfo" style="height: 200px; resize: none"></textarea>
+                                            <label for="reservationDate">수강생 정보를 입력해주세요.</label>
                                         </div>
 
                                         <div class="" style="display: flex; justify-content: center;">
@@ -112,6 +113,7 @@
                 dateFormat: "Y년 m월 d일 K h:i", // 날짜 & 시간 포맷 (오전/오후)
                 time_24hr: false, // 12시간제 (오전/오후) 사용
                 minuteIncrement: 5, // 5분 단위 선택
+                minDate: "today", // 오늘 이전 날짜 비활성화
                 locale: {
                     weekdays: {
                         shorthand: ["일", "월", "화", "수", "목", "금", "토"],

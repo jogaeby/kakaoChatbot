@@ -1,10 +1,13 @@
 $(document).ready(function() {
+    checkFormFilled()
+    $("#reservationForm input, #reservationForm select, #reservationForm textarea").on("input change", checkFormFilled);
+
+
     $("#reservationButton").on("click", function () {
         const teacherName = $('#teacherName').val();
         const teacherPhone = $('#teacherPhone').val();
         const reservationDate = parseKoreanDateTime($('#reservationDate').val())
         const zoomUrl = $('#zoomUrl').val();
-        console.log(reservationDate)
 
         if (!teacherName) {
             alert("선생님 이름을 입력해주세요.")
@@ -35,7 +38,18 @@ $(document).ready(function() {
     })
 
 })
+function checkFormFilled() {
+    let allFilled = true;
 
+    $("#reservationForm input, #reservationForm select, #reservationForm textarea").each(function () {
+        if (!$(this).val().trim()) {
+            allFilled = false;
+            return false; // 루프 종료
+        }
+    });
+
+    $("#reservationButton").prop("disabled", !allFilled);
+}
 function sendReservation(formData){
     $('#loadingOverlay').show();
     fetch(`/reservation/interview`, {
@@ -44,7 +58,7 @@ function sendReservation(formData){
     })
         .then(response => {
             if (response.ok) {
-                alert("예약이 성공적으로 접수되었습니다.");
+                alert("교사면접 예약완료\n예약이 성공적으로 완료되었습니다.");
                 $('#teacherName').val("");
                 $('#teacherPhone').val("");
                 $('#reservationDate').val("");

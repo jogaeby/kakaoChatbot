@@ -53,7 +53,7 @@
                             </div>
                             <div class="card">
                                 <div class="card-body" >
-                                    <form id="liveBlogRankForm">
+                                    <form id="reservationForm">
                                         <label for="teacherName">선생님 명:</label>
                                         <div class="form-floating mb-3">
                                             <input class="form-control" id="teacherName" type="text" required="">
@@ -100,6 +100,7 @@
                 dateFormat: "Y년 m월 d일 K h:i", // 날짜 & 시간 포맷 (오전/오후)
                 time_24hr: false, // 12시간제 (오전/오후) 사용
                 minuteIncrement: 5, // 5분 단위 선택
+                minDate: "today", // 오늘 이전 날짜 비활성화
                 locale: {
                     weekdays: {
                         shorthand: ["일", "월", "화", "수", "목", "금", "토"],
