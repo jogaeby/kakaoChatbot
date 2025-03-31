@@ -55,34 +55,44 @@ public class Schedule {
         log.info("[{}] 하루전 알람톡 종료",stopWatch.getTotalTimeSeconds());
     }
 
-    @Scheduled(cron = "0 0 * * * *") // 매 시간 0분 0초마다 실행
+    @Scheduled(cron = "0 * * * * *") // 매 분 0초마다 실행
     public void sendBeforeInterviewAlarmTalk() {
-        /**
-         * 예 현재시간 3월 1일 10:00
-         * 3월 1일 11:00 ~11:59 범위 조회
-         */
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
-        log.info("[{}] 1시간 전 알람톡 실행",stopWatch.getTotalTimeSeconds());
+        log.info("[{}] 1시간 전 알람톡 실행", stopWatch.getTotalTimeSeconds());
 
-        LocalDateTime now = LocalDateTime.now();
+        // 현재 시간을 초 단위로 절단
+        LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+        // 1시간 후의 정각
         LocalDateTime nextHourStart = now.plusHours(1).truncatedTo(ChronoUnit.HOURS);
+        // 1시간 후의 끝 (1시간 후 59분 59초 999999999나노초)
         LocalDateTime nextHourEnd = nextHourStart.plusMinutes(59).plusSeconds(59).plusNanos(999_999_999);
-        log.info("{} ~ {}",nextHourStart,nextHourEnd);
-        List<Reservation> reservations = reservationRepository.findAllByTypeAndReservationDateBetween(ReservationType.INTERVIEW,nextHourStart, nextHourEnd);
-        log.info("총 알림톡 대상자 {}",reservations.size());
-        // 실행할 로직
+
+        log.info("{} ~ {}", nextHourStart, nextHourEnd);
+
+        // 예약 조회
+        List<Reservation> reservations = reservationRepository.findAllByTypeAndReservationDateBetween(
+                ReservationType.INTERVIEW, nextHourStart, nextHourEnd);
+        log.info("총 알림톡 대상자: {}", reservations.size());
+
+        // 알림톡 발송
         reservations.forEach(reservation -> {
-                String teacherName = reservation.getTeacherName();
-                String teacherPhone = reservation.getTeacherPhone();
-                String zoomUrl = reservation.getZoomUrl();
-                LocalDateTime reservationDate = reservation.getReservationDate();
-                log.info("알림톡 발송: {} {}",teacherName,teacherPhone);
-                alarmTalkService.sendInterviewBefore(teacherName,teacherPhone,zoomUrl,reservationDate);
+            LocalDateTime reservationDate = reservation.getReservationDate();
+            LocalDateTime alertTime = reservationDate.minusHours(1);  // 예약시간에서 1시간 전으로 설정
+            String teacherName = reservation.getTeacherName();
+            String teacherPhone = reservation.getTeacherPhone();
+            String zoomUrl = reservation.getZoomUrl();
+
+            // 예약 시간이 알림톡 발송 시간에 도달한 경우에만 발송
+            // 분 단위만 비교 (초는 무시)
+            if (alertTime.getMinute() == now.getMinute() && alertTime.getHour() == now.getHour()) {
+                log.info("알림톡 발송: {} {}", teacherName, teacherPhone);
+                alarmTalkService.sendInterviewBefore(teacherName, teacherPhone, zoomUrl, reservationDate);
+            }
         });
 
         stopWatch.stop();
-        log.info("[{}] 1시간 알람톡 종료",stopWatch.getTotalTimeSeconds());
+        log.info("[{}] 1시간 알람톡 종료", stopWatch.getTotalTimeSeconds());
     }
 
     @Scheduled(cron = "0 */10 * * * *") // 매 10분마다 실행
