@@ -62,12 +62,14 @@ public class Schedule {
         log.info("[{}] 1시간 전 알람톡 실행", stopWatch.getTotalTimeSeconds());
 
         // 현재 시간을 초 단위로 절단
+        // 현재 시간 (초 단위까지 포함)
         LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
-        // 1시간 후의 정각
-        LocalDateTime nextHourStart = now.plusHours(1).truncatedTo(ChronoUnit.HOURS);
-        // 1시간 후의 끝 (1시간 후 59분 59초 999999999나노초)
-        LocalDateTime nextHourEnd = nextHourStart.plusMinutes(59).plusSeconds(59).plusNanos(999_999_999);
 
+        // 1시간 후의 정각 (예: 현재가 13:15면, nextHourStart는 14:15:00)
+        LocalDateTime nextHourStart = now.plusHours(1).truncatedTo(ChronoUnit.MINUTES);
+
+        // 1시간 후의 끝 (예: 14:15:59)
+        LocalDateTime nextHourEnd = nextHourStart.plusSeconds(59);
         log.info("{} ~ {}", nextHourStart, nextHourEnd);
 
         // 예약 조회
