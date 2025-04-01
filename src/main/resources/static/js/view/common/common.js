@@ -1,18 +1,41 @@
 const categories = [
-    { name: '수강생 이름', value: 'studentName' },
-    { name: '수강생 연락처', value: 'studentPhone' },
-    { name: '선생님 이름', value: 'teacherName' },
-    { name: '선생님 연락처', value: 'teacherPhone' },
-    { name: '체험일시', value: 'reservationDate' },
-    { name: '접수일', value: 'createDate' }
+
 ];
 const realEstateCategories = [
-    { name: '선생님 이름', value: 'teacherName' },
-    { name: '선생님 연락처', value: 'teacherPhone' },
-    { name: '면접일시', value: 'reservationDate' },
-    { name: '접수일', value: 'createDate' }
+
 ];
 
+function parseKoreanDateTime(dateStr) {
+    const regex = /(\d{4})년 (\d{2})월 (\d{2})일 (오전|오후) (\d{1,2}):(\d{2})/;
+    const match = dateStr.match(regex);
+
+    if (!match) {
+        throw new Error("Invalid date format");
+    }
+
+    let [, year, month, day, meridiem, hour, minute] = match;
+
+    year = parseInt(year, 10);
+    month = parseInt(month, 10) - 1; // JavaScript는 0부터 시작
+    day = parseInt(day, 10);
+    hour = parseInt(hour, 10);
+    minute = parseInt(minute, 10);
+
+    // 오전/오후 변환
+    if (meridiem === "오후" && hour !== 12) {
+        hour += 12;
+    } else if (meridiem === "오전" && hour === 12) {
+        hour = 0;
+    }
+
+    // 한국 시간대 (UTC+9) 설정
+    const date = new Date(year, month, day, hour, minute);
+
+    // ISO 형식 (Java의 LocalDateTime과 호환 가능)
+    const isoDateString = date.toISOString().replace("T", "T").split(".")[0];
+
+    return isoDateString.slice(0, 16); // 2025-03-28T14:48 형식
+}
 const todayKST = (() => {
     const now = new Date();
     // (9*60 + now.getTimezoneOffset())는 두 시간대 간의 차이를 분 단위로 계산합니다.
