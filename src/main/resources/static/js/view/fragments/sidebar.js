@@ -12,14 +12,33 @@ $(document).ready(function(){
         let menuHtml = '';
 
         if (userRole != '관리자') {
-            // menuHtml += `
-            //      <div class="nav">
-            //         <a class="nav-link" href="/product" >
-            //             <div class="sb-nav-link-icon"><i class='far fa-calendar-alt'></i></div>
-            //             매물등록
-            //         </a>
-            //     </div>
-            //     `;
+            menuHtml += `
+                 <div class="nav">
+                       <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#trial" aria-expanded="false" aria-controls="trial">
+                        <div class="sb-nav-link-icon"><i class="far fa-calendar-alt"></i></div>
+                        체험레슨
+                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    </a>
+                    <div class="collapse" id="trial" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                        <nav class="sb-sidenav-menu-nested nav">
+                            <a class="nav-link" href="/reservation">체험레슨 예약접수</a>
+                            <a class="nav-link" href="/reservation/list">체험레슨 예약내역</a>
+                        </nav>
+                    </div>
+                    
+                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#interview" aria-expanded="false" aria-controls="interview">
+                        <div class="sb-nav-link-icon"><i class="fas fa-comment"></i></div>
+                        면접
+                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    </a>
+                    <div class="collapse" id="interview" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                        <nav class="sb-sidenav-menu-nested nav">
+                            <a class="nav-link" href="/reservation/interview">면접 예약접수</a>
+                            <a class="nav-link" href="/reservation/interviewList">면접 예약내역</a>
+                        </nav>
+                    </div>
+                </div>
+                `;
         }
 
         if (userRole === '관리자') {
@@ -38,7 +57,7 @@ $(document).ready(function(){
                     </div>
                     
                     <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#interview" aria-expanded="false" aria-controls="interview">
-                        <div class="sb-nav-link-icon"><i class="far fa-calendar-alt"></i></div>
+                        <div class="sb-nav-link-icon"><i class="fas fa-comment"></i></div>
                         면접
                         <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                     </a>
@@ -48,6 +67,10 @@ $(document).ready(function(){
                             <a class="nav-link" href="/reservation/interviewList">면접 예약내역</a>
                         </nav>
                     </div>
+                    <a class="nav-link" href="/members" >
+                        <div class="sb-nav-link-icon"><i class="fa-sharp fa-light fa-user"></i></div>
+                        회원관리
+                    </a>
 <!--                    <a class="nav-link" href="/reservation" >-->
 <!--                        <div class="sb-nav-link-icon"><i class='far fa-calendar-alt'></i></div>-->
 <!--                        체험레슨 예약접수-->
