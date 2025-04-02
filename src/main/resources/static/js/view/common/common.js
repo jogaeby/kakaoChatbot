@@ -16,7 +16,7 @@ function parseKoreanDateTime(dateStr) {
     let [, year, month, day, meridiem, hour, minute] = match;
 
     year = parseInt(year, 10);
-    month = parseInt(month, 10) - 1; // JavaScript는 0부터 시작
+    month = parseInt(month, 10) - 1; // JavaScript의 월은 0부터 시작
     day = parseInt(day, 10);
     hour = parseInt(hour, 10);
     minute = parseInt(minute, 10);
@@ -28,14 +28,17 @@ function parseKoreanDateTime(dateStr) {
         hour = 0;
     }
 
-    // 한국 시간대 (UTC+9) 설정
+    // 한국 시간(UTC+9) 적용
     const date = new Date(year, month, day, hour, minute);
 
-    // ISO 형식 (Java의 LocalDateTime과 호환 가능)
-    const isoDateString = date.toISOString().replace("T", "T").split(".")[0];
+    // 9시간 추가해서 ISO 포맷으로 변환
+    const isoDateString = new Date(date.getTime() + (9 * 60 * 60 * 1000))
+        .toISOString()
+        .split(".")[0]; // 밀리초 제거
 
-    return isoDateString.slice(0, 16); // 2025-03-28T14:48 형식
+    return isoDateString; // 한국 시간 기준 ISO 형식 반환
 }
+
 const todayKST = (() => {
     const now = new Date();
     // (9*60 + now.getTimezoneOffset())는 두 시간대 간의 차이를 분 단위로 계산합니다.

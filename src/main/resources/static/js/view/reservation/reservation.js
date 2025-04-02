@@ -33,6 +33,7 @@ $(document).ready(function() {
             alert("체험 날짜를 선택해주세요.")
             return
         }
+
         const formData = new FormData();
         formData.append('studentName', studentName);
         formData.append('studentPhone', studentPhone);
@@ -58,7 +59,6 @@ function checkFormFilled() {
     let allFilled = true;
 
     $("#reservationForm input, #reservationForm select, #reservationForm textarea").each(function () {
-        console.log(this)
         if (!$(this).val().trim()) {
             allFilled = false;
             return false; // 루프 종료
