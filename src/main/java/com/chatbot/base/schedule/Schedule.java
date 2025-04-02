@@ -22,37 +22,43 @@ public class Schedule {
     private final AlarmTalkService alarmTalkService;
     private final ReservationRepository reservationRepository;
 
-    @Scheduled(cron = "0 0 19 * * *") // 매일 저녁 7시마다 실행
+    @Scheduled(cron = "0 * * * * *")
     public void sendBeforeAlarmTalk() {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
-        log.info("[{}] 하루전 알람톡 실행",stopWatch.getTotalTimeSeconds());
+        log.info("[{}] 하루전 알람톡 실행", stopWatch.getTotalTimeSeconds());
 
+        // 현재 시간을 초 단위까지 포함하여 절단
+        LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
 
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime dayBeforeStart = now.plusDays(1).truncatedTo(ChronoUnit.DAYS); // 25일 00시
-        LocalDateTime dayBeforeEnd = dayBeforeStart.plusDays(1).minusNanos(1); // 25일 23:59:59.999
-        log.info("{} ~ {}",dayBeforeStart,dayBeforeEnd);
+        // 24시간 후의 같은 분 (예: 현재가 14:15면, targetTime은 내일 14:15:00)
+        LocalDateTime targetTime = now.plusDays(1).truncatedTo(ChronoUnit.MINUTES);
 
-        List<Reservation> reservations = reservationRepository.findAllByTypeAndReservationDateBetween(ReservationType.TRIAL,dayBeforeStart, dayBeforeEnd);
-        log.info("총 알림톡 대상자 {}",reservations.size());
+        // 1분 범위 내의 예약만 찾음 (14:15:00 ~ 14:15:59)
+        LocalDateTime targetEndTime = targetTime.plusSeconds(59);
+
+        log.info("{} ~ {}", targetTime, targetEndTime);
+
+        List<Reservation> reservations = reservationRepository.findAllByTypeAndReservationDateBetween(
+                ReservationType.TRIAL, targetTime, targetEndTime);
+        log.info("총 알림톡 대상자 {}", reservations.size());
 
         reservations.forEach(reservation -> {
-                String studentName = reservation.getStudentName();
-                String studentPhone = reservation.getStudentPhone();
-                String teacherName = reservation.getTeacherName();
-                String teacherPhone = reservation.getTeacherPhone();
-                LocalDateTime reservationDate = reservation.getReservationDate();
-                log.info("[학생] 알림톡 발송: {} {}",studentName,studentPhone);
-                alarmTalkService.sendTrialBefore(studentPhone,studentName,reservationDate);
+            String studentName = reservation.getStudentName();
+            String studentPhone = reservation.getStudentPhone();
+            String teacherName = reservation.getTeacherName();
+            String teacherPhone = reservation.getTeacherPhone();
+            LocalDateTime reservationDate = reservation.getReservationDate();
 
-                log.info("[선생님] 알림톡 발송: {} {}",teacherName,teacherPhone);
-                alarmTalkService.sendTrialTeacherBefore(teacherPhone,teacherName,reservationDate);
+            log.info("[학생] 알림톡 발송: {} {}", studentName, studentPhone);
+            alarmTalkService.sendTrialBefore(studentPhone, studentName, reservationDate);
+
+            log.info("[선생님] 알림톡 발송: {} {}", teacherName, teacherPhone);
+            alarmTalkService.sendTrialTeacherBefore(teacherPhone, teacherName, reservationDate);
         });
 
-
         stopWatch.stop();
-        log.info("[{}] 하루전 알람톡 종료",stopWatch.getTotalTimeSeconds());
+        log.info("[{}] 하루전 알람톡 종료", stopWatch.getTotalTimeSeconds());
     }
 
     @Scheduled(cron = "0 * * * * *") // 매 분 0초마다 실행
