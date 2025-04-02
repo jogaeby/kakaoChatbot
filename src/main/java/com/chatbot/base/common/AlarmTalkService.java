@@ -11,9 +11,7 @@ import net.nurigo.sdk.message.service.DefaultMessageService;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 
 @Slf4j
@@ -24,9 +22,9 @@ public class AlarmTalkService {
     private final String TRIAL_BEFORE_TEMPLATE_ID = "KA01TP250321050528900Qt9AwWcle10";
     private final String TRIAL_AFTER_TEMPLATE_ID = "KA01TP250321051103334qqdDFrYQfbE";
 
-    private final String TRIAL_RECEIPT_TEACHER_TEMPLATE_ID = "KA01TP250325001619484yPNcVGOXTF4";
+    private final String TRIAL_RECEIPT_TEACHER_TEMPLATE_ID = "KA01TP250328050358449CGxVKNf7Fsi";
     private final String TRIAL_BEFORE_TEACHER_TEMPLATE_ID = "KA01TP250325001824569KxxfDfrskOU";
-    private final String TRIAL_AFTER_TEACHER_TEMPLATE_ID = "KA01TP250325001953519BEeXaabM2zZ";
+    private final String TRIAL_AFTER_TEACHER_TEMPLATE_ID = "KA01TP250328050450139fRnwuYuBwN7";
 
     private final String INTERVIEW_RECEIPT_TEMPLATE_ID = "KA01TP250321051403956Og0ws8YQEkI";
     private final String INTERVIEW_BEFORE_TEMPLATE_ID = "KA01TP250321051451962lar8z6U9X9L";
@@ -59,7 +57,7 @@ public class AlarmTalkService {
 
         HashMap<String, String> variables = new HashMap<>();
         variables.put("#{수강생명}", studentName);
-        variables.put("#{체험일시}", date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        variables.put("#{체험일시}", StringUtil.formatToKorean(date));
 
         kakaoOption.setVariables(variables);
 
@@ -91,7 +89,7 @@ public class AlarmTalkService {
 
         HashMap<String, String> variables = new HashMap<>();
         variables.put("#{수강생명}", studentName);
-        variables.put("#{체험일시}", date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        variables.put("#{체험일시}", StringUtil.formatToKorean(date));
 
         kakaoOption.setVariables(variables);
 
@@ -149,7 +147,7 @@ public class AlarmTalkService {
 
         HashMap<String, String> variables = new HashMap<>();
         variables.put("#{선생님 이름}", studentName);
-        variables.put("#{체험일시}", date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        variables.put("#{체험일시}", StringUtil.formatToKorean(date));
         variables.put("#{수강생 정보}", studentInfo);
 
         kakaoOption.setVariables(variables);
@@ -182,7 +180,7 @@ public class AlarmTalkService {
 
         HashMap<String, String> variables = new HashMap<>();
         variables.put("#{선생님 이름}", teacherName);
-        variables.put("#{체험일시}", date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        variables.put("#{체험일시}", StringUtil.formatToKorean(date));
 
         kakaoOption.setVariables(variables);
 
@@ -241,7 +239,7 @@ public class AlarmTalkService {
 
         HashMap<String, String> variables = new HashMap<>();
         variables.put("#{zoomUrl}", zoomUrl);
-        variables.put("#{인터뷰일시}", date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        variables.put("#{인터뷰일시}", StringUtil.formatToKorean(date));
 
         kakaoOption.setVariables(variables);
 
@@ -274,7 +272,7 @@ public class AlarmTalkService {
         HashMap<String, String> variables = new HashMap<>();
         variables.put("#선생님 명}", teacherName);
         variables.put("#{zoomUrl}", zoomUrl);
-        variables.put("#{체험일시}", date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        variables.put("#{체험일시}", StringUtil.formatToKorean(date));
 
         kakaoOption.setVariables(variables);
 

@@ -2,6 +2,8 @@ package com.chatbot.base.common;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +20,11 @@ public class StringUtil {
         phoneNumber = phoneNumber.replaceAll("[\\s-]", "");
         return phoneNumber;
     }
+    public static String formatToKorean(LocalDateTime dateTime) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 M월 d일 HH:mm", Locale.KOREAN);
+        return dateTime.format(formatter);
+    }
+
 
     public static List<String> splitString(String input, int delimiter) {
         List<String> result = new ArrayList<>();
