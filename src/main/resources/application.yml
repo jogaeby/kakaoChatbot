@@ -34,7 +34,7 @@ spring:
           time_zone: Asia/Seoul
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://3.34.199.230:3306/elviolin
+    url: jdbc:mysql://13.209.26.213:3306/elviolin
     username: elviolin
     password: elviolin2025!
     hikari:

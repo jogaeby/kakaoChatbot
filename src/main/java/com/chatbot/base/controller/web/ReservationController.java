@@ -123,6 +123,7 @@ public class ReservationController {
             ReservationType reservationType = ReservationType.fromString(type);
 
             List<ReservatonDTO> search = reservationService.search(category, input, reservationType);
+
             return ResponseEntity
                     .ok(search);
         }catch (Exception e) {
