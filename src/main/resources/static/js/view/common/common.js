@@ -321,7 +321,7 @@ function formatDate(dateString) {
     return date.toISOString().split("T")[0]; // YYYY-MM-DD 형태로 반환
 }
 
-// YYYY-MM-DD HH:mm:ss 형식으로 변환 (LocalDateTime)
+// YYYY-MM-DD HH:mm 형식으로 변환 (LocalDateTime)
 function formatDateTime(dateTimeString) {
     if (!dateTimeString) return "";
     const date = new Date(dateTimeString);
@@ -329,6 +329,5 @@ function formatDateTime(dateTimeString) {
         String(date.getMonth() + 1).padStart(2, '0') + "-" +
         String(date.getDate()).padStart(2, '0') + " " +
         String(date.getHours()).padStart(2, '0') + ":" +
-        String(date.getMinutes()).padStart(2, '0') + ":" +
-        String(date.getSeconds()).padStart(2, '0');
+        String(date.getMinutes()).padStart(2, '0')
 }

@@ -55,7 +55,7 @@ public class ReservationServiceImpl implements ReservationService {
         Specification<Reservation> spec = ReservationSpecification.withDynamicQuery(category, input)
                 .and((root, query, cb) -> cb.equal(root.get("type"), type));
 
-        List<Reservation> reservations = reservationRepository.findAll(spec, Sort.by(Sort.Direction.DESC, "reservationDate"));
+        List<Reservation> reservations = reservationRepository.findAll(spec, Sort.by(Sort.Direction.ASC, "reservationDate"));
 
 
         return reservations.stream()
