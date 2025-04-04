@@ -90,15 +90,20 @@ $(document).ready(function() {
         // idCell.on('click', () => openUpdateModal(data));
         //
         // row.append(idCell);
-        row.append($('<td data-column="studentName">').text(data.studentName));
+        row.append($('<td data-column="studentName">')
+            .html('<strong>' + data.studentName + '</strong>')
+            .css('white-space', 'nowrap'))
         row.append($('<td data-column="studentPhone">').text(data.studentPhone));
-        row.append($('<td data-column="teacherName">').text(data.teacherName));
+        row.append($('<td data-column="teacherName">').html('<strong>' + data.teacherName + '</strong>')
+            .css('white-space', 'nowrap'));
         row.append($('<td data-column="teacherPhone">').text(data.teacherPhone));
         row.append($('<td data-column="studentInfo">').text(data.studentInfo));
-        row.append($('<td data-column="formattedReservationDate">').text(formattedReservationDate));
+        row.append($('<td data-column="formattedReservationDate">').html('<strong>' + formattedReservationDate + '</strong>')
+            .css('white-space', 'nowrap'));;
         // 날짜 포맷 변경 (YYYY-MM-DD)
 
-        row.append($('<td data-column="등록일">').text(formattedCreateDate));
+        row.append($('<td data-column="등록일">').text(formattedCreateDate)
+            .css('white-space', 'nowrap'));
 
         if (userRole == '관리자' || id == data.memberId) {
             row.append($('<td style="display: flex; justify-content: center;" data-column="Actions">').append(deleteButton(data)));

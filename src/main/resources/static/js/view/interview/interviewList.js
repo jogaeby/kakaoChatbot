@@ -83,9 +83,15 @@ $(document).ready(function() {
         const row = $(`<tr id = ${data.id}>`);
         row.append($('<td data-column="index">').text(index + 1));
 
-        row.append($('<td data-column="teacherName">').text(data.teacherName));
+        row.append($('<td data-column="teacherName">')
+            .html('<strong>' + data.teacherName + '</strong>')
+            .css('white-space', 'nowrap')
+        );
         row.append($('<td data-column="teacherPhone">').text(data.teacherPhone));
-        row.append($('<td data-column="reservationDate">').text(formattedReservationDate));
+        row.append($('<td data-column="reservationDate">')
+            .html('<strong>' + formattedReservationDate + '</strong>')
+            .css('white-space', 'nowrap')
+        );
         row.append($('<td data-column="zoomUrl">').text(data.zoomUrl));
         row.append($('<td data-column="createDate">').text(formattedCreateDate));
 
