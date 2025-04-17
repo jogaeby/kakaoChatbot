@@ -1,9 +1,14 @@
 package com.chatbot.base.dto.kakao.request;
 
+import com.chatbot.base.domain.reservation.dto.RoomTourReservationDTO;
+import com.chatbot.base.dto.kakao.sync.KakaoSyncRequestDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -78,6 +83,8 @@ public class ChatBotRequest {
                 private String plusfriendUserKey;
                 private String bot_user_key;
                 private String plusfriend_user_key;
+                private String appUserStatus;
+                private String appUserId;
             }
         }
     }
@@ -109,6 +116,7 @@ public class ChatBotRequest {
             private String pageNumber;
             private String firstNumber;
             private String lastNumber;
+            private RoomTourReservationDTO roomTourReservation;
         }
 
         @Getter
@@ -116,21 +124,20 @@ public class ChatBotRequest {
         public class Params {
             private String name;
             private String phone;
-            private String parentsPhone;
+            private String quantity;
+            private String memo;
+            private String kakaoSync;
             private String email;
-            private String assignmentMessage;
-            private String schoolName;
-            private String major;
-            private String schoolGrade;
-            private String currentSchoolGrades;
-            private String hopeUniversity;
-            private String hopeMajor;
+            private String location;
+            private String age;
+            private String gender;
         }
 
         @Getter
         @JsonInclude(JsonInclude.Include.NON_EMPTY)
         public class DetailParams {
-            private ReservationDate reservationDate;
+            private ReservationDate visitDate;
+            private ReservationDate date;
 
             @Getter
             @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -182,14 +189,39 @@ public class ChatBotRequest {
         return action.getParams().getPhone();
     }
 
-    public LocalDate getReservationDate() {
-        if (Objects.isNull(action.getDetailParams().getReservationDate().getOrigin())) return null;
-        return LocalDate.parse(action.getDetailParams().getReservationDate().getOrigin(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+    public String getLocation(){
+        if (Objects.isNull(action.getParams().getLocation())) return null;
+        return action.getParams().getLocation();
+    }
+
+    public String getAge(){
+        if (Objects.isNull(action.getParams().getAge())) return null;
+        return action.getParams().getAge();
+    }
+
+    public String getGender(){
+        if (Objects.isNull(action.getParams().getGender())) return null;
+        return action.getParams().getGender();
+    }
+
+    public LocalDate getDate() {
+        if (Objects.isNull(action.getDetailParams().getDate().getOrigin())) return null;
+        return LocalDate.parse(action.getDetailParams().getDate().getOrigin(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+    }
+
+    public LocalDateTime getVisitDate() {
+        if (Objects.isNull(action.getDetailParams().getVisitDate().getOrigin())) return null;
+        return LocalDateTime.parse(action.getDetailParams().getVisitDate().getOrigin(), DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
     }
 
     public String getChoiceParam(){
         if (Objects.isNull(action.getClientExtra().getChoice())) return null;
         return action.getClientExtra().getChoice();
+    }
+
+    public RoomTourReservationDTO getRoomTourReservation(){
+        if (Objects.isNull(action.getClientExtra().getRoomTourReservation())) return null;
+        return action.getClientExtra().getRoomTourReservation();
     }
 
     public String getProductId(){
@@ -201,6 +233,21 @@ public class ChatBotRequest {
         if (Objects.isNull(action.getClientExtra().getPageNumber())) return 0;
         return Integer.parseInt(action.getClientExtra().getPageNumber());
     }
+    public String getAppUserId() {
+        if (Objects.isNull(userRequest.user.properties.getAppUserId())) return null;
+        return userRequest.user.properties.getAppUserId();
+    }
+
+    public String getMemo() throws JsonProcessingException {
+        if (Objects.isNull(action.getParams().getMemo())) return null;
+        return action.getParams().getMemo();
+    }
+
+    public KakaoSyncRequestDto getKakaoSync() throws JsonProcessingException {
+        if (Objects.isNull(action.getParams().getKakaoSync())) return null;
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.readValue(action.getParams().getKakaoSync(), KakaoSyncRequestDto.class);
+    }
 
     public String getUtterance(){
         return userRequest.getUtterance();
@@ -210,12 +257,12 @@ public class ChatBotRequest {
         return userRequest.getBlock().getId();
     }
 
-    public com.chatbot.base.dto.kakao.response.property.common.Context getReservationInfoContext() {
+    public com.chatbot.base.dto.kakao.response.property.common.Context getOrderSheetContext() {
         Context context = this.getContexts().stream()
-                .filter(ctx -> ctx.getName().equals("reservationInfo"))
+                .filter(ctx -> ctx.getName().equals("orderSheet"))
                 .findFirst().orElse(null);
 
-        com.chatbot.base.dto.kakao.response.property.common.Context result = new com.chatbot.base.dto.kakao.response.property.common.Context("reservationInfo", 1, 5);
+        com.chatbot.base.dto.kakao.response.property.common.Context result = new com.chatbot.base.dto.kakao.response.property.common.Context("orderSheet", 1, 5);
 
         context.getParams().forEach((contextParamKey, contextParamValue) -> {
             result.addParam(contextParamKey, contextParamValue.getValue());

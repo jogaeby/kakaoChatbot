@@ -22,6 +22,10 @@ public class Carousel<T> {
         this.items.add(component);
     }
 
+    public List<T> getComponent() {
+        return this.items;
+    }
+
     private String convertClassNameToCamelcase(String className){
         String first = className.substring(0,1).toLowerCase();
         className = first+className.substring(1);

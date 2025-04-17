@@ -34,9 +34,9 @@ spring:
           time_zone: Asia/Seoul
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://13.209.26.213:3306/elviolin
-    username: elviolin
-    password: elviolin2025!
+    url: jdbc:mysql://13.125.139.86:3306/comochez
+    username: comochez
+    password: comochez2025!
     hikari:
       maximum-pool-size: 10
       minimum-idle: 5

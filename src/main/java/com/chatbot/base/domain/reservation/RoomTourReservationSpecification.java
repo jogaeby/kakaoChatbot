@@ -7,9 +7,9 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDateTime;
 
-public class ReservationSpecification {
+public class RoomTourReservationSpecification {
 
-    public static Specification<Reservation> withDynamicQuery(String category, String input) {
+    public static Specification<RoomTourReservation> withDynamicQuery(String category, String input) {
         return (root, query, criteriaBuilder) -> {
             if (category == null || input == null || input.isEmpty()) {
                 return criteriaBuilder.conjunction();
@@ -34,7 +34,7 @@ public class ReservationSpecification {
         };
     }
     // LocalDate 처리 (saleDate)
-    private static Predicate saleDatePredicate(Root<Reservation> root, CriteriaBuilder cb, String input) {
+    private static Predicate saleDatePredicate(Root<RoomTourReservation> root, CriteriaBuilder cb, String input) {
         try {
             LocalDateTime startDateTime = LocalDateTime.parse(input + "T00:00:00");
             LocalDateTime endDateTime = startDateTime.plusDays(1).minusSeconds(1);
@@ -44,7 +44,7 @@ public class ReservationSpecification {
         }
     }
     // LocalDateTime 처리 (createDate)
-    private static Predicate createDatePredicate(Root<Reservation> root, CriteriaBuilder cb, String input) {
+    private static Predicate createDatePredicate(Root<RoomTourReservation> root, CriteriaBuilder cb, String input) {
         try {
             LocalDateTime startDateTime = LocalDateTime.parse(input + "T00:00:00");
             LocalDateTime endDateTime = startDateTime.plusDays(1).minusSeconds(1);

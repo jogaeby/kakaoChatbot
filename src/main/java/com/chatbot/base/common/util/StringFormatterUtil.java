@@ -1,15 +1,20 @@
-package com.chatbot.base.common;
+package com.chatbot.base.common.util;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class StringUtil {
+@Slf4j
+public class StringFormatterUtil {
+
 
     public static String formatPhoneNumber(String phoneNumber) {
         // +82를 0으로 바꾸고 나머지 부분에서 공백과 대시를 제거
@@ -20,11 +25,6 @@ public class StringUtil {
         phoneNumber = phoneNumber.replaceAll("[\\s-]", "");
         return phoneNumber;
     }
-    public static String formatToKorean(LocalDateTime dateTime) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 M월 d일 HH:mm", Locale.KOREAN);
-        return dateTime.format(formatter);
-    }
-
 
     public static List<String> splitString(String input, int delimiter) {
         List<String> result = new ArrayList<>();
@@ -46,14 +46,20 @@ public class StringUtil {
         return result;
     }
 
+
     public static String formatCurrency(String amount) {
-        try {
-            // 천단위 콤마 추가
-            return String.format("%,d", Long.parseLong(amount)) + "원";
-        } catch (NumberFormatException e) {
-            // 예외 발생 시 입력값 그대로 반환
-            return amount;
+        if (amount == null || amount.equals("0")) {
+            return "0";
         }
+        double parsedAmount = Double.parseDouble(amount);
+
+        // 소수점 이하가 없는 경우
+        if (parsedAmount == (long) parsedAmount) {
+            return String.format("%,d", (long) parsedAmount);
+        }
+
+        // 소수점 이하가 있는 경우
+        return String.format("%,.2f", parsedAmount);
     }
 
     public static String formatAddress(String address) {
@@ -102,5 +108,25 @@ public class StringUtil {
         LocalDate date = LocalDate.parse(dateStr);
         DayOfWeek dayOfWeek = date.getDayOfWeek();
         return dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.KOREAN);
+    }
+
+    public static String formatDate(LocalDate localDate) {
+
+        // 원하는 포맷으로 변환
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 (E)", Locale.KOREAN);
+
+        return localDate.format(formatter);
+    }
+
+    public static String objectToString(Object object) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            String json = mapper.writeValueAsString(object);
+            log.info("JSON: {}",json);
+            return json;
+        }catch (JsonProcessingException e) {
+            log.error("Object to JSON conversion error: {}", e.getMessage());
+            return "";
+        }
     }
 }

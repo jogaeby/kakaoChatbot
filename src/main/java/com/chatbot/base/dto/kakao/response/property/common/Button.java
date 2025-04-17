@@ -23,7 +23,7 @@ public class Button {
     private String blockId;
     private String phoneNumber;
     private String messageText;
-    private Map<ButtonParamKey,String> extra = new HashMap<>();
+    private Map<ButtonParamKey,Object> extra = new HashMap<>();
 
     /**
      * label : 버튼에 적히는 문구입니다. 버튼 14자(가로배열 2개 8자), 썸네일이 1:1이면 버튼이 가로배열 됩니다.
@@ -80,7 +80,7 @@ public class Button {
         }
     }
 
-    public Button(String buttonName, ButtonAction buttonAction, String actionValue, ButtonParamKey buttonParamKey, String buttonParamValue) {
+    public Button(String buttonName, ButtonAction buttonAction, String actionValue, ButtonParamKey buttonParamKey, Object buttonParamValue) {
         if (buttonAction.name().equals(ButtonAction.블럭이동.name())){
             this.label = buttonName;
             this.action = buttonAction.getValue();
@@ -123,6 +123,10 @@ public class Button {
     }
 
     public void setExtra(ButtonParamKey buttonParamKey, String buttonParamValue) {
+        extra.put(buttonParamKey,buttonParamValue);
+    }
+
+    public void setExtra(ButtonParamKey buttonParamKey, Object buttonParamValue) {
         extra.put(buttonParamKey,buttonParamValue);
     }
 }

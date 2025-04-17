@@ -71,6 +71,7 @@ public class ChatBotResponse {
         private CommerceCard commerceCard;
         private ListCard listCard;
         private Carousel carousel;
+        private ItemCard itemCard;
 
         public Component(SimpleText simpleText) {
             this.simpleText = simpleText;
@@ -95,9 +96,12 @@ public class ChatBotResponse {
         public Component(ListCard listCard) {
             this.listCard = listCard;
         }
+
         public Component(Carousel carousel) {
             this.carousel = carousel;
         }
+
+        public Component(ItemCard itemCard) {this.itemCard = itemCard;}
     }
 
 
@@ -111,6 +115,11 @@ public class ChatBotResponse {
         this.useCallback = useCallback;
     }
     public void addQuickButton(String buttonName, ButtonAction buttonAction, String actionValue, ButtonParamKey buttonParamKey, String buttonParamValue){
+        Button button = new Button(buttonName, buttonAction, actionValue, buttonParamKey, buttonParamValue);
+        this.template.getQuickReplies().add(button);
+    }
+
+    public void addQuickButton(String buttonName, ButtonAction buttonAction, String actionValue, ButtonParamKey buttonParamKey, Object buttonParamValue){
         Button button = new Button(buttonName, buttonAction, actionValue, buttonParamKey, buttonParamValue);
         this.template.getQuickReplies().add(button);
     }
@@ -197,6 +206,12 @@ public class ChatBotResponse {
         if(listCard.getItems().size()==0) throw new IllegalArgumentException("아이템의 최소 개수는 1개 입니다.");
 
         Component component = new Component(listCard);
+
+        this.template.getOutputs().add(component);
+    }
+
+    public void addItemCard(ItemCard itemCard){
+        Component component = new Component(itemCard);
 
         this.template.getOutputs().add(component);
     }

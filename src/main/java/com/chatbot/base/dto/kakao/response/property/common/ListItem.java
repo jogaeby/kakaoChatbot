@@ -18,7 +18,7 @@ public class ListItem {
     private String action;
     private String blockId;
     private String messageText;
-    private Map<ButtonParamKey,String> extra = new HashMap<>();
+    private Map<ButtonParamKey,Object> extra = new HashMap<>();
 
     public ListItem(String title) {
         this.title = title;
@@ -41,12 +41,21 @@ public class ListItem {
         this.blockId = nextBlockId.getBlockId();
     }
 
+    public void setActionBlock(String  blockId) {
+        this.action = "block";
+        this.blockId = blockId;
+    }
+
     public void setActionMessage(String messageText) {
         this.action = "message";
         this.messageText = messageText;
     }
+    public void setExtra(String blockId, ButtonParamKey buttonParamKey, Object buttonParamValue) {
+        setActionBlock(blockId);
+        this.extra.put(buttonParamKey,buttonParamValue);
+    }
 
-    public void setExtra(ButtonParamKey buttonParamKey, String buttonParamValue) {
+    public void setExtra(ButtonParamKey buttonParamKey, Object buttonParamValue) {
         this.extra.put(buttonParamKey,buttonParamValue);
     }
 }
