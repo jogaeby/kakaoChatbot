@@ -2,12 +2,17 @@ package com.chatbot.base.controller.web;
 
 import com.chatbot.base.common.AlarmTalkService;
 import com.chatbot.base.domain.reservation.RoomTourReservation;
+import com.chatbot.base.domain.reservation.dto.RoomTourReservationDTO;
 import com.chatbot.base.domain.reservation.service.RoomTourReservationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -16,23 +21,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class ReservationController {
     private final RoomTourReservationService roomTourReservationService;
     private final AlarmTalkService alarmTalkService;
-
-    @GetMapping()
-    public String getPage() {
-        return "reservation";
-    }
-    @GetMapping("interview")
-    public String getInterviewPage() {
-        return "interview";
-    }
-    @GetMapping("interviewList")
-    public String getInterviewListPage() {
-        return "interviewList";
-    }
-
-    @GetMapping("list")
-    public String getListPage() {
-        return "reservationList";
+    @GetMapping("roomTour/index")
+    public String getRoomTourIndexPage() {
+        return "roomTourReservationList";
     }
 //
 //    @PostMapping(value = "/trial",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -88,17 +79,17 @@ public class ReservationController {
 //        }
 //    }
 //
-//    @GetMapping("interview/list")
-//    public ResponseEntity<List<ReservatonDTO>> getInterviewReservationList(Pageable pageable) {
-//        try {
-//            List<ReservatonDTO> reservationDTOS = reservationService.getAllByType(ReservationType.INTERVIEW, pageable);
-//
-//            return ResponseEntity.ok(reservationDTOS);
-//        } catch (Exception e) {
-//            log.error("{}", e.getMessage(), e);
-//            return ResponseEntity.status(400).build();
-//        }
-//    }
+    @GetMapping("roomTour/list")
+    public ResponseEntity<List<RoomTourReservationDTO>> getInterviewReservationList(Pageable pageable) {
+        try {
+            List<RoomTourReservationDTO> reservationDTOS = roomTourReservationService.getAll(pageable);
+
+            return ResponseEntity.ok(reservationDTOS);
+        } catch (Exception e) {
+            log.error("{}", e.getMessage(), e);
+            return ResponseEntity.status(400).build();
+        }
+    }
 //
 //    @GetMapping("trial/list")
 //    public ResponseEntity<List<ReservatonDTO>> getTrialReservationList(Pageable pageable) {

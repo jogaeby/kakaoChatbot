@@ -1,6 +1,6 @@
 $(document).ready(function() {
     const headers = [
-        'No', '선생님 이름', '선생님 연락처','면접일시','줌 주소','접수일', '기타'
+        'No', '이름', '연락처', '성별', '연령대', '지점명','룸투어 희망일','입주 예정일','접수일', '기타'
     ];
     const sortableColumns = ["매각 기일", "등록일"];
 
@@ -10,7 +10,8 @@ $(document).ready(function() {
     const id = payload.id;
 
     getData()
-    renderCategoriesToInterview()
+
+    renderCategories()
 
     $('#searchDate').on('change', function () {
         const selectedDate = $(this).val();
@@ -39,8 +40,10 @@ $(document).ready(function() {
         searchProducts(searchInput, category)
     })
 
+
+
     function searchProducts(searchInput, searchCategory) {
-        fetch(`/reservation/search?input=${searchInput}&category=${searchCategory}&type=인터뷰`, {
+        fetch(`/reservation/search?input=${searchInput}&category=${searchCategory}&type=체험`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -59,9 +62,9 @@ $(document).ready(function() {
     function getData() {
         const page = 0
         const size = 20
-        const sort = 'reservationDate,desc'
+        const sort = 'createDate,desc'
 
-        fetch(`/reservation/interview/list?page=${page}&size=${size}&sort=${sort}`, {
+        fetch(`/reservation/roomTour/list?page=${page}&size=${size}&sort=${sort}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -78,22 +81,26 @@ $(document).ready(function() {
     }
 
     function createTableRow(data, index) {
+        console.log(data)
+        //'No', '이름', '연락처', '성별', '연령대', '지점명','룸투어 희망일','입주 예정일','접수일', '기타'
         const formattedCreateDate = formatDateTime(data.createDate);
-        const formattedReservationDate = formatDateTime(data.reservationDate);
         const row = $(`<tr id = ${data.id}>`);
-        row.append($('<td data-column="index">').text(index + 1));
+        //
+        // const idCell = $('<td data-column="Memo">').text(data.studentName)
+        //     .css({cursor: 'pointer', color: 'blue'});
+        // idCell.on('click', () => openUpdateModal(data));
+        //
+        // row.append(idCell);
 
-        row.append($('<td data-column="teacherName">')
-            .html('<strong>' + data.teacherName + '</strong>')
-            .css('white-space', 'nowrap')
-        );
-        row.append($('<td data-column="teacherPhone">').text(data.teacherPhone));
-        row.append($('<td data-column="reservationDate">')
-            .html('<strong>' + formattedReservationDate + '</strong>')
-            .css('white-space', 'nowrap')
-        );
-        row.append($('<td data-column="zoomUrl">').text(data.zoomUrl));
-        row.append($('<td data-column="createDate">').text(formattedCreateDate));
+        row.append($('<td data-column="idx">').text(index + 1));
+        row.append($('<td data-column="name">').text(data.name));
+        row.append($('<td data-column="phone">').text(data.phone));
+        row.append($('<td data-column="gender">').text(data.gender));
+        row.append($('<td data-column="age">').text(data.age));
+        row.append($('<td data-column="location">').text(data.location));
+        row.append($('<td data-column="visitDate">').text(data.visitDate));
+        row.append($('<td data-column="moveInDate">').text(data.moveInDate));
+        row.append($('<td data-column="moveInDate">').text(data.moveInDate));
 
         if (userRole == '관리자' || id == data.memberId) {
             row.append($('<td style="display: flex; justify-content: center;" data-column="Actions">').append(deleteButton(data)));

@@ -1,15 +1,11 @@
 package com.chatbot.base.schedule;
 
-import com.chatbot.base.domain.reservation.Reservation;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class ScheduleTest {
@@ -20,11 +16,6 @@ class ScheduleTest {
     @Test
     void sendBeforeAlarmTalk() {
         schedule.sendBeforeAlarmTalk();
-    }
-
-    @Test
-    void sendBeforeInterviewAlarmTalk() {
-        schedule.sendBeforeInterviewAlarmTalk();
     }
 
     @Test
