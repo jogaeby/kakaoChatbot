@@ -18,6 +18,7 @@ public class RoomTourReservationDTO {
     private String gender;
     private String age;
     private String phone;
+    private String period;
     private LocalDateTime createDate;
     public RoomTourReservation toEntity() {
         return RoomTourReservation.builder()
@@ -28,6 +29,7 @@ public class RoomTourReservationDTO {
                 .gender(gender)
                 .age(age)
                 .phone(phone)
+                .period(period)
                 .build();
     }
 }

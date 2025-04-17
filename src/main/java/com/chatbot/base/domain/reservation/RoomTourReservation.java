@@ -26,8 +26,9 @@ public class RoomTourReservation extends BaseEntity {
     private String gender;
     private String age;
     private String phone;
+    private String period;
     @Builder
-    public RoomTourReservation(String location, LocalDateTime visitDate, LocalDate moveInDate, String name, String gender, String age, String phone) {
+    public RoomTourReservation(String location, LocalDateTime visitDate, LocalDate moveInDate, String name, String gender, String age, String phone, String period) {
         this.location = location;
         this.visitDate = visitDate;
         this.moveInDate = moveInDate;
@@ -35,7 +36,9 @@ public class RoomTourReservation extends BaseEntity {
         this.gender = gender;
         this.age = age;
         this.phone = phone;
+        this.period = period;
     }
+
     public RoomTourReservationDTO toDto() {
         return RoomTourReservationDTO.builder()
                 .id(getUuid().toString())
@@ -46,6 +49,7 @@ public class RoomTourReservation extends BaseEntity {
                 .gender(gender)
                 .age(age)
                 .phone(phone)
+                .period(period)
                 .createDate(getCreateDate())
                 .build();
     }

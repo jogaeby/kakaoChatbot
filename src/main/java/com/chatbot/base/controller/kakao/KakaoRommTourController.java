@@ -38,6 +38,7 @@ public class KakaoRommTourController {
             String gender = chatBotRequest.getGender();
             String age = chatBotRequest.getAge();
             String phone = chatBotRequest.getPhone();
+            String period = chatBotRequest.getPeriod();
 
             RoomTourReservationDTO tourReservationDTO = RoomTourReservationDTO.builder()
                     .location(location)
@@ -47,14 +48,16 @@ public class KakaoRommTourController {
                     .gender(gender)
                     .age(age)
                     .phone(phone)
+                    .period(period)
                     .build();
 
             ChatBotResponse chatBotResponse = new ChatBotResponse();
             ItemCard itemCard = new ItemCard();
             itemCard.setImageTitle("룸투어 신청정보","룸투어 신청정보를 다시 확인해주세요.");
             itemCard.addItemList("지점명",location);
-            itemCard.addItemList("룸투어 희망날짜", StringFormatterUtil.formatDate(visitDate.toLocalDate())+" "+visitDate.toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm")));
+            itemCard.addItemList("투어 희망일", StringFormatterUtil.formatDate(visitDate.toLocalDate())+" "+visitDate.toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm")));
             itemCard.addItemList("입주 예정일",StringFormatterUtil.formatDate(moveInDate));
+            itemCard.addItemList("거주기간",period);
             itemCard.addItemList("성함",name);
             itemCard.addItemList("성별",gender);
             itemCard.addItemList("연령대",age);

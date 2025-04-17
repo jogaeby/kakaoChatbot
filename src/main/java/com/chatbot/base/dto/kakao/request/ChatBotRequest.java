@@ -131,6 +131,7 @@ public class ChatBotRequest {
             private String location;
             private String age;
             private String gender;
+            private String period;
         }
 
         @Getter
@@ -182,6 +183,11 @@ public class ChatBotRequest {
     public String getName(){
         if (Objects.isNull(action.getParams().getName())) return null;
         return action.getParams().getName();
+    }
+
+    public String getPeriod(){
+        if (Objects.isNull(action.getParams().getPeriod())) return null;
+        return action.getParams().getPeriod();
     }
 
     public String getPhone(){
