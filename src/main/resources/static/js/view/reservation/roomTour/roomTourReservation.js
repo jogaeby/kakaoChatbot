@@ -1,6 +1,6 @@
 $(document).ready(function() {
     const headers = [
-        'No', '이름', '연락처', '성별', '연령대', '지점명','룸투어 희망일','입주 예정일','접수일', '기타'
+        'No', '이름', '연락처', '성별', '연령대', '지점명','룸투어 희망일','거주기간','입주 예정일','접수일', '기타'
     ];
     const sortableColumns = ["매각 기일", "등록일"];
 
@@ -82,7 +82,7 @@ $(document).ready(function() {
 
     function createTableRow(data, index) {
         console.log(data)
-        //'No', '이름', '연락처', '성별', '연령대', '지점명','룸투어 희망일','입주 예정일','접수일', '기타'
+        'No', '이름', '연락처', '성별', '연령대', '지점명','룸투어 희망일','거주기간','입주 예정일','접수일', '기타'
         const formattedCreateDate = formatDateTime(data.createDate);
         const row = $(`<tr id = ${data.id}>`);
         //
@@ -98,9 +98,10 @@ $(document).ready(function() {
         row.append($('<td data-column="gender">').text(data.gender));
         row.append($('<td data-column="age">').text(data.age));
         row.append($('<td data-column="location">').text(data.location));
-        row.append($('<td data-column="visitDate">').text(data.visitDate));
+        row.append($('<td data-column="visitDate">').text(formatDateTime(data.visitDate)));
+        row.append($('<td data-column="period">').text(data.period));
         row.append($('<td data-column="moveInDate">').text(data.moveInDate));
-        row.append($('<td data-column="moveInDate">').text(data.moveInDate));
+        row.append($('<td data-column="createDate">').text(formatDateTime(data.createDate)));
 
         if (userRole == '관리자' || id == data.memberId) {
             row.append($('<td style="display: flex; justify-content: center;" data-column="Actions">').append(deleteButton(data)));
