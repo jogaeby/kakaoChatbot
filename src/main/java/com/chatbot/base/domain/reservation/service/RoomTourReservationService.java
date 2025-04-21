@@ -12,6 +12,8 @@ public interface RoomTourReservationService {
     void delete(String id);
 
     List<RoomTourReservationDTO> getAll(Pageable pageable);
-//
-//    List<RoomTourReservationDTO> search(String category, String input, ReservationType type);
+
+    void addRoomNumber(RoomTourReservationDTO roomTourReservationDTO);
+
+    List<RoomTourReservationDTO> search(String category, String input);
 }

@@ -20,6 +20,8 @@ public class RoomTourReservationDTO {
     private String age;
     private String phone;
     private String period;
+    private String address;
+    private String roomNumber;
     private LocalDateTime createDate;
     private String status;
 
@@ -33,6 +35,8 @@ public class RoomTourReservationDTO {
                 .age(age)
                 .phone(phone)
                 .period(period)
+                .address(address)
+                .roomNumber(roomNumber)
                 .status(RoomTourReservationStatus.fromString(status))
                 .build();
     }

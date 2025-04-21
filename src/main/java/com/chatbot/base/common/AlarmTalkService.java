@@ -1,5 +1,6 @@
 package com.chatbot.base.common;
 
+import com.chatbot.base.domain.reservation.dto.RoomTourReservationDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.nurigo.sdk.NurigoApp;
@@ -12,28 +13,20 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class AlarmTalkService {
-    private final String TRIAL_RECEIPT_TEMPLATE_ID = "KA01TP250321050424504UONOb04freL";
-    private final String TRIAL_BEFORE_TEMPLATE_ID = "KA01TP250321050528900Qt9AwWcle10";
-    private final String TRIAL_AFTER_TEMPLATE_ID = "KA01TP250321051103334qqdDFrYQfbE";
+    private final String ROOM_TOUR_ASSIGNMENT_TEMPLATE_ID = "KA01TP250417024022333Svetc3iatS8";
 
-    private final String TRIAL_RECEIPT_TEACHER_TEMPLATE_ID = "KA01TP250328050358449CGxVKNf7Fsi";
-    private final String TRIAL_BEFORE_TEACHER_TEMPLATE_ID = "KA01TP250325001824569KxxfDfrskOU";
-    private final String TRIAL_AFTER_TEACHER_TEMPLATE_ID = "KA01TP250328050450139fRnwuYuBwN7";
 
-    private final String INTERVIEW_RECEIPT_TEMPLATE_ID = "KA01TP250321051403956Og0ws8YQEkI";
-    private final String INTERVIEW_BEFORE_TEMPLATE_ID = "KA01TP250321051451962lar8z6U9X9L";
-    private final String INTERVIEW_AFTER_TEMPLATE_ID = "KA01TP2503210515594919RLvL8gLazj";
-
-    private final String CHANNEL_ID = "KA01PF240423061604083BUtgyvXfuP9";
-    private final String CALLER_1_ID = "010-5736-7927";
-    private final String API_KEY = "NCSFZ7LLDWAMUR79";
-    private final String API_SECRET_KEY = "ZW1CFHANQLBAUDQONZKODHHFZGNZY0WA";
+    private final String CHANNEL_ID = "KA01PF250416030320653KQJWjKEaobh";
+    private final String CALLER_1_ID = "010-7562-1588";
+    private final String API_KEY = "NCSC6ANN3TR6J2MX";
+    private final String API_SECRET_KEY = "QUWPDXWG66YWSDLEVFSOPUOCVBZU8DQD";
     /*
         아! 월~금 저녁 11시에는 과제 완료되지 않은 친구들은 과제를 올리라는 메세지와
         11시 59분에는 당일 과제 완료한 친구등 명단이 채팅방에 올라올수 있도록
@@ -47,22 +40,23 @@ public class AlarmTalkService {
         가능할까요?????
      */
 
-    public MultipleDetailMessageSentResponse sendTrialReceipt(String phone, String studentName, LocalDateTime date) {
+    public MultipleDetailMessageSentResponse sendRoomTourAssignment(RoomTourReservationDTO roomTourReservationDTO) {
         DefaultMessageService messageService =  NurigoApp.INSTANCE.initialize(API_KEY, API_SECRET_KEY, "https://api.solapi.com");
 
         KakaoOption kakaoOption = new KakaoOption();
         kakaoOption.setPfId(CHANNEL_ID);
-        kakaoOption.setTemplateId(TRIAL_RECEIPT_TEMPLATE_ID);
+        kakaoOption.setTemplateId(ROOM_TOUR_ASSIGNMENT_TEMPLATE_ID);
         kakaoOption.setDisableSms(true);
 
         HashMap<String, String> variables = new HashMap<>();
-        variables.put("#{수강생명}", studentName);
+        variables.put("#{고객명}", roomTourReservationDTO.getName());
+        variables.put("#{룸투어 날짜}", roomTourReservationDTO.getVisitDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
 
         kakaoOption.setVariables(variables);
 
         Message message = new Message();
         message.setFrom(CALLER_1_ID);
-        message.setTo(phone);
+        message.setTo(roomTourReservationDTO.getPhone());
         message.setKakaoOptions(kakaoOption);
 
         try {

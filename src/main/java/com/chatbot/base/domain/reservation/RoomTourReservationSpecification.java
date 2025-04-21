@@ -1,5 +1,6 @@
 package com.chatbot.base.domain.reservation;
 
+import com.chatbot.base.domain.constant.RoomTourReservationStatus;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
@@ -16,16 +17,20 @@ public class RoomTourReservationSpecification {
             }
 
             switch (category) {
-                case "studentName":
-                    return criteriaBuilder.like(root.get("studentName"), "%" + input + "%");
-                case "studentPhone":
-                    return criteriaBuilder.like(root.get("studentPhone"), "%" + input + "%");
-                case "teacherName":
-                    return criteriaBuilder.like(root.get("teacherName"), "%" + input + "%");
-                case "teacherPhone":
-                    return criteriaBuilder.like(root.get("teacherPhone"), "%" + input + "%");
-                case "reservationDate":
-                    return saleDatePredicate(root, criteriaBuilder, input);
+                case "name":
+                    return criteriaBuilder.like(root.get("name"), "%" + input + "%");
+                case "phone":
+                    return criteriaBuilder.like(root.get("phone"), "%" + input + "%");
+                case "status":
+                    try {
+                        RoomTourReservationStatus roomTourReservationStatus = RoomTourReservationStatus.fromString(input);
+                        return criteriaBuilder.equal(root.get("status"), roomTourReservationStatus);
+                    } catch (IllegalArgumentException e) {
+                        // 존재하지 않는 enum일 경우, 절대 true가 될 수 없는 조건으로 필터링
+                        return criteriaBuilder.disjunction(); // 항상 false
+                    }
+                case "visitDate":
+                    return visitDatePredicate(root, criteriaBuilder, input);
                 case "createDate":
                     return createDatePredicate(root, criteriaBuilder, input);
                 default:
@@ -34,11 +39,11 @@ public class RoomTourReservationSpecification {
         };
     }
     // LocalDate 처리 (saleDate)
-    private static Predicate saleDatePredicate(Root<RoomTourReservation> root, CriteriaBuilder cb, String input) {
+    private static Predicate visitDatePredicate(Root<RoomTourReservation> root, CriteriaBuilder cb, String input) {
         try {
             LocalDateTime startDateTime = LocalDateTime.parse(input + "T00:00:00");
             LocalDateTime endDateTime = startDateTime.plusDays(1).minusSeconds(1);
-            return cb.between(root.get("reservationDate"), startDateTime, endDateTime);
+            return cb.between(root.get("visitDate"), startDateTime, endDateTime);
         } catch (Exception e) {
             return cb.conjunction();
         }

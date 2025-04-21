@@ -50,13 +50,20 @@
                                 </div>
                             </div>
                             <div class="card m-3 ">
-                                <div class="form-group d-flex align-items-center gap-2 mx-3">
+                                <div class="form-group d-flex align-items-center gap-2 mx-3 mb-3 mt-3">
+                                    <label for="searchDate" class="mb-0">룸투어 희망일:</label>
                                     <input type="date" class="form-control form-control-sm w-auto" id="searchDate">
+                                </div>
+
+                                <!-- 두 번째 줄: 카테고리 + 검색창 + 검색 버튼 -->
+                                <div class="form-group d-flex align-items-center gap-2 mx-3 mb-3">
                                     <select class="form-select form-select-sm w-auto" id="categorySelect" required>
                                         <option value="">카테고리 선택</option>
                                     </select>
+
                                     <input type="text" class="form-control form-control-sm w-auto" id="searchInput" placeholder="검색어를 입력하세요">
-                                    <button class="btn btn-dark m-3" id="searchButton" type="button">검색</button>
+
+                                    <button class="btn btn-dark" id="searchButton" type="button">검색</button>
                                 </div>
                             </div>
                             <div class="card-body" style="font-size: 12px">
@@ -77,76 +84,19 @@
                             <div class="modal-header">
                                 <h6 class="modal-title" id="addModalLabel">매물등록</h6>
                             </div>
+                            <input type="hidden" id="addReservationId">
                             <div class="modal-body">
-                                <div class="form-group mb-3">
-                                    <label>이미지 입력 방법:</label>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="imageInputType" id="imageUrlOption" value="url" checked>
-                                        <label class="form-check-label" for="imageUrlOption">이미지 URL</label>
+                                <label for="addAddress">주소:</label>
+                                <input type="text" class="form-control" id="addAddress">
+                            </div>
 
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="imageInputType" id="imageFileOption" value="file">
-                                        <label class="form-check-label" for="imageFileOption">이미지 파일</label>
-                                    </div>
-                                </div>
-                                <!-- 이미지 URL 입력 -->
-                                <div class="form-group mb-3" id="imageUrlGroup">
-                                    <label for="addProductImageUrl">이미지 URL:</label>
-                                    <input type="text" class="form-control" id="addProductImageUrl">
-                                </div>
-
-                                <!-- 이미지 파일 입력 -->
-                                <div class="form-group mb-3" id="imageFileGroup" style="display: none;">
-                                    <label for="addProductImageFile">이미지 파일:</label>
-                                    <input type="file" class="form-control" id="addProductImageFile" accept="image/*">
-                                </div>
-
-                                <label for="addProductMemo">메모:</label>
-                                <input type="text" class="form-control mb-3" id="addProductMemo">
-
-                                <label for="addProductNo">타경번호:</label>
-                                <input type="text" class="form-control mb-3" id="addProductNo">
-
-                                <label for="addProductCategory">물건종류:</label>
-                                <input type="text" class="form-control mb-3" id="addProductCategory">
-
-                                <label for="addProductLocation">소재지:</label>
-                                <input type="text" class="form-control mb-3" id="addProductLocation">
-
-                                <label for="addProductPrice">감정가:</label>
-                                <input type="text" class="form-control mb-3 number-input" id="addProductPrice">
-
-                                <label for="addProductCurrentPrice">현시세:</label>
-                                <input type="text" class="form-control mb-3 number-input" id="addProductCurrentPrice">
-
-                                <label for="addProductMinPrice">최저가:</label>
-                                <input type="text" class="form-control mb-3 number-input" id="addProductMinPrice">
-
-                                <label for="addProductExpectedPrice">예상가:</label>
-                                <input type="text" class="form-control mb-3 number-input" id="addProductExpectedPrice">
-
-                                <label for="addProductSaleDate">매각 기일:</label>
-                                <input type="date" class="form-control mb-3" id="addProductSaleDate">
-
-                                <label for="addProductManagerName">권리분석사:</label>
-                                <input type="text" class="form-control mb-3" id="addProductManagerName">
-
-                                <label for="addProductManagerPhone">상담전화:</label>
-                                <input type="text" class="form-control mb-3" id="addProductManagerPhone">
-
-                                <label for="addProductDescription">특이사항:</label>
-                                <textarea class="form-control mb-3" id="addProductDescription"></textarea>
-
-                                <label for="addProductLink">링크:</label>
-                                <input type="text" class="form-control mb-3" id="addProductLink">
-
-                                <label for="addProductDisplayDate">노출 날짜:</label>
-                                <input type="date" class="form-control mb-3" id="addProductDisplayDate">
+                            <div class="modal-body">
+                                <label for="addRoomNumber">호수:</label>
+                                <input type="text" class="form-control mb-3" id="addRoomNumber">
                             </div>
 
                             <div class="d-flex align-items-center justify-content-center mt-3 mb-3 gap-3">
-                                <button type="button" id="addProductButton" class="btn btn-primary">등록</button>
+                                <button type="button" id="addProductButton" class="btn btn-primary">배정</button>
                                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal">취소</button>
                             </div>
                         </div>

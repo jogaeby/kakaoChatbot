@@ -1,9 +1,11 @@
 const categories = [
-
+    { name: '이름', value: 'name' },
+    { name: '연락처', value: 'phone' },
+    { name: '상태', value: 'status' },
+    { name: '룸투어 희망일', value: 'visitDate' },
+    { name: '등록일', value: 'createDate' }
 ];
-const realEstateCategories = [
 
-];
 
 function parseKoreanDateTime(dateStr) {
     const regex = /(\d{4})년 (\d{2})월 (\d{2})일 (오전|오후) (\d{1,2}):(\d{2})/;

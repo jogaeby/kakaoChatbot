@@ -30,9 +30,11 @@ public class RoomTourReservation extends BaseEntity {
     private String period;
     @Enumerated(EnumType.STRING)
     private RoomTourReservationStatus status;
+    private String address;
+    private String roomNumber;
 
     @Builder
-    public RoomTourReservation(String location, LocalDateTime visitDate, LocalDate moveInDate, String name, String gender, String age, String phone, String period, RoomTourReservationStatus status) {
+    public RoomTourReservation(String location, LocalDateTime visitDate, LocalDate moveInDate, String name, String gender, String age, String phone, String period, RoomTourReservationStatus status, String address, String roomNumber) {
         this.location = location;
         this.visitDate = visitDate;
         this.moveInDate = moveInDate;
@@ -42,6 +44,8 @@ public class RoomTourReservation extends BaseEntity {
         this.phone = phone;
         this.period = period;
         this.status = status;
+        this.address = address;
+        this.roomNumber = roomNumber;
     }
 
     public RoomTourReservationDTO toDto() {
@@ -55,8 +59,16 @@ public class RoomTourReservation extends BaseEntity {
                 .age(age)
                 .phone(phone)
                 .period(period)
+                .address(address)
+                .roomNumber(roomNumber)
                 .status(status.getName())
                 .createDate(getCreateDate())
                 .build();
+    }
+
+    public void addRoomNumber(String address, String roomNumber) {
+        this.address = address;
+        this.roomNumber = roomNumber;
+        this.status = RoomTourReservationStatus.ASSIGNMENT;
     }
 }
