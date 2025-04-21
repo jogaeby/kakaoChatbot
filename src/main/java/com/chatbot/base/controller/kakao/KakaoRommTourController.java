@@ -1,6 +1,7 @@
 package com.chatbot.base.controller.kakao;
 
 import com.chatbot.base.common.util.StringFormatterUtil;
+import com.chatbot.base.domain.constant.RoomTourReservationStatus;
 import com.chatbot.base.domain.reservation.dto.RoomTourReservationDTO;
 import com.chatbot.base.domain.reservation.service.RoomTourReservationService;
 import com.chatbot.base.dto.kakao.constatnt.button.ButtonAction;
@@ -49,6 +50,7 @@ public class KakaoRommTourController {
                     .age(age)
                     .phone(phone)
                     .period(period)
+                    .status(RoomTourReservationStatus.RECEIPT.getName())
                     .build();
 
             ChatBotResponse chatBotResponse = new ChatBotResponse();

@@ -1,6 +1,7 @@
 package com.chatbot.base.domain.reservation;
 
 import com.chatbot.base.domain.BaseEntity;
+import com.chatbot.base.domain.constant.RoomTourReservationStatus;
 import com.chatbot.base.domain.reservation.dto.RoomTourReservationDTO;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -27,8 +28,11 @@ public class RoomTourReservation extends BaseEntity {
     private String age;
     private String phone;
     private String period;
+    @Enumerated(EnumType.STRING)
+    private RoomTourReservationStatus status;
+
     @Builder
-    public RoomTourReservation(String location, LocalDateTime visitDate, LocalDate moveInDate, String name, String gender, String age, String phone, String period) {
+    public RoomTourReservation(String location, LocalDateTime visitDate, LocalDate moveInDate, String name, String gender, String age, String phone, String period, RoomTourReservationStatus status) {
         this.location = location;
         this.visitDate = visitDate;
         this.moveInDate = moveInDate;
@@ -37,6 +41,7 @@ public class RoomTourReservation extends BaseEntity {
         this.age = age;
         this.phone = phone;
         this.period = period;
+        this.status = status;
     }
 
     public RoomTourReservationDTO toDto() {
@@ -50,6 +55,7 @@ public class RoomTourReservation extends BaseEntity {
                 .age(age)
                 .phone(phone)
                 .period(period)
+                .status(status.getName())
                 .createDate(getCreateDate())
                 .build();
     }

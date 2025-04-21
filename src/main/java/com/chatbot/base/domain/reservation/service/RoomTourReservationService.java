@@ -8,7 +8,9 @@ import java.util.List;
 
 public interface RoomTourReservationService {
     RoomTourReservation receipt(RoomTourReservationDTO roomTourReservationDTO);
+
     void delete(String id);
+
     List<RoomTourReservationDTO> getAll(Pageable pageable);
 //
 //    List<RoomTourReservationDTO> search(String category, String input, ReservationType type);

@@ -1,5 +1,6 @@
 package com.chatbot.base.domain.reservation.dto;
 
+import com.chatbot.base.domain.constant.RoomTourReservationStatus;
 import com.chatbot.base.domain.reservation.RoomTourReservation;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,6 +21,8 @@ public class RoomTourReservationDTO {
     private String phone;
     private String period;
     private LocalDateTime createDate;
+    private String status;
+
     public RoomTourReservation toEntity() {
         return RoomTourReservation.builder()
                 .location(location)
@@ -30,6 +33,7 @@ public class RoomTourReservationDTO {
                 .age(age)
                 .phone(phone)
                 .period(period)
+                .status(RoomTourReservationStatus.fromString(status))
                 .build();
     }
 }
