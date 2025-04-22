@@ -3,10 +3,10 @@ services:
     image: 'mysql:8.0'
     container_name: mysql-container
     environment:
-      - 'MYSQL_DATABASE=comochez'
-      - 'MYSQL_USER=comochez'
-      - 'MYSQL_PASSWORD=comochez2025!'
-      - 'MYSQL_ROOT_PASSWORD=comochez2025!'
+      - 'MYSQL_DATABASE=yeongjong'
+      - 'MYSQL_USER=yeongjong'
+      - 'MYSQL_PASSWORD=yeongjong2025!'
+      - 'MYSQL_ROOT_PASSWORD=yeongjong2025!'
     ports:
       - '3306:3306'
     volumes:
@@ -21,9 +21,9 @@ services:
       dockerfile: Dockerfile
     container_name: spring_app_prod
     environment:
-      - 'SPRING_DATASOURCE_URL=jdbc:mysql://mysql-container:3306/comochez'
-      - 'SPRING_DATASOURCE_USERNAME=comochez'
-      - 'SPRING_DATASOURCE_PASSWORD=comochez2025!'
+      - 'SPRING_DATASOURCE_URL=jdbc:mysql://mysql-container:3306/yeongjong'
+      - 'SPRING_DATASOURCE_USERNAME=yeongjong'
+      - 'SPRING_DATASOURCE_PASSWORD=yeongjong2025!'
       - 'SPRING_DATA_REDIS_HOST=redis'
       - 'SPRING_DATA_REDIS_PORT=6379'
     ports:
