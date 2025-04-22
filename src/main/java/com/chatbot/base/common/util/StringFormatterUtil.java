@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
@@ -116,6 +117,13 @@ public class StringFormatterUtil {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 (E)", Locale.KOREAN);
 
         return localDate.format(formatter);
+    }
+
+    public static String formatDateTime(LocalDateTime localDateTime) {
+        // 원하는 포맷으로 변환
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 (E) a hh시 mm분", Locale.KOREAN);
+
+        return localDateTime.format(formatter);
     }
 
     public static String objectToString(Object object) {

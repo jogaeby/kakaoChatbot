@@ -124,14 +124,11 @@ public class ChatBotRequest {
         public class Params {
             private String name;
             private String phone;
-            private String quantity;
-            private String memo;
-            private String kakaoSync;
-            private String email;
-            private String location;
-            private String age;
-            private String gender;
-            private String period;
+            private String depart;
+            private String arrive;
+            private String hopePrice;
+            private String message;
+            private String comment;
         }
 
         @Getter
@@ -139,6 +136,8 @@ public class ChatBotRequest {
         public class DetailParams {
             private ReservationDate visitDate;
             private ReservationDate date;
+            private ReservationDate hopeCompleteDateTime;
+            private ReservationDate reservationDateTime;
 
             @Getter
             @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -185,29 +184,34 @@ public class ChatBotRequest {
         return action.getParams().getName();
     }
 
-    public String getPeriod(){
-        if (Objects.isNull(action.getParams().getPeriod())) return null;
-        return action.getParams().getPeriod();
-    }
-
     public String getPhone(){
         if (Objects.isNull(action.getParams().getPhone())) return null;
         return action.getParams().getPhone();
     }
 
-    public String getLocation(){
-        if (Objects.isNull(action.getParams().getLocation())) return null;
-        return action.getParams().getLocation();
+    public String getDepart(){
+        if (Objects.isNull(action.getParams().getDepart())) return null;
+        return action.getParams().getDepart();
     }
 
-    public String getAge(){
-        if (Objects.isNull(action.getParams().getAge())) return null;
-        return action.getParams().getAge();
+    public String getArrive(){
+        if (Objects.isNull(action.getParams().getArrive())) return null;
+        return action.getParams().getArrive();
     }
 
-    public String getGender(){
-        if (Objects.isNull(action.getParams().getGender())) return null;
-        return action.getParams().getGender();
+    public String getHopePrice(){
+        if (Objects.isNull(action.getParams().getHopePrice())) return null;
+        return action.getParams().getHopePrice();
+    }
+
+    public String getMessage(){
+        if (Objects.isNull(action.getParams().getMessage())) return null;
+        return action.getParams().getMessage();
+    }
+
+    public String getComment(){
+        if (Objects.isNull(action.getParams().getComment())) return null;
+        return action.getParams().getComment();
     }
 
     public LocalDate getDate() {
@@ -215,9 +219,14 @@ public class ChatBotRequest {
         return LocalDate.parse(action.getDetailParams().getDate().getOrigin(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
 
-    public LocalDateTime getVisitDate() {
-        if (Objects.isNull(action.getDetailParams().getVisitDate().getOrigin())) return null;
-        return LocalDateTime.parse(action.getDetailParams().getVisitDate().getOrigin(), DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+    public LocalDateTime getHopeCompleteDateTime() {
+        if (Objects.isNull(action.getDetailParams().getHopeCompleteDateTime().getOrigin())) return null;
+        return LocalDateTime.parse(action.getDetailParams().getHopeCompleteDateTime().getOrigin(), DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+    }
+
+    public LocalDateTime getReservationDateTime() {
+        if (Objects.isNull(action.getDetailParams().getReservationDateTime().getOrigin())) return null;
+        return LocalDateTime.parse(action.getDetailParams().getReservationDateTime().getOrigin(), DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
     }
 
     public String getChoiceParam(){
@@ -242,17 +251,6 @@ public class ChatBotRequest {
     public String getAppUserId() {
         if (Objects.isNull(userRequest.user.properties.getAppUserId())) return null;
         return userRequest.user.properties.getAppUserId();
-    }
-
-    public String getMemo() throws JsonProcessingException {
-        if (Objects.isNull(action.getParams().getMemo())) return null;
-        return action.getParams().getMemo();
-    }
-
-    public KakaoSyncRequestDto getKakaoSync() throws JsonProcessingException {
-        if (Objects.isNull(action.getParams().getKakaoSync())) return null;
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.readValue(action.getParams().getKakaoSync(), KakaoSyncRequestDto.class);
     }
 
     public String getUtterance(){
