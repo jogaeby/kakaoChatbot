@@ -67,7 +67,7 @@ public class KakaoReservationController {
             itemCard.addItemList("예약날짜",StringFormatterUtil.formatDateTime(reservationDateTime));
             itemCard.addItemList("희망완료날짜",StringFormatterUtil.formatDateTime(hopeCompleteDateTime));
             itemCard.addItemList("희망요금",StringFormatterUtil.formatCurrency(hopePrice)+"원");
-            itemCard.setTitle("해당 내용으로 룸투어 신청하시겠습니까?");
+            itemCard.setTitle("해당 내용으로 서비스를 신청하시겠습니까?");
 
 
             TextCard departTextCard = new TextCard();
