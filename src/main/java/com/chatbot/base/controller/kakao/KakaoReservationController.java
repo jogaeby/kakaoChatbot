@@ -1,10 +1,9 @@
 package com.chatbot.base.controller.kakao;
 
 import com.chatbot.base.common.util.StringFormatterUtil;
-import com.chatbot.base.domain.constant.RoomTourReservationStatus;
+import com.chatbot.base.domain.reservation.Reservation;
 import com.chatbot.base.domain.reservation.dto.ReservationDto;
-import com.chatbot.base.domain.reservation.dto.RoomTourReservationDTO;
-import com.chatbot.base.domain.reservation.service.RoomTourReservationService;
+import com.chatbot.base.domain.reservation.service.ReservationService;
 import com.chatbot.base.dto.kakao.constatnt.button.ButtonAction;
 import com.chatbot.base.dto.kakao.constatnt.button.ButtonParamKey;
 import com.chatbot.base.dto.kakao.request.ChatBotRequest;
@@ -20,16 +19,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 @RestController
 @RequiredArgsConstructor
 @Slf4j
 @RequestMapping(value = "/kakao/chatbot/reservation")
 public class KakaoReservationController {
-    private final RoomTourReservationService roomTourReservationService;
+    private final ReservationService reservationService;
     private final ChatBotExceptionResponse chatBotExceptionResponse = new ChatBotExceptionResponse();
     @PostMapping(value = "confirm")
     public ChatBotResponse confirmReceipt(@RequestBody ChatBotRequest chatBotRequest) {
@@ -102,17 +99,18 @@ public class KakaoReservationController {
     }
 
     @PostMapping(value = "receipt")
-    public ChatBotResponse receiptRoomTour(@RequestBody ChatBotRequest chatBotRequest) {
+    public ChatBotResponse receiptReservation(@RequestBody ChatBotRequest chatBotRequest) {
         try {
-            RoomTourReservationDTO roomTourReservation = chatBotRequest.getRoomTourReservation();
-            roomTourReservationService.receipt(roomTourReservation);
+            ReservationDto reservation = chatBotRequest.getReservation();
+            Reservation receipt = reservationService.receipt(reservation);
+            Long id = receipt.getId();
 
             ChatBotResponse chatBotResponse = new ChatBotResponse();
-            chatBotResponse.addSimpleText("룸투어 신청을 정상적으로 완료하였습니다.");
+            chatBotResponse.addSimpleText("["+id+"] 서비스 신청을 정상적으로 완료하였습니다.");
             return chatBotResponse;
         }catch (Exception e) {
-            log.error("receiptRoomTour: {}", e.getMessage(), e);
-            return chatBotExceptionResponse.createException();
+            log.error("receiptReservation: {}", e.getMessage(), e);
+            return chatBotExceptionResponse.createException("서비스 신청을 실패하였습니다.");
         }
     }
 

@@ -1,10 +1,7 @@
 package com.chatbot.base.dto.kakao.request;
 
-import com.chatbot.base.domain.reservation.dto.RoomTourReservationDTO;
-import com.chatbot.base.dto.kakao.sync.KakaoSyncRequestDto;
+import com.chatbot.base.domain.reservation.dto.ReservationDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 
 import java.time.LocalDate;
@@ -116,7 +113,7 @@ public class ChatBotRequest {
             private String pageNumber;
             private String firstNumber;
             private String lastNumber;
-            private RoomTourReservationDTO roomTourReservation;
+            private ReservationDto reservation;
         }
 
         @Getter
@@ -234,9 +231,9 @@ public class ChatBotRequest {
         return action.getClientExtra().getChoice();
     }
 
-    public RoomTourReservationDTO getRoomTourReservation(){
-        if (Objects.isNull(action.getClientExtra().getRoomTourReservation())) return null;
-        return action.getClientExtra().getRoomTourReservation();
+    public ReservationDto getReservation(){
+        if (Objects.isNull(action.getClientExtra().getReservation())) return null;
+        return action.getClientExtra().getReservation();
     }
 
     public String getProductId(){

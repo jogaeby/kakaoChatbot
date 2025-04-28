@@ -1,20 +1,8 @@
 package com.chatbot.base.common;
 
-import com.chatbot.base.domain.reservation.dto.RoomTourReservationDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.nurigo.sdk.NurigoApp;
-import net.nurigo.sdk.message.exception.NurigoMessageNotReceivedException;
-import net.nurigo.sdk.message.model.KakaoOption;
-import net.nurigo.sdk.message.model.Message;
-import net.nurigo.sdk.message.response.MultipleDetailMessageSentResponse;
-import net.nurigo.sdk.message.service.DefaultMessageService;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 
 @Slf4j
 @Service
@@ -39,35 +27,35 @@ public class AlarmTalkService {
 
         가능할까요?????
      */
-
-    public MultipleDetailMessageSentResponse sendRoomTourAssignment(RoomTourReservationDTO roomTourReservationDTO) {
-        DefaultMessageService messageService =  NurigoApp.INSTANCE.initialize(API_KEY, API_SECRET_KEY, "https://api.solapi.com");
-
-        KakaoOption kakaoOption = new KakaoOption();
-        kakaoOption.setPfId(CHANNEL_ID);
-        kakaoOption.setTemplateId(ROOM_TOUR_ASSIGNMENT_TEMPLATE_ID);
-        kakaoOption.setDisableSms(true);
-
-        HashMap<String, String> variables = new HashMap<>();
-        variables.put("#{고객명}", roomTourReservationDTO.getName());
-        variables.put("#{룸투어 날짜}", roomTourReservationDTO.getVisitDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
-
-        kakaoOption.setVariables(variables);
-
-        Message message = new Message();
-        message.setFrom(CALLER_1_ID);
-        message.setTo(roomTourReservationDTO.getPhone());
-        message.setKakaoOptions(kakaoOption);
-
-        try {
-            // send 메소드로 ArrayList<Message> 객체를 넣어도 동작합니다!
-            return messageService.send(message);
-        } catch (NurigoMessageNotReceivedException e) {
-            log.error("{} {}",e.getFailedMessageList(),e.getMessage());
-            throw new RuntimeException(e.getMessage());
-        } catch (Exception e) {
-            log.error("{} {}",e.getMessage(),e.getStackTrace());
-            throw new RuntimeException(e.getMessage());
-        }
-    }
+//
+//    public MultipleDetailMessageSentResponse sendRoomTourAssignment(RoomTourReservationDTO roomTourReservationDTO) {
+//        DefaultMessageService messageService =  NurigoApp.INSTANCE.initialize(API_KEY, API_SECRET_KEY, "https://api.solapi.com");
+//
+//        KakaoOption kakaoOption = new KakaoOption();
+//        kakaoOption.setPfId(CHANNEL_ID);
+//        kakaoOption.setTemplateId(ROOM_TOUR_ASSIGNMENT_TEMPLATE_ID);
+//        kakaoOption.setDisableSms(true);
+//
+//        HashMap<String, String> variables = new HashMap<>();
+//        variables.put("#{고객명}", roomTourReservationDTO.getName());
+//        variables.put("#{룸투어 날짜}", roomTourReservationDTO.getVisitDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+//
+//        kakaoOption.setVariables(variables);
+//
+//        Message message = new Message();
+//        message.setFrom(CALLER_1_ID);
+//        message.setTo(roomTourReservationDTO.getPhone());
+//        message.setKakaoOptions(kakaoOption);
+//
+//        try {
+//            // send 메소드로 ArrayList<Message> 객체를 넣어도 동작합니다!
+//            return messageService.send(message);
+//        } catch (NurigoMessageNotReceivedException e) {
+//            log.error("{} {}",e.getFailedMessageList(),e.getMessage());
+//            throw new RuntimeException(e.getMessage());
+//        } catch (Exception e) {
+//            log.error("{} {}",e.getMessage(),e.getStackTrace());
+//            throw new RuntimeException(e.getMessage());
+//        }
+//    }
 }
