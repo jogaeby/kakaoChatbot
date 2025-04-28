@@ -90,7 +90,7 @@ public class KakaoReservationController {
             chatBotResponse.addItemCard(itemCard);
             chatBotResponse.addCarousel(carousel);
             chatBotResponse.addQuickButton("다시입력",ButtonAction.블럭이동,"68026f3c2a22a85698b1aed6");
-            chatBotResponse.addQuickButton("신청하기",ButtonAction.블럭이동,"680062d90d2e457e10df68f5", ButtonParamKey.reservation,reservationDto);
+            chatBotResponse.addQuickButton("신청하기",ButtonAction.블럭이동,"680eca6f938bdf47fceadcde", ButtonParamKey.reservation,reservationDto);
             return chatBotResponse;
         }catch (Exception e) {
             log.error("confirmReceipt: {}", e.getMessage(), e);
