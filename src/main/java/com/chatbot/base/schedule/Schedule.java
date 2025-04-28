@@ -11,7 +11,7 @@ import org.springframework.util.StopWatch;
 @RequiredArgsConstructor
 public class Schedule {
 
-    @Scheduled(cron = "0 * * * * *")
+//    @Scheduled(cron = "0 * * * * *")
     public void sendBeforeAlarmTalk() {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
