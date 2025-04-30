@@ -1,5 +1,6 @@
 package com.chatbot.base.controller.kakao;
 
+import com.chatbot.base.common.AlarmTalkService;
 import com.chatbot.base.common.util.StringFormatterUtil;
 import com.chatbot.base.domain.reservation.Reservation;
 import com.chatbot.base.domain.reservation.dto.ReservationDto;
@@ -27,6 +28,7 @@ import java.time.LocalDateTime;
 @RequestMapping(value = "/kakao/chatbot/reservation")
 public class KakaoReservationController {
     private final ReservationService reservationService;
+    private final AlarmTalkService alarmTalkService;
     private final ChatBotExceptionResponse chatBotExceptionResponse = new ChatBotExceptionResponse();
     @PostMapping(value = "confirm")
     public ChatBotResponse confirmReceipt(@RequestBody ChatBotRequest chatBotRequest) {
@@ -104,6 +106,8 @@ public class KakaoReservationController {
             ReservationDto reservation = chatBotRequest.getReservation();
             Reservation receipt = reservationService.receipt(reservation);
             Long id = receipt.getId();
+
+            alarmTalkService.sendReservation("01039190126",receipt);
 
             ChatBotResponse chatBotResponse = new ChatBotResponse();
             chatBotResponse.addSimpleText("["+id+"] 서비스 신청을 정상적으로 완료하였습니다.");
