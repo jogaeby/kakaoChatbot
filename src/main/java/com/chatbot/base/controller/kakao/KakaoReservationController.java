@@ -60,8 +60,6 @@ public class KakaoReservationController {
 //            rowData.add(name);
 //
 //
-//
-//
 //            googleSheetUtil.appendToSheet("","",rowData);
 
             ChatBotResponse chatBotResponse = new ChatBotResponse();
