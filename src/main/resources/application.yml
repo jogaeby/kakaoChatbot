@@ -34,9 +34,9 @@ spring:
           time_zone: Asia/Seoul
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://3.36.94.18:3306/yeongjong
-    username: yeongjong
-    password: yeongjong2025!
+    url: jdbc:mysql://3.36.94.18:3306/tefal
+    username: tefal
+    password: tefal2025!
     hikari:
       maximum-pool-size: 10
       minimum-idle: 5
