@@ -141,7 +141,7 @@ public class GoogleSheetUtil {
         int startCol = newRowData.size(); // 마지막 열의 인덱스
         int endCol = startCol + 1;        // 체크박스 범위
 
-        addCheckboxToSheet(service, spreadSheetId, sheetName, lastRow+1, lastRow + 2, startCol, endCol); // C열에 체크박스 추가
+//        addCheckboxToSheet(service, spreadSheetId, sheetName, lastRow+1, lastRow + 2, startCol, endCol); // C열에 체크박스 추가
     }
 
     private void addCheckboxToSheet(Sheets service, String spreadSheetId, String sheetName, int startRow, int endRow, int startCol, int endCol) throws IOException {

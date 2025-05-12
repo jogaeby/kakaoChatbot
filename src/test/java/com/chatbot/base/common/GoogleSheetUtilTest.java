@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -27,5 +28,10 @@ class GoogleSheetUtilTest {
                 .setEnd(new EventDateTime().setDateTime(new DateTime("2025-04-01T11:00:00+09:00")).setTimeZone("Asia/Seoul"));
 
         googleSheetUtil.insertEvent(calendarId,event);
+    }
+
+    @Test
+    void readAllSheet() throws GeneralSecurityException, IOException {
+        googleSheetUtil.readAllSheet("","");
     }
 }
