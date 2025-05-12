@@ -2,6 +2,7 @@ package com.chatbot.base.dto.kakao.request;
 
 import com.chatbot.base.domain.reservation.dto.ReservationDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 
 import java.time.LocalDate;
@@ -126,6 +127,7 @@ public class ChatBotRequest {
             private String hopePrice;
             private String message;
             private String comment;
+            private String images;
         }
 
         @Getter
@@ -248,6 +250,19 @@ public class ChatBotRequest {
     public String getAppUserId() {
         if (Objects.isNull(userRequest.user.properties.getAppUserId())) return null;
         return userRequest.user.properties.getAppUserId();
+    }
+
+    public List<String> getImages(){
+        try {
+            if (Objects.isNull(action.getParams().getImages())) return null;
+
+            ObjectMapper mapper = new ObjectMapper();
+            String images = this.action.getParams().getImages();
+            KakaoPluginSecureImage kakaoPluginSecureImage = mapper.readValue(images, KakaoPluginSecureImage.class);
+            return kakaoPluginSecureImage.getImgUrlList();
+        }catch (Exception e){
+            return null;
+        }
     }
 
     public String getUtterance(){

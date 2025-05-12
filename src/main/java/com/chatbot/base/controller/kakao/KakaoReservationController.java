@@ -39,28 +39,30 @@ public class KakaoReservationController {
     @PostMapping(value = "receipt")
     public ChatBotResponse receiptEvent(@RequestBody ChatBotRequest chatBotRequest) {
         try {
+            List<String> images = chatBotRequest.getImages();
+            log.info("receiptEvent, images: {}", images);
 
-            String appUserId = chatBotRequest.getAppUserId();
-
-            KakaoProfileDto kakaoProfile = kakaoApiService.getKakaoProfile(appUserId);
+//            String appUserId = chatBotRequest.getAppUserId();
+//
+//            KakaoProfileDto kakaoProfile = kakaoApiService.getKakaoProfile(appUserId);
             long id = System.currentTimeMillis();
-            String name = kakaoProfile.getKakaoAccount().getName();
-            String nickName = kakaoProfile.getProperties().getNickname();
-            String profileImage = kakaoProfile.getProperties().getThumbnailImage();
-            String gender = kakaoProfile.getGender();
-            String birthday = kakaoProfile.getBirthDate();
-            String phone = kakaoProfile.getKakaoAccount().getPhoneNumber();
-            LocalDateTime localDateTime = LocalDateTime.now();
-
-
-            List<Object> rowData = new ArrayList<>();
-            rowData.add(id);
-            rowData.add(name);
-
-
-
-
-            googleSheetUtil.appendToSheet("","",rowData);
+//            String name = kakaoProfile.getKakaoAccount().getName();
+//            String nickName = kakaoProfile.getProperties().getNickname();
+//            String profileImage = kakaoProfile.getProperties().getThumbnailImage();
+//            String gender = kakaoProfile.getGender();
+//            String birthday = kakaoProfile.getBirthDate();
+//            String phone = kakaoProfile.getKakaoAccount().getPhoneNumber();
+//            LocalDateTime localDateTime = LocalDateTime.now();
+//
+//
+//            List<Object> rowData = new ArrayList<>();
+//            rowData.add(id);
+//            rowData.add(name);
+//
+//
+//
+//
+//            googleSheetUtil.appendToSheet("","",rowData);
 
             ChatBotResponse chatBotResponse = new ChatBotResponse();
             chatBotResponse.addSimpleText("["+id+"] 제출 완료되었습니다\n" +
