@@ -9,6 +9,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -32,6 +34,13 @@ class GoogleSheetUtilTest {
 
     @Test
     void readAllSheet() throws GeneralSecurityException, IOException {
-        googleSheetUtil.readAllSheet("","");
+        googleSheetUtil.readAllSheet("1676Rgmx9eOPNTvrKJSNmnoPpnYF5dXYByvB9ZME7QFs","이벤트");
+    }
+
+    @Test
+    void name() throws GeneralSecurityException, IOException {
+        List<Object> rowData = new ArrayList<>();
+        rowData.add("test");
+        googleSheetUtil.appendToSheet("1676Rgmx9eOPNTvrKJSNmnoPpnYF5dXYByvB9ZME7QFs","이벤트",rowData);
     }
 }

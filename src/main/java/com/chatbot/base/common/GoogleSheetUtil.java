@@ -136,11 +136,11 @@ public class GoogleSheetUtil {
 
         log.info("데이터 추가 완료 (추가된 셀 수): {}", appendResponse.getUpdates().getUpdatedCells());
 
-        int lastRow = maxNo; // 마지막 추가된 행 번호 (0-based index)
-        // newRowData 기반으로 체크박스 열 계산
-        int startCol = newRowData.size(); // 마지막 열의 인덱스
-        int endCol = startCol + 1;        // 체크박스 범위
-
+//        int lastRow = maxNo; // 마지막 추가된 행 번호 (0-based index)
+//        // newRowData 기반으로 체크박스 열 계산
+//        int startCol = newRowData.size(); // 마지막 열의 인덱스
+//        int endCol = startCol + 1;        // 체크박스 범위
+//
 //        addCheckboxToSheet(service, spreadSheetId, sheetName, lastRow+1, lastRow + 2, startCol, endCol); // C열에 체크박스 추가
     }
 

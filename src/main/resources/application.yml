@@ -1,5 +1,5 @@
 host:
-  ip: http://3.36.94.18
+  ip: http://3.39.191.194
   port: 8080
 spring:
   servlet:
@@ -34,7 +34,7 @@ spring:
           time_zone: Asia/Seoul
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://3.36.94.18:3306/tefal
+    url: jdbc:mysql://3.39.191.194:3306/tefal
     username: tefal
     password: tefal2025!
     hikari:
