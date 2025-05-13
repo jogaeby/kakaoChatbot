@@ -31,14 +31,19 @@ public class EventServiceImpl implements EventService {
             String id = String.valueOf(System.currentTimeMillis());
 //            KakaoProfileDto kakaoProfile = kakaoApiService.getKakaoProfile(appUserId);
 //            String name = kakaoProfile.getKakaoAccount().getName();
-            String name = "홍길동";
 //            String nickName = kakaoProfile.getProperties().getNickname();
 //            String profileImage = kakaoProfile.getProperties().getThumbnailImage();
 //            String gender = kakaoProfile.getGender();
 //            String birthday = kakaoProfile.getBirthDate();
 //            String phone = kakaoProfile.getKakaoAccount().getPhoneNumber();
 //            LocalDateTime localDateTime = LocalDateTime.now();
-
+            String name = "홍길동(예시)";
+            String phone = "+82 010-1234-5678(예시)";
+            String nickName = "프로필명(예시)";
+            String profileImage = "http://yyy.kakao.com/dn/.../img_640x640.jpg(예시)";
+            String email = "sample@sample.com(예시)";
+            String gender = "남성/여성(예시)";
+            String birthday = "2022-11-30(예시)";
 
             StringBuilder imageUrlList = new StringBuilder();
             List<String> serverImageUrls = imageUtil.downloadImage(images,"onePick",name,id);
@@ -50,7 +55,13 @@ public class EventServiceImpl implements EventService {
             List<Object> rowData = new ArrayList<>();
             rowData.add(id);
             rowData.add(name);
-            rowData.add("01011112222");
+            rowData.add(phone);
+            rowData.add("");
+            rowData.add(nickName);
+            rowData.add(profileImage);
+            rowData.add(email);
+            rowData.add(gender);
+            rowData.add(birthday);
             rowData.add(imageUrlList.toString());
             rowData.add(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
 
