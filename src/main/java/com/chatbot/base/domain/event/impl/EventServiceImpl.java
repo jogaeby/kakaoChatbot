@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,7 +50,9 @@ public class EventServiceImpl implements EventService {
             List<Object> rowData = new ArrayList<>();
             rowData.add(id);
             rowData.add(name);
+            rowData.add("01011112222");
             rowData.add(imageUrlList.toString());
+            rowData.add(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
 
             googleSheetUtil.appendToSheet(SHEET_ID,SHEET_NAME,rowData);
             return id;
