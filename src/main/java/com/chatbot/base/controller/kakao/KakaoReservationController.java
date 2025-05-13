@@ -1,21 +1,11 @@
 package com.chatbot.base.controller.kakao;
 
-import com.chatbot.base.common.AlarmTalkService;
-import com.chatbot.base.common.GoogleSheetUtil;
+import com.chatbot.base.common.ImageUtil;
 import com.chatbot.base.common.util.KakaoApiService;
-import com.chatbot.base.common.util.StringFormatterUtil;
-import com.chatbot.base.domain.reservation.Reservation;
-import com.chatbot.base.domain.reservation.dto.ReservationDto;
-import com.chatbot.base.domain.reservation.service.ReservationService;
-import com.chatbot.base.dto.kakao.constatnt.button.ButtonAction;
-import com.chatbot.base.dto.kakao.constatnt.button.ButtonParamKey;
+import com.chatbot.base.domain.event.EventService;
 import com.chatbot.base.dto.kakao.request.ChatBotRequest;
 import com.chatbot.base.dto.kakao.response.ChatBotExceptionResponse;
 import com.chatbot.base.dto.kakao.response.ChatBotResponse;
-import com.chatbot.base.dto.kakao.response.property.components.Carousel;
-import com.chatbot.base.dto.kakao.response.property.components.ItemCard;
-import com.chatbot.base.dto.kakao.response.property.components.TextCard;
-import com.chatbot.base.dto.kakao.sync.KakaoProfileDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -32,8 +20,8 @@ import java.util.List;
 @Slf4j
 @RequestMapping(value = "/kakao/chatbot/event")
 public class KakaoReservationController {
-    private final GoogleSheetUtil googleSheetUtil;
-    private final KakaoApiService kakaoApiService;
+
+    private final EventService eventService;
     private final ChatBotExceptionResponse chatBotExceptionResponse = new ChatBotExceptionResponse();
 
     @PostMapping(value = "receipt")
@@ -42,25 +30,9 @@ public class KakaoReservationController {
             List<String> images = chatBotRequest.getImages();
             log.info("receiptEvent, images: {}", images);
 
-//            String appUserId = chatBotRequest.getAppUserId();
-//
-//            KakaoProfileDto kakaoProfile = kakaoApiService.getKakaoProfile(appUserId);
-            long id = System.currentTimeMillis();
-//            String name = kakaoProfile.getKakaoAccount().getName();
-//            String nickName = kakaoProfile.getProperties().getNickname();
-//            String profileImage = kakaoProfile.getProperties().getThumbnailImage();
-//            String gender = kakaoProfile.getGender();
-//            String birthday = kakaoProfile.getBirthDate();
-//            String phone = kakaoProfile.getKakaoAccount().getPhoneNumber();
-//            LocalDateTime localDateTime = LocalDateTime.now();
-//
-//
-//            List<Object> rowData = new ArrayList<>();
-//            rowData.add(id);
-//            rowData.add(name);
-//
-//
-//            googleSheetUtil.appendToSheet("","",rowData);
+            String appUserId = chatBotRequest.getAppUserId();
+
+            String id = eventService.onePickEvent(images, appUserId);
 
             ChatBotResponse chatBotResponse = new ChatBotResponse();
             chatBotResponse.addSimpleText("["+id+"] 제출 완료되었습니다\n" +
