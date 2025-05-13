@@ -40,7 +40,7 @@ public class EventServiceImpl implements EventService {
 
 
             StringBuilder imageUrlList = new StringBuilder();
-            List<String> serverImageUrls = imageUtil.downloadImage(images,"event/onePick",name,id);
+            List<String> serverImageUrls = imageUtil.downloadImage(images,"onePick",name,id);
             serverImageUrls.forEach(url -> {
                 imageUrlList.append(url+"\n");
             });
