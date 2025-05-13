@@ -49,7 +49,7 @@ public class EventServiceImpl implements EventService {
             List<Object> rowData = new ArrayList<>();
             rowData.add(id);
             rowData.add(name);
-            rowData.add(imageUrlList);
+            rowData.add(imageUrlList.toString());
 
             googleSheetUtil.appendToSheet(SHEET_ID,SHEET_NAME,rowData);
             return id;
