@@ -6,6 +6,7 @@ import com.chatbot.base.common.util.KakaoApiService;
 import com.chatbot.base.domain.event.EventService;
 import com.chatbot.base.dto.kakao.sync.KakaoProfileDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@Transactional(readOnly = true)
+@Slf4j
 @RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
     private final KakaoApiService kakaoApiService;
@@ -53,6 +54,7 @@ public class EventServiceImpl implements EventService {
             googleSheetUtil.appendToSheet(SHEET_ID,SHEET_NAME,rowData);
             return id;
         }catch (Exception e) {
+            log.error("{}",e.getMessage(),e);
             throw new RuntimeException();
         }
     }
