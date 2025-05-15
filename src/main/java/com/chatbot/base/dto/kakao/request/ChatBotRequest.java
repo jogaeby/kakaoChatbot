@@ -1,7 +1,9 @@
 package com.chatbot.base.dto.kakao.request;
 
 import com.chatbot.base.domain.reservation.dto.ReservationDto;
+import com.chatbot.base.dto.kakao.sync.KakaoProfileRequestDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 
@@ -125,6 +127,7 @@ public class ChatBotRequest {
             private String depart;
             private String arrive;
             private String hopePrice;
+            private String profile;
             private String message;
             private String comment;
             private String images;
@@ -250,6 +253,12 @@ public class ChatBotRequest {
     public String getAppUserId() {
         if (Objects.isNull(userRequest.user.properties.getAppUserId())) return null;
         return userRequest.user.properties.getAppUserId();
+    }
+
+    public KakaoProfileRequestDto getProfile() throws JsonProcessingException {
+        if (Objects.isNull(action.getParams().getProfile())) return null;
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.readValue(action.getParams().getProfile(), KakaoProfileRequestDto.class);
     }
 
     public List<String> getImages(){
