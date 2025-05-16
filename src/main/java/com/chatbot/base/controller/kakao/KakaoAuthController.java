@@ -1,9 +1,11 @@
 package com.chatbot.base.controller.kakao;
 
 import com.chatbot.base.common.KakaoApiService;
+import com.chatbot.base.dto.kakao.constatnt.button.ButtonAction;
 import com.chatbot.base.dto.kakao.request.ChatBotRequest;
 import com.chatbot.base.dto.kakao.response.ChatBotExceptionResponse;
 import com.chatbot.base.dto.kakao.response.ChatBotResponse;
+import com.chatbot.base.dto.kakao.response.property.common.Button;
 import com.chatbot.base.dto.kakao.response.property.components.TextCard;
 import com.chatbot.base.dto.kakao.sync.KakaoAccessTokenDto;
 import com.chatbot.base.dto.kakao.sync.KakaoMemberTermsDto;
@@ -50,6 +52,7 @@ public class KakaoAuthController {
             textCard.setDescription("연동 완료되었습니다\n" +
                     "아래 버튼을 눌러 영수증을\n" +
                     "등록해주세요");
+            textCard.setButtons(new Button("영수증 등록하기", ButtonAction.블럭이동,"6821606d23dc6c3328144ff7"));
 
 //            chatBotResponse.addSimpleText("정상적으로 동의가 완료되었습니다.");
             chatBotResponse.addTextCard(textCard);
