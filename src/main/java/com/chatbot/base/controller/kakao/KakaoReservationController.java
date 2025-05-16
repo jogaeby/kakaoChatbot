@@ -4,6 +4,7 @@ import com.chatbot.base.domain.event.EventService;
 import com.chatbot.base.dto.kakao.request.ChatBotRequest;
 import com.chatbot.base.dto.kakao.response.ChatBotExceptionResponse;
 import com.chatbot.base.dto.kakao.response.ChatBotResponse;
+import com.chatbot.base.dto.kakao.response.property.components.TextCard;
 import com.chatbot.base.view.KakaoChatBotView;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,27 @@ public class KakaoReservationController {
     private final ChatBotExceptionResponse chatBotExceptionResponse = new ChatBotExceptionResponse();
 
     private final KakaoChatBotView kakaoChatBotView;
+
+    @PostMapping(value = "auth")
+    public ChatBotResponse authEvent(@RequestBody ChatBotRequest chatBotRequest) {
+        try {
+            ChatBotResponse chatBotResponse = new ChatBotResponse();
+
+            String appUserId = chatBotRequest.getAppUserId();
+
+            if (appUserId == null) throw new AuthenticationException("appUserId 없음");
+
+//            chatBotResponse.addTextCard("");
+
+            return chatBotResponse;
+        }catch (AuthenticationException e) {
+            log.error("[카카오싱크 실패] receiptReservation: {}", e.getMessage(), e);
+            return kakaoChatBotView.authView();
+        }catch (Exception e) {
+            log.error("receiptReservation: {}", e.getMessage(), e);
+            return chatBotExceptionResponse.createException();
+        }
+    }
 
     @PostMapping(value = "receipt")
     public ChatBotResponse receiptEvent(@RequestBody ChatBotRequest chatBotRequest) {
