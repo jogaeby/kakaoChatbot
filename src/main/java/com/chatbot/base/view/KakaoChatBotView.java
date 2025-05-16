@@ -11,10 +11,10 @@ public class KakaoChatBotView {
     public ChatBotResponse authView() {
         ChatBotResponse chatBotResponse = new ChatBotResponse();
         TextCard textCard = new TextCard();
-        Button button = new Button("네", ButtonAction.블럭이동,"6707147ad7cd4b2948f8b237");
+        Button button = new Button("네", ButtonAction.블럭이동,"68268a39d9c3e21ccc37318e");
         StringBuilder message = new StringBuilder();
         message
-                .append("대원투어 골프 상품을 카카오톡에서 예약하시려면,")
+                .append("이벤트에 참여하시려면")
                 .append("\n")
                 .append("최초 한번의 인증과 개인정보 수집 및 활용 동의가 필요해요.")
                 .append("\n")
