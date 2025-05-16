@@ -26,9 +26,8 @@ public class KakaoReservationController {
     public ChatBotResponse receiptEvent(@RequestBody ChatBotRequest chatBotRequest) {
         try {
             List<String> images = chatBotRequest.getImages();
-            log.info("receiptEvent, images: {}", images);
 
-            String appUserId = "27891265(테스트)";
+            String appUserId = chatBotRequest.getAppUserId();
 
             String id = eventService.onePickEvent(images, appUserId);
 
