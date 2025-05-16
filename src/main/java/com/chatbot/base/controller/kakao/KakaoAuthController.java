@@ -4,6 +4,7 @@ import com.chatbot.base.common.KakaoApiService;
 import com.chatbot.base.dto.kakao.request.ChatBotRequest;
 import com.chatbot.base.dto.kakao.response.ChatBotExceptionResponse;
 import com.chatbot.base.dto.kakao.response.ChatBotResponse;
+import com.chatbot.base.dto.kakao.response.property.components.TextCard;
 import com.chatbot.base.dto.kakao.sync.KakaoAccessTokenDto;
 import com.chatbot.base.dto.kakao.sync.KakaoMemberTermsDto;
 import com.chatbot.base.dto.kakao.sync.KakaoProfileDto;
@@ -45,8 +46,13 @@ public class KakaoAuthController {
 
             if (!profileRequestDto.isSaved()) throw new AuthenticationException("카카오 싱크 인증이 되지 않았습니다. 인증이 필요합니다.");
 
-            chatBotResponse.addSimpleText("정상적으로 동의가 완료되었습니다.");
+            TextCard textCard = new TextCard();
+            textCard.setDescription("연동 완료되었습니다\n" +
+                    "아래 버튼을 눌러 영수증을\n" +
+                    "등록해주세요");
 
+//            chatBotResponse.addSimpleText("정상적으로 동의가 완료되었습니다.");
+            chatBotResponse.addTextCard(textCard);
             return chatBotResponse;
         }catch (Exception e) {
             log.error("profile: {} {}", e.getMessage(), e.getStackTrace());
