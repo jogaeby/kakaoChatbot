@@ -145,15 +145,19 @@ public class KakaoProfileDto {
     public String getGender() {
         String gender = this.getKakaoAccount().getGender();
         if (gender.equals("female")) {
-            return "2";
+            return "여성";
         }
         if (gender.equals("male")) {
-            return "1";
+            return "남성";
         }
-        return "0";
+        return "중성";
     }
     public String getBirthDate() {
-        return this.getKakaoAccount().getBirthyear()+this.getKakaoAccount().getBirthday();
+        String birth = this.getKakaoAccount().getBirthyear();  // "1995"
+        String birthday = this.getKakaoAccount().getBirthday(); // "0617"
+        String formattedDate = birth + "-" + birthday.substring(0, 2) + "-" + birthday.substring(2);
+        // 결과: "1995-06-17"
+        return formattedDate;
     }
 
     public String isAgreeMarketing() {
