@@ -106,7 +106,7 @@ public class KakaoAuthController {
             log.error("login: {} {}", e.getMessage(), e.getStackTrace());
             // 예외 발생 시 실패 페이지로 이동
             modelAndView.setViewName(LOGIN_FAIL_PAGE);
-            modelAndView.addObject("message", "로그인 중 오류가 발생했습니다.\n다시 시도해주세요.");
+            modelAndView.addObject("message", "인증 오류가 발생했습니다.\n다시 시도해주세요.");
             return modelAndView;
         }
     }
