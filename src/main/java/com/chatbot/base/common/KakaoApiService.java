@@ -1,13 +1,13 @@
 package com.chatbot.base.common;
 
 import com.chatbot.base.dto.kakao.sync.KakaoAccessTokenDto;
+import com.chatbot.base.dto.kakao.sync.KakaoAddressDto;
 import com.chatbot.base.dto.kakao.sync.KakaoMemberTermsDto;
 import com.chatbot.base.dto.kakao.sync.KakaoProfileDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -18,6 +18,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 @Slf4j
@@ -26,10 +27,17 @@ public class KakaoApiService {
     private final String REST_API_KEY = "f51f1862deb9b948a90c53eadadd947d";
     private final String ADMIN_API_KEY = "df8a200e991496b6f0ac210ab95fd39b";
     private final String CLIENT_SECRET = "ZuYreTCBdGWBdMjX4twazqNe5Bq3k2Pl";
-
-    @Value("${spring.data.redirect.url}")
-    private String REDIRECT_URI;
+    private final String REDIRECT_URI = "http://223.130.150.134:8080/kakao/chatbot/auth/login";
     private ObjectMapper objectMapper = new ObjectMapper();
+
+    public boolean isAgree(String appUserId) {
+        log.info("카카오 개인정보 제공 동의 여부 appUserId = {} ",appUserId);
+        //사용자가 개인정보 제공에 동의하는 경우에 한해 해당 사용자의 appUserId를 확인할 수 있습니다.
+        if (Objects.nonNull(appUserId)) {
+            return true;
+        }
+        return false;
+    }
 
     public KakaoProfileDto getKakaoProfile(String appUserId) {
         final String url = "https://kapi.kakao.com/v2/user/me?target_id_type=user_id&target_id="+appUserId;
@@ -111,6 +119,27 @@ public class KakaoApiService {
 
         }catch (Exception e) {
             log.info("[{}] response::{}","카카오 사용자 정보 가져오기 응답",e.getStackTrace());
+        }
+        return response;
+    }
+
+    public KakaoAddressDto getKakaoUserAddressFromUserId(String userId) {
+        final String url = "https://kapi.kakao.com/v1/user/shipping_address?target_id_type=user_id&target_id="+userId;
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization","KakaoAK "+ADMIN_API_KEY);
+
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+
+        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(body,headers);
+
+        ResponseEntity<KakaoAddressDto> exchange = restTemplate.exchange(url,HttpMethod.GET,httpEntity, KakaoAddressDto.class);
+        KakaoAddressDto response = exchange.getBody();
+        try {
+            String responseStr = objectMapper.writeValueAsString(response);
+            log.info("[{}] response::{}","카카오 사용자 주소 가져오기 응답",responseStr);
+
+        }catch (Exception e) {
+            log.info("[{}] response::{}","카카오 사용자 주소 가져오기 응답",e.getStackTrace());
         }
         return response;
     }

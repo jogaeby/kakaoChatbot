@@ -1,7 +1,5 @@
 package com.chatbot.base.controller.kakao;
 
-import com.chatbot.base.common.ImageUtil;
-import com.chatbot.base.common.util.KakaoApiService;
 import com.chatbot.base.domain.event.EventService;
 import com.chatbot.base.dto.kakao.request.ChatBotRequest;
 import com.chatbot.base.dto.kakao.response.ChatBotExceptionResponse;

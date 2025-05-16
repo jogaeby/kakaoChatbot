@@ -2,13 +2,11 @@ package com.chatbot.base.domain.event.impl;
 
 import com.chatbot.base.common.GoogleSheetUtil;
 import com.chatbot.base.common.ImageUtil;
-import com.chatbot.base.common.util.KakaoApiService;
+import com.chatbot.base.common.KakaoApiService;
 import com.chatbot.base.domain.event.EventService;
-import com.chatbot.base.dto.kakao.sync.KakaoProfileDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
