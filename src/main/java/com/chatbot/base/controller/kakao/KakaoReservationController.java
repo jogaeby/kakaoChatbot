@@ -4,8 +4,10 @@ import com.chatbot.base.domain.event.EventService;
 import com.chatbot.base.dto.kakao.request.ChatBotRequest;
 import com.chatbot.base.dto.kakao.response.ChatBotExceptionResponse;
 import com.chatbot.base.dto.kakao.response.ChatBotResponse;
+import com.chatbot.base.view.KakaoChatBotView;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,12 +24,16 @@ public class KakaoReservationController {
     private final EventService eventService;
     private final ChatBotExceptionResponse chatBotExceptionResponse = new ChatBotExceptionResponse();
 
+    private final KakaoChatBotView kakaoChatBotView;
+
     @PostMapping(value = "receipt")
     public ChatBotResponse receiptEvent(@RequestBody ChatBotRequest chatBotRequest) {
         try {
             List<String> images = chatBotRequest.getImages();
 
             String appUserId = chatBotRequest.getAppUserId();
+            if (appUserId == null) throw new AuthenticationException("appUserId 없음");
+
 
             String id = eventService.onePickEvent(images, appUserId);
 
@@ -35,6 +41,9 @@ public class KakaoReservationController {
             chatBotResponse.addSimpleText("["+id+"] 제출 완료되었습니다\n" +
                     "참여해 주셔서 감사합니다");
             return chatBotResponse;
+        }catch (AuthenticationException e) {
+            log.error("[카카오싱크 실패] receiptReservation: {}", e.getMessage(), e);
+            return kakaoChatBotView.authView();
         }catch (Exception e) {
             log.error("receiptReservation: {}", e.getMessage(), e);
             return chatBotExceptionResponse.createException("서비스 신청을 실패하였습니다.");
