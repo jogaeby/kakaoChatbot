@@ -1,9 +1,11 @@
 package com.chatbot.base.controller.kakao;
 
 import com.chatbot.base.domain.event.EventService;
+import com.chatbot.base.dto.kakao.constatnt.button.ButtonAction;
 import com.chatbot.base.dto.kakao.request.ChatBotRequest;
 import com.chatbot.base.dto.kakao.response.ChatBotExceptionResponse;
 import com.chatbot.base.dto.kakao.response.ChatBotResponse;
+import com.chatbot.base.dto.kakao.response.property.common.Button;
 import com.chatbot.base.dto.kakao.response.property.components.TextCard;
 import com.chatbot.base.view.KakaoChatBotView;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +29,7 @@ public class KakaoReservationController {
 
     private final KakaoChatBotView kakaoChatBotView;
 
-    @PostMapping(value = "auth")
+    @PostMapping(value = "validation")
     public ChatBotResponse authEvent(@RequestBody ChatBotRequest chatBotRequest) {
         try {
             ChatBotResponse chatBotResponse = new ChatBotResponse();
@@ -36,7 +38,10 @@ public class KakaoReservationController {
 
             if (appUserId == null) throw new AuthenticationException("appUserId 없음");
 
-//            chatBotResponse.addTextCard("");
+            TextCard textCard = new TextCard();
+            textCard.setDescription("아래 버튼을 눌러 이벤트를 참여해주세요.");
+            textCard.setButtons(new Button("이벤트 참여하기", ButtonAction.블럭이동,"6821606d23dc6c3328144ff7"));
+            chatBotResponse.addTextCard(textCard);
 
             return chatBotResponse;
         }catch (AuthenticationException e) {
