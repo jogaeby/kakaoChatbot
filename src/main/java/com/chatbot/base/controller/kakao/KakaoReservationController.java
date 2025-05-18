@@ -40,9 +40,8 @@ public class KakaoReservationController {
 
             TextCard textCard = new TextCard();
             textCard.setDescription("아래 버튼을 눌러 이벤트를 참여해주세요.");
-            textCard.setButtons(new Button("이벤트 참여하기", ButtonAction.블럭이동,"6821606d23dc6c3328144ff7"));
             chatBotResponse.addTextCard(textCard);
-
+            chatBotResponse.addQuickButton(new Button("이벤트 참여하기", ButtonAction.블럭이동,"6821606d23dc6c3328144ff7"));
             return chatBotResponse;
         }catch (AuthenticationException e) {
             log.error("[카카오싱크 실패] receiptReservation: {}", e.getMessage(), e);
