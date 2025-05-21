@@ -64,7 +64,7 @@ public class KakaoReservationController {
             String id = eventService.onePickEvent(images, appUserId);
 
             ChatBotResponse chatBotResponse = new ChatBotResponse();
-            chatBotResponse.addSimpleText("접수번호["+id+"]이(가) 제출 완료되었습니다\n" +
+            chatBotResponse.addSimpleText("접수번호["+id+"]이(가) 제출 완료되었습니다\n\n" +
                     "참여해 주셔서 감사합니다");
             return chatBotResponse;
         }catch (AuthenticationException e) {
