@@ -46,10 +46,21 @@ public class EventServiceImpl implements EventService {
 //            String birthday = "2022-11-30(예시)";
 
             StringBuilder imageUrlList = new StringBuilder();
-            List<String> serverImageUrls = imageUtil.downloadImage(images,"onePick",name,id);
-            serverImageUrls.forEach(url -> {
-                imageUrlList.append(url+"\n");
-            });
+            List<String> serverImageUrls = imageUtil.downloadImage(images, "onePick", name, id);
+
+            for (int i = 0; i < serverImageUrls.size(); i++) {
+                String url = serverImageUrls.get(i);
+                imageUrlList.append("HYPERLINK(\"")
+                        .append(url)
+                        .append("\", \"이미지")
+                        .append(i + 1)
+                        .append("\")");
+
+                // 줄바꿈 수식 추가 (마지막 줄은 제외)
+                if (i < serverImageUrls.size() - 1) {
+                    imageUrlList.append(" & CHAR(10) & ");
+                }
+            }
 
 
             List<Object> rowData = new ArrayList<>();
@@ -62,7 +73,7 @@ public class EventServiceImpl implements EventService {
             rowData.add(email);
             rowData.add(gender);
             rowData.add(birthday);
-            rowData.add(imageUrlList.toString());
+            rowData.add("=" + imageUrlList.toString());
             rowData.add(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
 
             googleSheetUtil.appendToSheet(SHEET_ID,SHEET_NAME,rowData);
