@@ -187,7 +187,7 @@ public class GoogleSheetUtil {
         // 데이터를 시트에 Append
         AppendValuesResponse appendResponse = service.spreadsheets().values()
                 .append(spreadSheetId, appendRange, body)
-                .setValueInputOption("USER_ENTERED") // 사용자가 입력한 것처럼 처리
+                .setValueInputOption("RAW") // 사용자가 입력한 것처럼 처리
                 .execute();
 
         log.info("데이터 추가 완료 (추가된 셀 수): {}", appendResponse.getUpdates().getUpdatedCells());
