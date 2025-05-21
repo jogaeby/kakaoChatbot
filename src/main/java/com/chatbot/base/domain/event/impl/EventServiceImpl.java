@@ -44,32 +44,28 @@ public class EventServiceImpl implements EventService {
 //            String email = "sample@sample.com(예시)";
 //            String gender = "남성/여성(예시)";
 //            String birthday = "2022-11-30(예시)";
-
-            StringBuilder imageUrlList = new StringBuilder();
+            List<List<Object>> rows = new ArrayList<>();
+//            StringBuilder imageUrlList = new StringBuilder();
             List<String> serverImageUrls = imageUtil.downloadImage(images, "onePick", name, id);
 
-            for (int i = 0; i < serverImageUrls.size(); i++) {
-                imageUrlList.append(serverImageUrls.get(i));
-                if (i < serverImageUrls.size() - 1) {
-                    imageUrlList.append("\n"); // 줄바꿈 문자
-                }
-            }
+            serverImageUrls.forEach(image -> {
+                List<Object> rowData = new ArrayList<>();
+                rowData.add(id);
+                rowData.add(name);
+                rowData.add(phone);
+                rowData.add("");
+                rowData.add(nickName);
+                rowData.add(profileImage);
+                rowData.add(email);
+                rowData.add(gender);
+                rowData.add(birthday);
+                rowData.add(image);
+                rowData.add(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
 
+                rows.add(rowData);
+            });
 
-            List<Object> rowData = new ArrayList<>();
-            rowData.add(id);
-            rowData.add(name);
-            rowData.add(phone);
-            rowData.add("");
-            rowData.add(nickName);
-            rowData.add(profileImage);
-            rowData.add(email);
-            rowData.add(gender);
-            rowData.add(birthday);
-            rowData.add(imageUrlList.toString()); // 구글시트 수식으로 인식시키기 위해 "=" 붙임
-            rowData.add(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
-
-            googleSheetUtil.appendToSheet(SHEET_ID,SHEET_NAME,rowData);
+            googleSheetUtil.appendToSheetByAll(SHEET_ID,SHEET_NAME,rows);
             return id;
         }catch (Exception e) {
             log.error("{}",e.getMessage(),e);

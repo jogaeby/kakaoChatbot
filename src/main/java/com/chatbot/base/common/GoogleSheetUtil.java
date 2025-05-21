@@ -144,6 +144,55 @@ public class GoogleSheetUtil {
 //        addCheckboxToSheet(service, spreadSheetId, sheetName, lastRow+1, lastRow + 2, startCol, endCol); // C열에 체크박스 추가
     }
 
+    public void appendToSheetByAll(String spreadSheetId, String sheetName, List<List<Object>> newRows) throws GeneralSecurityException, IOException {
+        log.info("{} {}", spreadSheetId, sheetName);
+        final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport(); // HTTP 요청에 사용될 트랜스포트
+
+        // Sheets API 클라이언트 빌드
+        Sheets service = getSheetsService();
+
+        // 현재 시트 데이터를 읽어서 최대 no 값을 계산
+        String range = sheetName + "!A:A"; // 첫 번째 열 전체 범위
+        ValueRange response = service.spreadsheets().values().get(spreadSheetId, range).execute();
+        List<List<Object>> values = response.getValues();
+
+        int maxNo = 0;
+        if (values != null && !values.isEmpty()) {
+            for (List<Object> row : values) {
+                if (!row.isEmpty()) {
+                    try {
+                        int currentNo = Integer.parseInt(row.get(0).toString());
+                        maxNo = Math.max(maxNo, currentNo); // 최대값 갱신
+                    } catch (NumberFormatException e) {
+                        log.warn("숫자로 변환할 수 없는 값: {}", row.get(0)); // 숫자가 아닌 값은 무시
+                    }
+                }
+            }
+        }
+
+        // 각 행의 첫 번째 칸에 고유 번호 추가
+        for (int i = 0; i < newRows.size(); i++) {
+            newRows.get(i).add(0, maxNo + 1 + i);
+        }
+
+        // 데이터를 추가할 범위 설정
+        String appendRange = sheetName + "!A1"; // 데이터 추가 범위
+
+        // 추가할 데이터를 ValueRange로 변환
+        ValueRange body = new ValueRange()
+                .setValues(newRows); // 여러 행 데이터 입력
+
+        log.info("Formatted data: {}", newRows);
+
+        // 데이터를 시트에 Append
+        AppendValuesResponse appendResponse = service.spreadsheets().values()
+                .append(spreadSheetId, appendRange, body)
+                .setValueInputOption("USER_ENTERED") // 사용자가 입력한 것처럼 처리
+                .execute();
+
+        log.info("데이터 추가 완료 (추가된 셀 수): {}", appendResponse.getUpdates().getUpdatedCells());
+    }
+
     private void addCheckboxToSheet(Sheets service, String spreadSheetId, String sheetName, int startRow, int endRow, int startCol, int endCol) throws IOException {
         // 시트 ID 가져오기
         Spreadsheet spreadsheet = service.spreadsheets().get(spreadSheetId).execute();
