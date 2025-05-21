@@ -49,16 +49,9 @@ public class EventServiceImpl implements EventService {
             List<String> serverImageUrls = imageUtil.downloadImage(images, "onePick", name, id);
 
             for (int i = 0; i < serverImageUrls.size(); i++) {
-                String url = serverImageUrls.get(i);
-                imageUrlList.append("HYPERLINK(\"")
-                        .append(url)
-                        .append("\", \"이미지")
-                        .append(i + 1)
-                        .append("\")");
-
-                // 줄바꿈 수식 추가 (마지막 줄은 제외)
+                imageUrlList.append(serverImageUrls.get(i));
                 if (i < serverImageUrls.size() - 1) {
-                    imageUrlList.append(" & CHAR(10) & ");
+                    imageUrlList.append("\n"); // 줄바꿈
                 }
             }
 
@@ -73,7 +66,7 @@ public class EventServiceImpl implements EventService {
             rowData.add(email);
             rowData.add(gender);
             rowData.add(birthday);
-            rowData.add("=" + imageUrlList.toString());
+            rowData.add(imageUrlList.toString());
             rowData.add(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
 
             googleSheetUtil.appendToSheet(SHEET_ID,SHEET_NAME,rowData);
