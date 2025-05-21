@@ -72,7 +72,7 @@ public class KakaoReservationController {
             return kakaoChatBotView.authView();
         }catch (Exception e) {
             log.error("receiptReservation: {}", e.getMessage(), e);
-            return chatBotExceptionResponse.createException("서비스 신청을 실패하였습니다.");
+            return chatBotExceptionResponse.createException("제출을 실패하였습니다.");
         }
     }
 
