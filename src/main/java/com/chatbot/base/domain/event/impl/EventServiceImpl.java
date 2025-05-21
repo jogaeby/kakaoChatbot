@@ -48,18 +48,11 @@ public class EventServiceImpl implements EventService {
             StringBuilder imageUrlList = new StringBuilder();
             List<String> serverImageUrls = imageUtil.downloadImage(images, "onePick", name, id);
 
-            for (String url : serverImageUrls) {
-                imageUrlList.append("HYPERLINK(\"")
-                        .append(url)
-                        .append("\", \"")
-                        .append(url)
-                        .append("\")")
-                        .append(" & CHAR(10) & ");
-            }
-
-            // 마지막 CHAR(10) 제거
-            if (imageUrlList.length() > 0) {
-                imageUrlList.setLength(imageUrlList.length() - " & CHAR(10) & ".length());
+            for (int i = 0; i < serverImageUrls.size(); i++) {
+                imageUrlList.append(serverImageUrls.get(i));
+                if (i < serverImageUrls.size() - 1) {
+                    imageUrlList.append("\n"); // 줄바꿈 문자
+                }
             }
 
 
@@ -73,7 +66,7 @@ public class EventServiceImpl implements EventService {
             rowData.add(email);
             rowData.add(gender);
             rowData.add(birthday);
-            rowData.add("=" + imageUrlList.toString()); // 구글시트 수식으로 인식시키기 위해 "=" 붙임
+            rowData.add(imageUrlList.toString()); // 구글시트 수식으로 인식시키기 위해 "=" 붙임
             rowData.add(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
 
             googleSheetUtil.appendToSheet(SHEET_ID,SHEET_NAME,rowData);
