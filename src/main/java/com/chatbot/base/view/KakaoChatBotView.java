@@ -14,9 +14,9 @@ public class KakaoChatBotView {
         Button button = new Button("네", ButtonAction.블럭이동,"68268a39d9c3e21ccc37318e");
         StringBuilder message = new StringBuilder();
         message
-                .append("이벤트에 참여하시려면")
+                .append("이벤트 응모 정보 접수를 위해")
                 .append("\n")
-                .append("최초 한번의 인증과 개인정보 수집 및 활용 동의가 필요해요.")
+                .append("카카오싱크 연동이 필요해요,")
                 .append("\n")
                 .append("\n")
                 .append("계속 진행하시겠어요?")
