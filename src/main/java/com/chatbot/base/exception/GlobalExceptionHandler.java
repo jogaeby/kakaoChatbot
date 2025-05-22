@@ -13,7 +13,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ModelAndView handleMethodArgumentNotValidException(Exception e) {
         log.error("******* exceptionHandler catch = {} *******", e.getMessage(), e);
-        ModelAndView mav = new ModelAndView("login");
+        ModelAndView mav = new ModelAndView("loginError");
+        mav.addObject("message", "예상치 못한 오류가 발생하였습니다.");
         mav.setStatus(HttpStatus.BAD_REQUEST);
         return mav;
     }
