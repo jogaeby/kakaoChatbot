@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -46,7 +47,7 @@ public class EventServiceImpl implements EventService {
 //            String birthday = "2022-11-30(예시)";
             List<List<Object>> rows = new ArrayList<>();
 //            StringBuilder imageUrlList = new StringBuilder();
-            List<String> serverImageUrls = imageUtil.downloadImage(images, "onePick", name, id);
+            List<String> serverImageUrls = imageUtil.downloadImage(images, LocalDate.now(),"onePick", name, id);
 
             serverImageUrls.forEach(image -> {
                 List<Object> rowData = new ArrayList<>();

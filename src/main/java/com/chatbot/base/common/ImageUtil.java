@@ -13,6 +13,7 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
+import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -94,7 +95,47 @@ public class ImageUtil {
         return downloadImgUrlList;
     }
 
+    public List<String> downloadImage(List<String> imgUrlList, LocalDate date, String dirName, String imageName, String receiptNumber) {
+        final String EXT = ".jpg";
+        List<String> downloadImgUrlList = new LinkedList<>();
 
+        try {
+            // 날짜 폴더 포함한 경로
+            Path baseDirPath = Paths.get(BASE_DIR, dirName, date.toString());
+            if (!Files.exists(baseDirPath)) {
+                Set<PosixFilePermission> permissions = PosixFilePermissions.fromString("rwxr-xr-x");
+                Files.createDirectories(baseDirPath, PosixFilePermissions.asFileAttribute(permissions));
+            }
+        } catch (Exception e) {
+            log.error("베이스 이미지 디렉토리 생성 실패");
+            e.printStackTrace();
+        }
+
+        for (int i = 0; i < imgUrlList.size(); i++) {
+            int cnt = i + 1;
+            String fileName = cnt + "_" + receiptNumber + "_" + imageName + EXT;
+            String destinationDir = BASE_DIR + File.separator + dirName + File.separator + date + File.separator + receiptNumber;
+
+            try {
+                downloadUrlImage(imgUrlList.get(i), destinationDir, fileName);
+            } catch (Exception e) {
+                log.error("이미지 다운로드 실패: {}", imgUrlList.get(i));
+                e.printStackTrace();
+                downloadImgUrlList.add("이미지 다운로드 실패");
+                continue;
+            }
+
+            File file = new File(destinationDir + File.separator + fileName);
+            if (file.exists()) {
+                String imageUrl = HOST_IP + ":" + HOST_PORT + "/images/" + dirName + "/" + date + "/" + receiptNumber + "/" + fileName;
+                downloadImgUrlList.add(imageUrl);
+            } else {
+                downloadImgUrlList.add("이미지 실패");
+            }
+        }
+
+        return downloadImgUrlList;
+    }
     public void downloadUrlImage(String imageUrl, String destinationDir, String fileName) throws Exception {
         URL url = new URL(imageUrl);
         Path dirPath = Paths.get(destinationDir);
