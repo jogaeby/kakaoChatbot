@@ -50,22 +50,22 @@ public class EventServiceImpl implements EventService {
             List<String> serverImageUrls = imageUtil.downloadImage(images, LocalDate.now(),"onePick", name, id);
 
             serverImageUrls.forEach(image -> {
+                // HYPERLINK 함수 형태로 링크 추가
+                String hyperlinkFormula = String.format("=HYPERLINK(\"%s\", \"%s\")", image, image);
+
                 List<Object> rowData = new ArrayList<>();
+                rowData.add(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
                 rowData.add(id);
                 rowData.add(name);
                 rowData.add("'" + phone);
+                rowData.add(hyperlinkFormula);
                 rowData.add("");
-                rowData.add(nickName);
-                rowData.add(profileImage);
-                rowData.add(email);
+                rowData.add("");
                 rowData.add(gender);
                 rowData.add(birthday);
-
-                // HYPERLINK 함수 형태로 링크 추가
-                String hyperlinkFormula = String.format("=HYPERLINK(\"%s\", \"%s\")", image, image);
-                rowData.add(hyperlinkFormula);
-
-                rowData.add(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+                rowData.add(email);
+                rowData.add(nickName);
+                rowData.add(profileImage);
 
                 rows.add(rowData);
             });
