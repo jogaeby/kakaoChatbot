@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -30,13 +31,29 @@ public class EventServiceImpl implements EventService {
 
             String id = String.valueOf(System.currentTimeMillis());
             KakaoProfileDto kakaoProfile = kakaoApiService.getKakaoProfile(appUserId);
-            String name = kakaoProfile.getKakaoAccount().getName();
-            String nickName = kakaoProfile.getProperties().getNickname();
-            String profileImage = kakaoProfile.getProperties().getThumbnailImage();
-            String email = kakaoProfile.getKakaoAccount().getEmail();
-            String gender = kakaoProfile.getGender();
-            String birthday = kakaoProfile.getBirthDate();
-            String phone = kakaoProfile.getKakaoAccount().getPhoneNumber();
+
+            String name = Optional.ofNullable(kakaoProfile.getKakaoAccount())
+                    .map(acc -> acc.getName())
+                    .orElse("이름없음");
+
+            String phone = Optional.ofNullable(kakaoProfile.getKakaoAccount())
+                    .map(acc -> acc.getPhoneNumber())
+                    .orElse("번호없음");
+
+            String email = Optional.ofNullable(kakaoProfile.getKakaoAccount())
+                    .map(acc -> acc.getEmail())
+                    .orElse("이메일없음");
+
+            String gender = Optional.ofNullable(kakaoProfile.getGender()).orElse("미입력");
+            String birthday = Optional.ofNullable(kakaoProfile.getBirthDate()).orElse("미입력");
+
+            String nickName = Optional.ofNullable(kakaoProfile.getProperties())
+                    .map(p -> p.getNickname())
+                    .orElse("닉네임없음");
+
+            String profileImage = Optional.ofNullable(kakaoProfile.getProperties())
+                    .map(p -> p.getThumbnailImage())
+                    .orElse("");
 
 //            String name = "홍길동(예시)";
 //            String phone = "+82 010-1234-5678(예시)";
@@ -73,7 +90,7 @@ public class EventServiceImpl implements EventService {
             googleSheetUtil.appendToSheetByAll(SHEET_ID,SHEET_NAME,rows);
             return id;
         }catch (Exception e) {
-            log.error("{}",e.getMessage(),e);
+            log.error("onePickEvent 실패: appUserId:{} KakaoProfileDto 값 확인 필요 - {}", appUserId, e.getMessage(), e);
             throw new RuntimeException();
         }
     }
