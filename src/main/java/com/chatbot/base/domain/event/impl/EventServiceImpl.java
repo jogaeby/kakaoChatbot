@@ -34,26 +34,26 @@ public class EventServiceImpl implements EventService {
 
             String name = Optional.ofNullable(kakaoProfile.getKakaoAccount())
                     .map(acc -> acc.getName())
-                    .orElse("이름없음");
+                    .orElse("없음");
 
             String phone = Optional.ofNullable(kakaoProfile.getKakaoAccount())
                     .map(acc -> acc.getPhoneNumber())
-                    .orElse("번호없음");
+                    .orElse("없음");
 
             String email = Optional.ofNullable(kakaoProfile.getKakaoAccount())
                     .map(acc -> acc.getEmail())
-                    .orElse("이메일없음");
+                    .orElse("없음");
 
-            String gender = Optional.ofNullable(kakaoProfile.getGender()).orElse("미입력");
-            String birthday = Optional.ofNullable(kakaoProfile.getBirthDate()).orElse("미입력");
+            String gender = Optional.ofNullable(kakaoProfile.getGender()).orElse("없음");
+            String birthday = Optional.ofNullable(kakaoProfile.getBirthDate()).orElse("없음");
 
             String nickName = Optional.ofNullable(kakaoProfile.getProperties())
                     .map(p -> p.getNickname())
-                    .orElse("닉네임없음");
+                    .orElse("없음");
 
             String profileImage = Optional.ofNullable(kakaoProfile.getProperties())
                     .map(p -> p.getThumbnailImage())
-                    .orElse("");
+                    .orElse("없음");
 
 //            String name = "홍길동(예시)";
 //            String phone = "+82 010-1234-5678(예시)";

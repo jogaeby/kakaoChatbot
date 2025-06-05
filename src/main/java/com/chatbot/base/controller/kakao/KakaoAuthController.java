@@ -123,7 +123,7 @@ public class KakaoAuthController {
 
             if (!appUserId.equals(logoutId)) throw new AuthenticationException("아이디가 일치하지 않습니다.");
 
-            chatBotResponse.addSimpleText("정상적으로 로그아웃이 되었습니다.");
+            chatBotResponse.addSimpleText("정상적으로 동의철회 되었습니다.");
             return chatBotResponse;
         } catch (AuthenticationException e) {
             log.error("logout: {} {}", e.getMessage(), e.getStackTrace());
