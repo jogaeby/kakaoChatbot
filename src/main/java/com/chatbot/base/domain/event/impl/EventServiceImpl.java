@@ -114,10 +114,10 @@ public class EventServiceImpl implements EventService {
         String id = monthValue + "_" + System.currentTimeMillis();
 
         // TODO: KakaoProfileDto에서 사용자 정보 가져오기
-        // KakaoProfileDto kakaoProfile = kakaoApiService.getKakaoProfile(appUserId);
+         KakaoProfileDto kakaoProfile = kakaoApiService.getKakaoProfile(appUserId);
 
-        String userName = "홍길동"; // kakaoProfile.getNickname()
-        String phoneNumber = "01055554444"; // kakaoProfile.getPhoneNumber()
+        String userName = kakaoProfile.getKakaoAccount().getName();
+        String phoneNumber = kakaoProfile.getKakaoAccount().getPhoneNumber();
 
         List<Object> newRowData = new ArrayList<>(Arrays.asList(
                 id,
@@ -153,10 +153,10 @@ public class EventServiceImpl implements EventService {
         String id = String.valueOf(System.currentTimeMillis());
 
         // TODO: KakaoProfileDto에서 사용자 정보 가져오기
-        // KakaoProfileDto kakaoProfile = kakaoApiService.getKakaoProfile(appUserId);
+         KakaoProfileDto kakaoProfile = kakaoApiService.getKakaoProfile(appUserId);
 
-        String userName = "홍길동"; // kakaoProfile.getNickname()
-        String phoneNumber = "01055554444"; // kakaoProfile.getPhoneNumber()
+        String userName = kakaoProfile.getKakaoAccount().getName();
+        String phoneNumber = kakaoProfile.getKakaoAccount().getPhoneNumber();
 
         List<Object> newRowData = new ArrayList<>(Arrays.asList(
                 id,

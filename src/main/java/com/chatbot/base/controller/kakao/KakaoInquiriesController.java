@@ -112,14 +112,15 @@ public class KakaoInquiriesController {
         try {
             String comment = chatBotRequest.getCommentParam();
 
-//            String appUserId = chatBotRequest.getAppUserId();
-//            if (appUserId == null) throw new AuthenticationException("appUserId 없음");
-            String id = eventService.inquiriesReceipt(comment,"");
+            String appUserId = chatBotRequest.getAppUserId();
+            if (appUserId == null) throw new AuthenticationException("appUserId 없음");
+
+            String id = eventService.inquiriesReceipt(comment,appUserId);
 
             ChatBotResponse chatBotResponse = new ChatBotResponse();
             chatBotResponse.addSimpleText("접수번호 [" + id + "]\n\n문의사항 접수가 완료되었습니다");
             return chatBotResponse;
-        }catch (RuntimeException e) {
+        }catch (AuthenticationException e) {
             log.error("[카카오싱크 실패] receiptReservation: {}", e.getMessage(), e);
             return kakaoChatBotView.authView();
         }catch (Exception e) {
