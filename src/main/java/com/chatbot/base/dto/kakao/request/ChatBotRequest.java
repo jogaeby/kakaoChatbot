@@ -111,6 +111,8 @@ public class ChatBotRequest {
             private String productId;
             private String noticeId;
             private String choice;
+            private String address;
+            private String comment;
             private String productStatus;
             private String searchWord;
             private String pageNumber;
@@ -240,6 +242,16 @@ public class ChatBotRequest {
     public String getChoiceParam(){
         if (Objects.isNull(action.getClientExtra().getChoice())) return null;
         return action.getClientExtra().getChoice();
+    }
+
+    public String getAddressParam(){
+        if (Objects.isNull(action.getClientExtra().getAddress())) return null;
+        return action.getClientExtra().getAddress();
+    }
+
+    public String getCommentParam(){
+        if (Objects.isNull(action.getClientExtra().getComment())) return null;
+        return action.getClientExtra().getComment();
     }
 
     public ReservationDto getReservation(){

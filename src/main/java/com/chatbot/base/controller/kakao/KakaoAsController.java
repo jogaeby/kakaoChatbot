@@ -87,8 +87,8 @@ public class KakaoAsController {
     public ChatBotResponse noticeCost(@RequestBody ChatBotRequest chatBotRequest) {
         try {
             ChatBotResponse chatBotResponse = new ChatBotResponse();
-            String address = chatBotRequest.getAddress();
-            String comment = chatBotRequest.getComment();
+            String address = chatBotRequest.getAddressParam();
+            String comment = chatBotRequest.getCommentParam();
 
             chatBotResponse.addSimpleText("요금 및 보증기간 안내");
             Button button = new Button("네,확인했어요",ButtonAction.블럭이동,"684f66bb47b70d2c1d6be9cf", ButtonParamKey.address,address);
@@ -106,8 +106,8 @@ public class KakaoAsController {
     public ChatBotResponse finalConfirm(@RequestBody ChatBotRequest chatBotRequest) {
         try {
             ChatBotResponse chatBotResponse = new ChatBotResponse();
-            String address = chatBotRequest.getAddress();
-            String comment = chatBotRequest.getComment();
+            String address = chatBotRequest.getAddressParam();
+            String comment = chatBotRequest.getCommentParam();
 
             ItemCard itemCard = new ItemCard();
             itemCard.setItemListAlignment("right");
@@ -136,8 +136,8 @@ public class KakaoAsController {
     @PostMapping(value = "receipt")
     public ChatBotResponse receiptAs(@RequestBody ChatBotRequest chatBotRequest) {
         try {
-            String address = chatBotRequest.getAddress();
-            String comment = chatBotRequest.getComment();
+            String address = chatBotRequest.getAddressParam();
+            String comment = chatBotRequest.getCommentParam();
 
 //            String appUserId = chatBotRequest.getAppUserId();
 //            if (appUserId == null) throw new AuthenticationException("appUserId 없음");
