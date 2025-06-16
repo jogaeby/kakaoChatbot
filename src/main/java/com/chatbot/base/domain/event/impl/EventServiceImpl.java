@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -88,6 +90,34 @@ public class EventServiceImpl implements EventService {
             });
 
             googleSheetUtil.appendToSheetByAll(SHEET_ID,SHEET_NAME,rows);
+            return id;
+        }catch (Exception e) {
+            log.error("onePickEvent 실패: appUserId:{} KakaoProfileDto 값 확인 필요 - {}", appUserId, e.getMessage(), e);
+            throw new RuntimeException();
+        }
+    }
+
+    @Override
+    public String asReceipt(String address, String appUserId) throws GeneralSecurityException, IOException {
+        try {
+            final String SHEET_ID = "1xgwEkqVXh3iQBlnHN-yZIAYk5xr68pCQzCVETaRGwTw";
+            final String SHEET_NAME = "A/S접수_1월";
+
+            LocalDate now = LocalDate.now();
+            String id = String.valueOf(System.currentTimeMillis());
+//            KakaoProfileDto kakaoProfile = kakaoApiService.getKakaoProfile(appUserId);
+
+
+            List<Object> newRowData = new ArrayList<>();
+            newRowData.add(id);
+            newRowData.add("홍길동");
+            newRowData.add("01055554444");
+            newRowData.add(address);
+            newRowData.add("접수");
+            newRowData.add(now);
+
+            googleSheetUtil.appendToSheet(SHEET_ID,SHEET_NAME,newRowData);
+
             return id;
         }catch (Exception e) {
             log.error("onePickEvent 실패: appUserId:{} KakaoProfileDto 값 확인 필요 - {}", appUserId, e.getMessage(), e);

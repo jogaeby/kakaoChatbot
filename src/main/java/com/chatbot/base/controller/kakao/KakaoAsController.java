@@ -60,7 +60,7 @@ public class KakaoAsController {
             ChatBotResponse chatBotResponse = new ChatBotResponse();
             String address = chatBotRequest.getAddress();
 
-            chatBotResponse.addSimpleText("입력하신 주소가 아래 내용이 맞을까요?");
+            chatBotResponse.addSimpleText("입력하신 주소가 아래 내용과 일치하나요?");
             chatBotResponse.addTextCard("주소",address);
             chatBotResponse.addQuickButton("아니요",ButtonAction.블럭이동,"684f669ac5b310190b722a21");
             chatBotResponse.addQuickButton("네,맞아요",ButtonAction.블럭이동,"684f66a7e7598b00aa826584", ButtonParamKey.choice,address);
@@ -100,7 +100,7 @@ public class KakaoAsController {
             chatBotResponse.addSimpleText("해당 내용으로 A/S접수를 진행하시겠습니까?");
             chatBotResponse.addItemCard(itemCard);
             chatBotResponse.addQuickButton("다시입력하기",ButtonAction.블럭이동,"684f669ac5b310190b722a21");
-            chatBotResponse.addQuickButton("네,접수하기",ButtonAction.블럭이동,"684f66bb47b70d2c1d6be9cf", ButtonParamKey.choice,address);
+            chatBotResponse.addQuickButton("네,접수하기",ButtonAction.블럭이동,"684f66cd2c50e1482b21f7d5", ButtonParamKey.choice,address);
             return chatBotResponse;
         }catch (Exception e) {
             log.error("finalConfirm: {}", e.getMessage(), e);
@@ -116,9 +116,7 @@ public class KakaoAsController {
 
 //            String appUserId = chatBotRequest.getAppUserId();
 //            if (appUserId == null) throw new AuthenticationException("appUserId 없음");
-
-
-            String id = "12312";
+            String id = eventService.asReceipt(address, "");
 
             ChatBotResponse chatBotResponse = new ChatBotResponse();
             chatBotResponse.addSimpleText("접수번호[" + id + "]\nA/S 접수가 완료되었습니다");
