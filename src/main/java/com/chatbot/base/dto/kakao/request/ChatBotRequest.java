@@ -123,6 +123,7 @@ public class ChatBotRequest {
         @JsonInclude(JsonInclude.Include.NON_EMPTY)
         public class Params {
             private String name;
+            private String address;
             private String phone;
             private String depart;
             private String arrive;
@@ -189,6 +190,11 @@ public class ChatBotRequest {
     public String getPhone(){
         if (Objects.isNull(action.getParams().getPhone())) return null;
         return action.getParams().getPhone();
+    }
+
+    public String getAddress(){
+        if (Objects.isNull(action.getParams().getAddress())) return null;
+        return action.getParams().getAddress();
     }
 
     public String getDepart(){
