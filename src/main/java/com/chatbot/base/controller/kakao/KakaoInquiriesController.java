@@ -91,41 +91,6 @@ public class KakaoInquiriesController {
         }
     }
 
-    @PostMapping(value = "confirm")
-    public ChatBotResponse finalConfirm(@RequestBody ChatBotRequest chatBotRequest) {
-        try {
-            ChatBotResponse chatBotResponse = new ChatBotResponse();
-            String comment = chatBotRequest.getCommentParam();
-            String appUserId = chatBotRequest.getAppUserId();
-
-            if (appUserId == null) throw new AuthenticationException("appUserId 없음");
-            KakaoProfileDto kakaoProfile = kakaoApiService.getKakaoProfile(appUserId);
-
-            ItemCard itemCard = new ItemCard();
-            itemCard.setItemListAlignment("right");
-            itemCard.addItemList("이름",kakaoProfile.getKakaoAccount().getName());
-            itemCard.addItemList("연락처",kakaoProfile.getPhoneNumber());
-            itemCard.setTitle("문의사항");
-            itemCard.setDescription(comment);
-
-            chatBotResponse.addSimpleText("해당 내용으로 문의사항을 접수를 진행하시겠습니까?");
-            chatBotResponse.addItemCard(itemCard);
-
-            chatBotResponse.addQuickButton("다시입력하기",ButtonAction.블럭이동,"684f672c47b70d2c1d6be9db");
-            Button button = new Button("네,접수하기",ButtonAction.블럭이동,"684f6832c5b310190b722a54", ButtonParamKey.comment,comment);
-
-            chatBotResponse.addQuickButton(button);
-            return chatBotResponse;
-        }catch (AuthenticationException e) {
-            log.error("[카카오싱크 실패] receiptReservation: {}", e.getMessage(), e);
-            return kakaoChatBotView.authView();
-        }catch (Exception e) {
-            log.error("finalConfirm: {}", e.getMessage(), e);
-            return chatBotExceptionResponse.createException();
-        }
-    }
-
-
     @PostMapping(value = "receipt")
     public ChatBotResponse receiptAs(@RequestBody ChatBotRequest chatBotRequest) {
         try {
