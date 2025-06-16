@@ -1,5 +1,6 @@
 package com.chatbot.base.controller.kakao;
 
+import com.chatbot.base.common.KakaoApiService;
 import com.chatbot.base.domain.event.EventService;
 import com.chatbot.base.dto.kakao.constatnt.button.ButtonAction;
 import com.chatbot.base.dto.kakao.constatnt.button.ButtonParamKey;
@@ -9,6 +10,7 @@ import com.chatbot.base.dto.kakao.response.ChatBotResponse;
 import com.chatbot.base.dto.kakao.response.property.common.Button;
 import com.chatbot.base.dto.kakao.response.property.components.ItemCard;
 import com.chatbot.base.dto.kakao.response.property.components.TextCard;
+import com.chatbot.base.dto.kakao.sync.KakaoProfileDto;
 import com.chatbot.base.view.KakaoChatBotView;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +32,8 @@ public class KakaoAsController {
     private final ChatBotExceptionResponse chatBotExceptionResponse = new ChatBotExceptionResponse();
 
     private final KakaoChatBotView kakaoChatBotView;
+
+    private final KakaoApiService kakaoApiService;
 
     @PostMapping(value = "validation")
     public ChatBotResponse authAS(@RequestBody ChatBotRequest chatBotRequest) {
@@ -108,11 +112,15 @@ public class KakaoAsController {
             ChatBotResponse chatBotResponse = new ChatBotResponse();
             String address = chatBotRequest.getAddressParam();
             String comment = chatBotRequest.getCommentParam();
+            String appUserId = chatBotRequest.getAppUserId();
+
+            if (appUserId == null) throw new AuthenticationException("appUserId 없음");
+            KakaoProfileDto kakaoProfile = kakaoApiService.getKakaoProfile(appUserId);
 
             ItemCard itemCard = new ItemCard();
             itemCard.setItemListAlignment("right");
-            itemCard.addItemList("이름","홍길동");
-            itemCard.addItemList("연락처","01055552222");
+            itemCard.addItemList("이름",kakaoProfile.getKakaoAccount().getName());
+            itemCard.addItemList("연락처",kakaoProfile.getPhoneNumber());
             itemCard.setTitle("주소");
             itemCard.setDescription(address);
 
@@ -126,6 +134,9 @@ public class KakaoAsController {
 
             chatBotResponse.addQuickButton(button);
             return chatBotResponse;
+        }catch (AuthenticationException e) {
+            log.error("[카카오싱크 실패] receiptReservation: {}", e.getMessage(), e);
+            return kakaoChatBotView.authView();
         }catch (Exception e) {
             log.error("finalConfirm: {}", e.getMessage(), e);
             return chatBotExceptionResponse.createException();

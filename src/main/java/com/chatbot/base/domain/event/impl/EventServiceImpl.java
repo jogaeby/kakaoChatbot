@@ -117,7 +117,7 @@ public class EventServiceImpl implements EventService {
          KakaoProfileDto kakaoProfile = kakaoApiService.getKakaoProfile(appUserId);
 
         String userName = kakaoProfile.getKakaoAccount().getName();
-        String phoneNumber = kakaoProfile.getKakaoAccount().getPhoneNumber();
+        String phoneNumber = kakaoProfile.getPhoneNumber();
 
         List<Object> newRowData = new ArrayList<>(Arrays.asList(
                 id,
@@ -156,7 +156,7 @@ public class EventServiceImpl implements EventService {
          KakaoProfileDto kakaoProfile = kakaoApiService.getKakaoProfile(appUserId);
 
         String userName = kakaoProfile.getKakaoAccount().getName();
-        String phoneNumber = kakaoProfile.getKakaoAccount().getPhoneNumber();
+        String phoneNumber = kakaoProfile.getPhoneNumber();
 
         List<Object> newRowData = new ArrayList<>(Arrays.asList(
                 id,
