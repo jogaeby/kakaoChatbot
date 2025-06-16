@@ -108,9 +108,10 @@ public class EventServiceImpl implements EventService {
         LocalDateTime now = LocalDateTime.now();
         String formattedMonth = now.format(DateTimeFormatter.ofPattern("M월"));
         String sheetName = SHEET_PREFIX + "_" + formattedMonth;
+        int monthValue = now.getMonthValue(); // 1~12
 
         // 접수 ID 생성
-        String id = String.valueOf(System.currentTimeMillis());
+        String id = monthValue + "_" + System.currentTimeMillis();
 
         // TODO: KakaoProfileDto에서 사용자 정보 가져오기
         // KakaoProfileDto kakaoProfile = kakaoApiService.getKakaoProfile(appUserId);
