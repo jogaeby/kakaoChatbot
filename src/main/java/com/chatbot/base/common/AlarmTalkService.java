@@ -19,13 +19,13 @@ import java.util.HashMap;
 @Service
 @RequiredArgsConstructor
 public class AlarmTalkService {
-    private final String ROOM_TOUR_ASSIGNMENT_TEMPLATE_ID = "KA01TP250429060751487hy6liQXD2Ju";
+    private final String ROOM_TOUR_ASSIGNMENT_TEMPLATE_ID = "";
 
 
-    private final String CHANNEL_ID = "KA01PF250429022937123up5LXRNxBuq";
-    private final String CALLER_1_ID = "010-3919-0126";
-    private final String API_KEY = "NCSNWVYDNNO5CTVN";
-    private final String API_SECRET_KEY = "TNHOIYTJ6XD83P7UWI8V0DPACEXMDUJN";
+    private final String CHANNEL_ID = "KA01PF250613092804345VGzjHfhV1Uo";
+    private final String CALLER_1_ID = "010-7102-7421";
+    private final String API_KEY = "NCSXKGY4BH4NF1LS";
+    private final String API_SECRET_KEY = "1NG2OLUMSXYU2UWRUXKNOE6RECQ8NUG1";
 
 
     public MultipleDetailMessageSentResponse sendReservation(String phone, Reservation reservation) {
