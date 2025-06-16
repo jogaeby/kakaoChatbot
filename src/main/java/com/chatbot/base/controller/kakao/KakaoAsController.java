@@ -58,6 +58,7 @@ public class KakaoAsController {
             return chatBotExceptionResponse.createException();
         }
     }
+
     @PostMapping(value = "address")
     public ChatBotResponse enterAddress(@RequestBody ChatBotRequest chatBotRequest) {
         try {
@@ -65,21 +66,9 @@ public class KakaoAsController {
             String address = chatBotRequest.getAddress();
             String comment = chatBotRequest.getComment();
 
-            StringBuilder message = new StringBuilder();
-            message.append("주소: "+address)
-                    .append("\n\n")
-                    .append("증상: "+comment)
-            ;
-
-            chatBotResponse.addSimpleText("입력하신 내용이 아래 내용과 일치하나요?");
-            chatBotResponse.addTextCard("",message.toString());
-
-
-            chatBotResponse.addQuickButton("아니요",ButtonAction.블럭이동,"684f669ac5b310190b722a21");
-
-            Button button = new Button("네,맞아요",ButtonAction.블럭이동,"684f66a7e7598b00aa826584", ButtonParamKey.address,address);
+            chatBotResponse.addSimpleText("요금 및 보증기간 안내");
+            Button button = new Button("네,확인했어요",ButtonAction.블럭이동,"684f66bb47b70d2c1d6be9cf", ButtonParamKey.address,address);
             button.setExtra(ButtonParamKey.comment,comment);
-            chatBotResponse.addQuickButton(button);
             return chatBotResponse;
         }catch (Exception e) {
             log.error("enterAddress: {}", e.getMessage(), e);
