@@ -42,13 +42,13 @@ public class KakaoInquiriesController {
             String appUserId = chatBotRequest.getAppUserId();
 
             if (appUserId == null) throw new AuthenticationException("appUserId 없음");
-
+            Button firstMenuButton = new Button("처음으로",ButtonAction.블럭이동,"684ff639b721652da7a7ce99");
             TextCard textCard = new TextCard();
-            textCard.setDescription("아래 버튼을 눌러 문의사항 접수를 진행해주세요.");
+            textCard.setDescription("아래 버튼을 눌러 문의사항 접수를 진행해주세요. (궁금)");
             chatBotResponse.addTextCard(textCard);
             chatBotResponse.addQuickButton(new Button("문의사항접수 진행하기", ButtonAction.블럭이동,"684f672c47b70d2c1d6be9db"));
+            chatBotResponse.addQuickButton(firstMenuButton);
             return chatBotResponse;
-
         }catch (AuthenticationException e) {
             log.error("[카카오싱크 실패] receiptReservation: {}", e.getMessage(), e);
             return kakaoChatBotView.authView();
@@ -73,14 +73,18 @@ public class KakaoInquiriesController {
             itemCard.addItemList("연락처",kakaoProfile.getPhoneNumber());
             itemCard.setTitle("문의사항");
             itemCard.setDescription(comment);
-
-            chatBotResponse.addSimpleText("해당 내용으로 문의사항을 접수를 진행하시겠습니까?");
+            TextCard textCard = new TextCard();
+            textCard.setDescription("해당 내용으로 문의사항을 진행 하시겠습니까?(궁금)\n" +
+                    "\n" +
+                    "※ 아래에 있는 버튼을 눌러 계속 진행하세요.");
+            chatBotResponse.addTextCard(textCard);
             chatBotResponse.addItemCard(itemCard);
 
-            chatBotResponse.addQuickButton("다시입력하기",ButtonAction.블럭이동,"684f672c47b70d2c1d6be9db");
+            Button firstMenuButton = new Button("처음으로",ButtonAction.블럭이동,"684ff639b721652da7a7ce99");
             Button button = new Button("네,접수하기",ButtonAction.블럭이동,"684f6832c5b310190b722a54", ButtonParamKey.comment,comment);
-
+            chatBotResponse.addQuickButton("다시입력하기",ButtonAction.블럭이동,"684f672c47b70d2c1d6be9db");
             chatBotResponse.addQuickButton(button);
+            chatBotResponse.addQuickButton(firstMenuButton);
             return chatBotResponse;
         }catch (AuthenticationException e) {
             log.error("[카카오싱크 실패] receiptReservation: {}", e.getMessage(), e);
@@ -102,7 +106,17 @@ public class KakaoInquiriesController {
             String id = eventService.inquiriesReceipt(comment,appUserId);
 
             ChatBotResponse chatBotResponse = new ChatBotResponse();
-            chatBotResponse.addSimpleText("접수번호 [" + id + "]\n\n문의사항 접수가 완료되었습니다");
+            Button firstMenuButton = new Button("처음으로",ButtonAction.블럭이동,"684ff639b721652da7a7ce99");
+
+            TextCard textCard = new TextCard();
+            textCard.setDescription("\uD83D\uDCE9 접수 완료!\n" +
+                    "접수번호 : "+id+"\n" +
+                    "\n" +
+                    "담당자가 확인 후 순차적으로 연락드립니다.\n" +
+                    "빠르게 처리해드릴게요. 감사합니다!(크크)");
+
+            chatBotResponse.addTextCard(textCard);
+            chatBotResponse.addQuickButton(firstMenuButton);
             return chatBotResponse;
         }catch (AuthenticationException e) {
             log.error("[카카오싱크 실패] receiptReservation: {}", e.getMessage(), e);
