@@ -27,7 +27,7 @@ public class KakaoApiService {
     private final String REST_API_KEY = "241354c76f9bca97b335ff5eed7eed82";
     private final String ADMIN_API_KEY = "501504b775e89e23272ff9045a55cb07";
     private final String CLIENT_SECRET = "MS9HmJQZgA25D6Z3Llhs5VFyOpIHFauP";
-    private final String REDIRECT_URI = "http://43.203.66.39:8080/kakao/chatbot/auth/login";
+    private final String REDIRECT_URI = "http://223.130.157.107:28080/kakao/chatbot/auth/login";
     private ObjectMapper objectMapper = new ObjectMapper();
 
     public boolean isAgree(String appUserId) {
