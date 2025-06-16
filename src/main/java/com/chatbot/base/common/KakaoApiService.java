@@ -24,9 +24,9 @@ import java.util.Objects;
 @Slf4j
 public class KakaoApiService {
     private RestTemplate restTemplate = new RestTemplate();
-    private final String REST_API_KEY = "f51f1862deb9b948a90c53eadadd947d";
-    private final String ADMIN_API_KEY = "df8a200e991496b6f0ac210ab95fd39b";
-    private final String CLIENT_SECRET = "ZuYreTCBdGWBdMjX4twazqNe5Bq3k2Pl";
+    private final String REST_API_KEY = "241354c76f9bca97b335ff5eed7eed82";
+    private final String ADMIN_API_KEY = "501504b775e89e23272ff9045a55cb07";
+    private final String CLIENT_SECRET = "MS9HmJQZgA25D6Z3Llhs5VFyOpIHFauP";
     private final String REDIRECT_URI = "http://43.203.66.39:8080/kakao/chatbot/auth/login";
     private ObjectMapper objectMapper = new ObjectMapper();
 
