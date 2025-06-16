@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -99,29 +100,39 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public String asReceipt(String address, String appUserId) throws GeneralSecurityException, IOException {
+        final String SHEET_ID = "1xgwEkqVXh3iQBlnHN-yZIAYk5xr68pCQzCVETaRGwTw";
+        final String SHEET_PREFIX = "A/S접수";
+
+        // 날짜 및 시트 이름 생성
+        LocalDateTime now = LocalDateTime.now();
+        String formattedMonth = now.format(DateTimeFormatter.ofPattern("M월"));
+        String sheetName = SHEET_PREFIX + "_" + formattedMonth;
+
+        // 접수 ID 생성
+        String id = String.valueOf(System.currentTimeMillis());
+
+        // TODO: KakaoProfileDto에서 사용자 정보 가져오기
+        // KakaoProfileDto kakaoProfile = kakaoApiService.getKakaoProfile(appUserId);
+
+        String userName = "홍길동"; // kakaoProfile.getNickname()
+        String phoneNumber = "01055554444"; // kakaoProfile.getPhoneNumber()
+
+        List<Object> newRowData = List.of(
+                id,
+                userName,
+                phoneNumber,
+                address,
+                "접수",
+                now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
+        );
+
         try {
-            final String SHEET_ID = "1xgwEkqVXh3iQBlnHN-yZIAYk5xr68pCQzCVETaRGwTw";
-            final String SHEET_NAME = "A/S접수_1월";
-
-            LocalDate now = LocalDate.now();
-            String id = String.valueOf(System.currentTimeMillis());
-//            KakaoProfileDto kakaoProfile = kakaoApiService.getKakaoProfile(appUserId);
-
-
-            List<Object> newRowData = new ArrayList<>();
-            newRowData.add(id);
-            newRowData.add("홍길동");
-            newRowData.add("01055554444");
-            newRowData.add(address);
-            newRowData.add("접수");
-            newRowData.add(now.toString());
-
-            googleSheetUtil.appendToSheet(SHEET_ID,SHEET_NAME,newRowData);
-
+            googleSheetUtil.appendToSheet(SHEET_ID, sheetName, newRowData);
+            log.info("A/S 접수 성공 - ID: {}, 사용자: {}, 주소: {}", id, userName, address);
             return id;
-        }catch (Exception e) {
-            log.error("onePickEvent 실패: appUserId:{} KakaoProfileDto 값 확인 필요 - {}", appUserId, e.getMessage(), e);
-            throw new RuntimeException();
+        } catch (Exception e) {
+            log.error("A/S 접수 실패 - appUserId: {}, address: {}, 오류: {}", appUserId, address, e.getMessage(), e);
+            throw new RuntimeException("A/S 접수 처리 중 오류가 발생했습니다.", e);
         }
     }
 }
