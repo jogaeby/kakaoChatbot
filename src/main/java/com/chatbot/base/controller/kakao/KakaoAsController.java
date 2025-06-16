@@ -71,8 +71,8 @@ public class KakaoAsController {
             TextCard textCard = new TextCard();
             textCard.setDescription("\uD83E\uDDFE A/S 요금 및 보증기간 안내입니다.\n" +
                     "\n" +
-                    "⭐계약기간 내라면 대부분 무상 처리됩니다!\n" +
-                    "⭐단, 고객 부주의나 소모품 문제는 유상일 수 있어요.\n" +
+                    "⭐계약기간 내라면 대부분 무상 처리됩니다!\n\n" +
+                    "⭐단, 고객 부주의나 소모품 문제는 유상일 수 있어요.\n\n" +
                     "⭐계약기간이 끝난 경우엔 출장비나 수리비가 발생할 수 있고, 방문 후 정확한 비용 안내드릴게요.\n" +
                     "\n" +
                     "\uD83D\uDEE0\uFE0F A/S 접수를 계속하시려면  \n" +
