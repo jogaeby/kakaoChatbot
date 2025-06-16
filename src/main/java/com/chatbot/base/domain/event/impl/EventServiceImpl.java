@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -117,14 +118,14 @@ public class EventServiceImpl implements EventService {
         String userName = "홍길동"; // kakaoProfile.getNickname()
         String phoneNumber = "01055554444"; // kakaoProfile.getPhoneNumber()
 
-        List<Object> newRowData = List.of(
+        List<Object> newRowData = new ArrayList<>(Arrays.asList(
                 id,
                 userName,
                 phoneNumber,
                 address,
                 "접수",
                 now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
-        );
+        ));
 
         try {
             googleSheetUtil.appendToSheet(SHEET_ID, sheetName, newRowData);
