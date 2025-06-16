@@ -62,21 +62,29 @@ public class KakaoInquiriesController {
         try {
             ChatBotResponse chatBotResponse = new ChatBotResponse();
             String comment = chatBotRequest.getComment();
+            String appUserId = chatBotRequest.getAppUserId();
 
-            StringBuilder message = new StringBuilder();
-            message.append("문의사항: "+comment)
-            ;
+            if (appUserId == null) throw new AuthenticationException("appUserId 없음");
+            KakaoProfileDto kakaoProfile = kakaoApiService.getKakaoProfile(appUserId);
 
-            chatBotResponse.addSimpleText("입력하신 내용이 아래 내용과 일치하나요?");
-            chatBotResponse.addTextCard("",message.toString());
+            ItemCard itemCard = new ItemCard();
+            itemCard.setItemListAlignment("right");
+            itemCard.addItemList("이름",kakaoProfile.getKakaoAccount().getName());
+            itemCard.addItemList("연락처",kakaoProfile.getPhoneNumber());
+            itemCard.setTitle("문의사항");
+            itemCard.setDescription(comment);
 
+            chatBotResponse.addSimpleText("해당 내용으로 문의사항을 접수를 진행하시겠습니까?");
+            chatBotResponse.addItemCard(itemCard);
 
-            chatBotResponse.addQuickButton("아니요,다시입력",ButtonAction.블럭이동,"684f672c47b70d2c1d6be9db");
-
-            Button button = new Button("네,맞아요",ButtonAction.블럭이동,"684f682a938bdf47fcf4d701", ButtonParamKey.comment,comment);
+            chatBotResponse.addQuickButton("다시입력하기",ButtonAction.블럭이동,"684f672c47b70d2c1d6be9db");
+            Button button = new Button("네,접수하기",ButtonAction.블럭이동,"684f6832c5b310190b722a54", ButtonParamKey.comment,comment);
 
             chatBotResponse.addQuickButton(button);
             return chatBotResponse;
+        }catch (AuthenticationException e) {
+            log.error("[카카오싱크 실패] receiptReservation: {}", e.getMessage(), e);
+            return kakaoChatBotView.authView();
         }catch (Exception e) {
             log.error("enterAddress: {}", e.getMessage(), e);
             return chatBotExceptionResponse.createException();

@@ -78,25 +78,6 @@ public class KakaoAsController {
         }
     }
 
-    @PostMapping(value = "cost")
-    public ChatBotResponse noticeCost(@RequestBody ChatBotRequest chatBotRequest) {
-        try {
-            ChatBotResponse chatBotResponse = new ChatBotResponse();
-            String address = chatBotRequest.getAddressParam();
-            String comment = chatBotRequest.getCommentParam();
-
-            chatBotResponse.addSimpleText("요금 및 보증기간 안내");
-            Button button = new Button("네,확인했어요",ButtonAction.블럭이동,"684f66bb47b70d2c1d6be9cf", ButtonParamKey.address,address);
-            button.setExtra(ButtonParamKey.comment,comment);
-
-            chatBotResponse.addQuickButton(button);
-            return chatBotResponse;
-        }catch (Exception e) {
-            log.error("enterAddress: {}", e.getMessage(), e);
-            return chatBotExceptionResponse.createException();
-        }
-    }
-
     @PostMapping(value = "confirm")
     public ChatBotResponse finalConfirm(@RequestBody ChatBotRequest chatBotRequest) {
         try {
