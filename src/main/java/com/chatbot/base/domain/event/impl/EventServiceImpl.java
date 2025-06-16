@@ -114,7 +114,7 @@ public class EventServiceImpl implements EventService {
             newRowData.add("01055554444");
             newRowData.add(address);
             newRowData.add("접수");
-            newRowData.add(now);
+            newRowData.add(now.toString());
 
             googleSheetUtil.appendToSheet(SHEET_ID,SHEET_NAME,newRowData);
 
