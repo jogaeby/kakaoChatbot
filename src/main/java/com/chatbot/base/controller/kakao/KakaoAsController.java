@@ -41,7 +41,7 @@ public class KakaoAsController {
 //            if (appUserId == null) throw new AuthenticationException("appUserId 없음");
 
             TextCard textCard = new TextCard();
-            textCard.setDescription("아래 버튼을 눌러 A/S접수를 진행해주세요.");
+            textCard.setDescription("아래 버튼을 눌러 A/S 접수를 진행해주세요.");
             chatBotResponse.addTextCard(textCard);
             chatBotResponse.addQuickButton(new Button("A/S접수 진행하기", ButtonAction.블럭이동,"684f669ac5b310190b722a21"));
             return chatBotResponse;
@@ -96,7 +96,9 @@ public class KakaoAsController {
             itemCard.setItemListAlignment("right");
             itemCard.addItemList("이름","홍길동");
             itemCard.addItemList("연락처","01055552222");
-            itemCard.setSummary("주소",address);
+            itemCard.setTitle("주소");
+            itemCard.setDescription(address);
+
             chatBotResponse.addSimpleText("해당 내용으로 A/S접수를 진행하시겠습니까?");
             chatBotResponse.addItemCard(itemCard);
             chatBotResponse.addQuickButton("다시입력하기",ButtonAction.블럭이동,"684f669ac5b310190b722a21");
