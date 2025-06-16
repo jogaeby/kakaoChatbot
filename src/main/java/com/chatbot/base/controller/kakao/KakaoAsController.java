@@ -69,6 +69,8 @@ public class KakaoAsController {
             chatBotResponse.addSimpleText("요금 및 보증기간 안내");
             Button button = new Button("네,확인했어요",ButtonAction.블럭이동,"684f66bb47b70d2c1d6be9cf", ButtonParamKey.address,address);
             button.setExtra(ButtonParamKey.comment,comment);
+            chatBotResponse.addQuickButton(button);
+
             return chatBotResponse;
         }catch (Exception e) {
             log.error("enterAddress: {}", e.getMessage(), e);
