@@ -45,7 +45,7 @@ public class KakaoAsController {
             if (appUserId == null) throw new AuthenticationException("appUserId 없음");
 
             TextCard textCard = new TextCard();
-            textCard.setDescription("아래 버튼을 눌러 A/S 접수를 진행해주세요.");
+            textCard.setDescription("아래 버튼을 눌러 A/S 접수를 진행해주세요. (궁금)");
             chatBotResponse.addTextCard(textCard);
             chatBotResponse.addQuickButton(new Button("A/S접수 진행하기", ButtonAction.블럭이동,"684f669ac5b310190b722a21"));
             return chatBotResponse;
