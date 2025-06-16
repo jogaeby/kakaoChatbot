@@ -48,12 +48,12 @@ public class KakaoAuthController {
 
             if (!profileRequestDto.isSaved()) throw new AuthenticationException("카카오 싱크 인증이 되지 않았습니다. 인증이 필요합니다.");
 
-            TextCard textCard = new TextCard();
-            textCard.setDescription("영수증 등록을 진행해 주세요.");
-            textCard.setButtons(new Button("영수증 등록하기", ButtonAction.블럭이동,"6821606d23dc6c3328144ff7"));
+//            TextCard textCard = new TextCard();
+//            textCard.setDescription("영수증 등록을 진행해 주세요.");
+//            textCard.setButtons(new Button("영수증 등록하기", ButtonAction.블럭이동,"6821606d23dc6c3328144ff7"));
 
 //            chatBotResponse.addSimpleText("정상적으로 동의가 완료되었습니다.");
-            chatBotResponse.addTextCard(textCard);
+            chatBotResponse.addSimpleText("정상적으로 동의가 완료되었습니다.");
             return chatBotResponse;
         }catch (Exception e) {
             log.error("profile: {} {}", e.getMessage(), e.getStackTrace());
