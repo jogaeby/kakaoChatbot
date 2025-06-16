@@ -59,11 +59,23 @@ public class KakaoAsController {
         try {
             ChatBotResponse chatBotResponse = new ChatBotResponse();
             String address = chatBotRequest.getAddress();
+            String comment = chatBotRequest.getComment();
 
-            chatBotResponse.addSimpleText("입력하신 주소가 아래 내용과 일치하나요?");
-            chatBotResponse.addTextCard("주소",address);
+            StringBuilder message = new StringBuilder();
+            message.append("주소: "+address)
+                    .append("\n\n")
+                    .append("증상: "+comment)
+            ;
+
+            chatBotResponse.addSimpleText("입력하신 내용이 아래 내용과 일치하나요?");
+            chatBotResponse.addTextCard("",message.toString());
+
+
             chatBotResponse.addQuickButton("아니요",ButtonAction.블럭이동,"684f669ac5b310190b722a21");
-            chatBotResponse.addQuickButton("네,맞아요",ButtonAction.블럭이동,"684f66a7e7598b00aa826584", ButtonParamKey.choice,address);
+
+            Button button = new Button("네,맞아요",ButtonAction.블럭이동,"684f66a7e7598b00aa826584", ButtonParamKey.address,address);
+            button.setExtra(ButtonParamKey.comment,comment);
+            chatBotResponse.addQuickButton(button);
             return chatBotResponse;
         }catch (Exception e) {
             log.error("enterAddress: {}", e.getMessage(), e);
@@ -75,10 +87,14 @@ public class KakaoAsController {
     public ChatBotResponse noticeCost(@RequestBody ChatBotRequest chatBotRequest) {
         try {
             ChatBotResponse chatBotResponse = new ChatBotResponse();
-            String address = chatBotRequest.getChoiceParam();
+            String address = chatBotRequest.getAddress();
+            String comment = chatBotRequest.getComment();
 
             chatBotResponse.addSimpleText("요금 및 보증기간 안내");
-            chatBotResponse.addQuickButton("네,확인했어요",ButtonAction.블럭이동,"684f66bb47b70d2c1d6be9cf", ButtonParamKey.choice,address);
+            Button button = new Button("네,확인했어요",ButtonAction.블럭이동,"684f66bb47b70d2c1d6be9cf", ButtonParamKey.address,address);
+            button.setExtra(ButtonParamKey.comment,comment);
+
+            chatBotResponse.addQuickButton(button);
             return chatBotResponse;
         }catch (Exception e) {
             log.error("enterAddress: {}", e.getMessage(), e);
@@ -90,7 +106,8 @@ public class KakaoAsController {
     public ChatBotResponse finalConfirm(@RequestBody ChatBotRequest chatBotRequest) {
         try {
             ChatBotResponse chatBotResponse = new ChatBotResponse();
-            String address = chatBotRequest.getChoiceParam();
+            String address = chatBotRequest.getAddress();
+            String comment = chatBotRequest.getComment();
 
             ItemCard itemCard = new ItemCard();
             itemCard.setItemListAlignment("right");
@@ -101,8 +118,13 @@ public class KakaoAsController {
 
             chatBotResponse.addSimpleText("해당 내용으로 A/S접수를 진행하시겠습니까?");
             chatBotResponse.addItemCard(itemCard);
+            chatBotResponse.addTextCard("증상",comment);
+
             chatBotResponse.addQuickButton("다시입력하기",ButtonAction.블럭이동,"684f669ac5b310190b722a21");
-            chatBotResponse.addQuickButton("네,접수하기",ButtonAction.블럭이동,"684f66cd2c50e1482b21f7d5", ButtonParamKey.choice,address);
+            Button button = new Button("네,접수하기",ButtonAction.블럭이동,"684f66cd2c50e1482b21f7d5", ButtonParamKey.address,address);
+            button.setExtra(ButtonParamKey.comment,comment);
+
+            chatBotResponse.addQuickButton(button);
             return chatBotResponse;
         }catch (Exception e) {
             log.error("finalConfirm: {}", e.getMessage(), e);
@@ -114,14 +136,15 @@ public class KakaoAsController {
     @PostMapping(value = "receipt")
     public ChatBotResponse receiptAs(@RequestBody ChatBotRequest chatBotRequest) {
         try {
-            String address = chatBotRequest.getChoiceParam();
+            String address = chatBotRequest.getAddress();
+            String comment = chatBotRequest.getComment();
 
 //            String appUserId = chatBotRequest.getAppUserId();
 //            if (appUserId == null) throw new AuthenticationException("appUserId 없음");
-            String id = eventService.asReceipt(address, "");
+            String id = eventService.asReceipt(address, comment,"");
 
             ChatBotResponse chatBotResponse = new ChatBotResponse();
-            chatBotResponse.addSimpleText("접수번호[" + id + "]\nA/S 접수가 완료되었습니다");
+            chatBotResponse.addSimpleText("접수번호 [" + id + "]\n\nA/S 접수가 완료되었습니다");
             return chatBotResponse;
         }catch (RuntimeException e) {
             log.error("[카카오싱크 실패] receiptReservation: {}", e.getMessage(), e);

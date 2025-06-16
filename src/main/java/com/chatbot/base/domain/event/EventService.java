@@ -9,5 +9,5 @@ import java.util.List;
 public interface EventService {
     String onePickEvent(List<String> images, String appUserId);
 
-    String asReceipt(String address, String appUserId) throws GeneralSecurityException, IOException;
+    String asReceipt(String address,String comment, String appUserId) throws GeneralSecurityException, IOException;
 }

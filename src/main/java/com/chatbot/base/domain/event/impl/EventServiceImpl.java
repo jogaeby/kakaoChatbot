@@ -100,7 +100,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public String asReceipt(String address, String appUserId) throws GeneralSecurityException, IOException {
+    public String asReceipt(String address, String comment, String appUserId) throws GeneralSecurityException, IOException {
         final String SHEET_ID = "1xgwEkqVXh3iQBlnHN-yZIAYk5xr68pCQzCVETaRGwTw";
         final String SHEET_PREFIX = "A/S접수";
 
@@ -124,6 +124,7 @@ public class EventServiceImpl implements EventService {
                 userName,
                 phoneNumber,
                 address,
+                comment,
                 "접수",
                 now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
         ));
