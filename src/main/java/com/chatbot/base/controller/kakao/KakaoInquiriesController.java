@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.naming.AuthenticationException;
+
 @RestController
 @RequiredArgsConstructor
 @Slf4j
@@ -33,9 +35,9 @@ public class KakaoInquiriesController {
         try {
             ChatBotResponse chatBotResponse = new ChatBotResponse();
 
-//            String appUserId = chatBotRequest.getAppUserId();
-//
-//            if (appUserId == null) throw new AuthenticationException("appUserId 없음");
+            String appUserId = chatBotRequest.getAppUserId();
+
+            if (appUserId == null) throw new AuthenticationException("appUserId 없음");
 
             TextCard textCard = new TextCard();
             textCard.setDescription("아래 버튼을 눌러 문의사항 접수를 진행해주세요.");
@@ -43,7 +45,7 @@ public class KakaoInquiriesController {
             chatBotResponse.addQuickButton(new Button("문의사항접수 진행하기", ButtonAction.블럭이동,"684f672c47b70d2c1d6be9db"));
             return chatBotResponse;
 
-        }catch (RuntimeException e) {
+        }catch (AuthenticationException e) {
             log.error("[카카오싱크 실패] receiptReservation: {}", e.getMessage(), e);
             return kakaoChatBotView.authView();
         }catch (Exception e) {

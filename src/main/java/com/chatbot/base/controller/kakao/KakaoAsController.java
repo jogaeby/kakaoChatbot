@@ -12,12 +12,12 @@ import com.chatbot.base.dto.kakao.response.property.components.TextCard;
 import com.chatbot.base.view.KakaoChatBotView;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.naming.AuthenticationException;
 import java.util.List;
 
 @RestController
@@ -36,9 +36,9 @@ public class KakaoAsController {
         try {
             ChatBotResponse chatBotResponse = new ChatBotResponse();
 
-//            String appUserId = chatBotRequest.getAppUserId();
-//
-//            if (appUserId == null) throw new AuthenticationException("appUserId 없음");
+            String appUserId = chatBotRequest.getAppUserId();
+
+            if (appUserId == null) throw new AuthenticationException("appUserId 없음");
 
             TextCard textCard = new TextCard();
             textCard.setDescription("아래 버튼을 눌러 A/S 접수를 진행해주세요.");
@@ -46,7 +46,7 @@ public class KakaoAsController {
             chatBotResponse.addQuickButton(new Button("A/S접수 진행하기", ButtonAction.블럭이동,"684f669ac5b310190b722a21"));
             return chatBotResponse;
 
-        }catch (RuntimeException e) {
+        }catch (AuthenticationException e) {
             log.error("[카카오싱크 실패] receiptReservation: {}", e.getMessage(), e);
             return kakaoChatBotView.authView();
         }catch (Exception e) {
