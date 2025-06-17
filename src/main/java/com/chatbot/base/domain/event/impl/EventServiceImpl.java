@@ -1,5 +1,6 @@
 package com.chatbot.base.domain.event.impl;
 
+import com.chatbot.base.common.AlarmTalkService;
 import com.chatbot.base.common.GoogleSheetUtil;
 import com.chatbot.base.common.ImageUtil;
 import com.chatbot.base.common.KakaoApiService;
@@ -8,6 +9,7 @@ import com.chatbot.base.dto.kakao.sync.KakaoProfileDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -27,6 +29,7 @@ import java.util.Optional;
 public class EventServiceImpl implements EventService {
     private final KakaoApiService kakaoApiService;
     private final GoogleSheetUtil googleSheetUtil;
+    private final AlarmTalkService alarmTalkService;
 
     @Value("${google.sheet.id}")
     private String SHEET_ID;
@@ -105,5 +108,10 @@ public class EventServiceImpl implements EventService {
             log.error("기타문의 접수 실패 - appUserId: {}, address: {}, 오류: {}", appUserId, comment, e.getMessage(), e);
             throw new RuntimeException("기타문의 접수 처리 중 오류가 발생했습니다.", e);
         }
+    }
+
+    @Async
+    void sendReceiptAlarmTalk(String address, String comment, String appUserId) {
+
     }
 }

@@ -27,6 +27,7 @@ import java.security.GeneralSecurityException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -89,6 +90,14 @@ public class GoogleSheetUtil {
             values.forEach(row -> row.forEach(cell -> log.info("{}", cell)));
             return values;
         }
+    }
+
+    public List<List<Object>> readMemberSheet(String spreadSheetId) throws GeneralSecurityException, IOException {
+        List<List<Object>> engineers = readAllSheet(spreadSheetId, "엔지니어");
+        List<List<Object>> on = engineers.stream()
+                .filter(row -> row.size() > 1 && "ON".equalsIgnoreCase(row.get(1).toString()))
+                .collect(Collectors.toList());
+        return on;
     }
 
     public void appendToSheet(String spreadSheetId, String sheetName, List<Object> newRowData) throws GeneralSecurityException, IOException {
