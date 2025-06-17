@@ -34,7 +34,7 @@ class GoogleSheetUtilTest {
 
     @Test
     void readAllSheet() throws GeneralSecurityException, IOException {
-        googleSheetUtil.readAllSheet("1xgwEkqVXh3iQBlnHN-yZIAYk5xr68pCQzCVETaRGwTw","시트1");
+        googleSheetUtil.readAllSheet("1xgwEkqVXh3iQBlnHN-yZIAYk5xr68pCQzCVETaRGwTw","기타문의사항 접수내역");
     }
 
     @Test

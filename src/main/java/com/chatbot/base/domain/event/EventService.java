@@ -7,8 +7,6 @@ import java.security.GeneralSecurityException;
 import java.util.List;
 
 public interface EventService {
-    String onePickEvent(List<String> images, String appUserId);
-
     String asReceipt(String address,String comment, String appUserId) throws GeneralSecurityException, IOException;
 
     String inquiriesReceipt(String comment, String appUserId) throws GeneralSecurityException, IOException;

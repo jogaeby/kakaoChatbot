@@ -71,11 +71,10 @@ public class GoogleSheetUtil {
         return sheetsService;
     }
     // 구글 시트의 모든 데이터를 읽어오기
-    public void readAllSheet(String spreadSheetId, String sheetName) throws GeneralSecurityException, IOException {
-        final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport(); // HTTP 요청에 사용될 트랜스포트
-
+    public List<List<Object>> readAllSheet(String spreadSheetId, String sheetName) throws GeneralSecurityException, IOException {
         // Sheets API 클라이언트 빌드
         Sheets service = getSheetsService();
+
         // 시트 데이터를 읽어오기
         String range = sheetName; // 읽을 범위 설정
         ValueRange response = service.spreadsheets().values().get(spreadSheetId, range).execute();
@@ -84,11 +83,11 @@ public class GoogleSheetUtil {
         // 읽은 데이터가 없으면 로그 출력
         if (values == null || values.isEmpty()) {
             log.info("지정된 시트에 데이터가 없습니다.");
+            return Collections.emptyList(); // 빈 리스트 반환
         } else {
-            // 데이터 출력
-            values.forEach(row -> {
-                row.forEach(cell -> log.info("{}", cell));
-            });
+            // 데이터 출력 (원하면 유지)
+            values.forEach(row -> row.forEach(cell -> log.info("{}", cell)));
+            return values;
         }
     }
 
