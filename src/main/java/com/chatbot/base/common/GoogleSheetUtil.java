@@ -24,6 +24,8 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.GeneralSecurityException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -180,7 +182,7 @@ public class GoogleSheetUtil {
                                          Object newC, Object newI, Object newJ) throws GeneralSecurityException, IOException {
         Sheets service = getSheetsService();
 
-        // 최소한 A ~ J열 범위 조회
+        // A~J까지 읽기
         String range = sheetName + "!A:J";
         ValueRange response = service.spreadsheets().values().get(spreadSheetId, range).execute();
         List<List<Object>> originalValues = response.getValues();
@@ -189,14 +191,13 @@ public class GoogleSheetUtil {
             throw new NoSuchElementException("시트에 데이터가 없습니다.");
         }
 
-        // 복사본을 만들어 최신 데이터부터 조회
+        // 최신순 탐색을 위한 복사본
         List<List<Object>> reversedValues = new ArrayList<>(originalValues);
         Collections.reverse(reversedValues);
 
         int reversedIndex = -1;
         for (int i = 0; i < reversedValues.size(); i++) {
             List<Object> row = reversedValues.get(i);
-            // B열: receiptId, C열: 상태
             if (row.size() > 2 && receiptId.equals(row.get(1).toString()) && "접수".equals(row.get(2).toString())) {
                 reversedIndex = i;
                 break;
@@ -207,19 +208,23 @@ public class GoogleSheetUtil {
             throw new NoSuchElementException("receiptId = " + receiptId + "인 데이터를 찾을 수 없습니다.");
         }
 
-        // 실제 시트 기준 행 번호 계산 (1-based index)
         int rowNumber = originalValues.size() - reversedIndex;
 
-        // 각 열의 셀 범위 정의
+        // 날짜+시간 생성
+        String dateTimeNow = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+
+        // 셀 범위 정의
         String rangeC = String.format("%s!C%d", sheetName, rowNumber);
         String rangeI = String.format("%s!I%d", sheetName, rowNumber);
         String rangeJ = String.format("%s!J%d", sheetName, rowNumber);
+        String rangeK = String.format("%s!K%d", sheetName, rowNumber);
 
-        // 각 셀에 대한 요청 생성
+        // 업데이트 데이터 구성
         List<ValueRange> data = List.of(
                 new ValueRange().setRange(rangeC).setValues(List.of(List.of(newC))),
                 new ValueRange().setRange(rangeI).setValues(List.of(List.of(newI))),
-                new ValueRange().setRange(rangeJ).setValues(List.of(List.of(newJ)))
+                new ValueRange().setRange(rangeJ).setValues(List.of(List.of(newJ))),
+                new ValueRange().setRange(rangeK).setValues(List.of(List.of(dateTimeNow)))
         );
 
         BatchUpdateValuesRequest body = new BatchUpdateValuesRequest()
@@ -230,7 +235,7 @@ public class GoogleSheetUtil {
                 .batchUpdate(spreadSheetId, body)
                 .execute();
 
-        log.info("C, I, J열 수정 완료 (row {}): 업데이트된 셀 수 = {}", rowNumber, result.getTotalUpdatedCells());
+        log.info("C, I, J, K열 수정 완료 (row {}): 업데이트된 셀 수 = {}", rowNumber, result.getTotalUpdatedCells());
     }
 
     public void appendToSheetByAll(String spreadSheetId, String sheetName, List<List<Object>> newRows) throws GeneralSecurityException, IOException {

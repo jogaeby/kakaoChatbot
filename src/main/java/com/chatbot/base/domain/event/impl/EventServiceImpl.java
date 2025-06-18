@@ -4,6 +4,7 @@ import com.chatbot.base.common.AlarmTalkService;
 import com.chatbot.base.common.GoogleSheetUtil;
 import com.chatbot.base.common.ImageUtil;
 import com.chatbot.base.common.KakaoApiService;
+import com.chatbot.base.common.util.EncryptionUtil;
 import com.chatbot.base.domain.event.EventService;
 import com.chatbot.base.dto.kakao.sync.KakaoProfileDto;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,8 @@ public class EventServiceImpl implements EventService {
     private final KakaoApiService kakaoApiService;
     private final GoogleSheetUtil googleSheetUtil;
     private final AlarmTalkService alarmTalkService;
+    @Value("${host.url}")
+    private String HOST_URL;
 
     @Value("${google.sheet.id}")
     private String SHEET_ID;
@@ -117,7 +120,15 @@ public class EventServiceImpl implements EventService {
                 String phone = String.valueOf(objects.get(4));
                 String name = kakaoProfile.getKakaoAccount().getName();
                 String phoneNumber = kakaoProfile.getPhoneNumber();
-                alarmTalkService.sendASReceipt(phone,receiptId,name,phoneNumber,address,comment,"");
+                try {
+                    String encryptPhone = EncryptionUtil.encrypt(EncryptionUtil.getKey(), phone);
+                    String encryptReceiptId = EncryptionUtil.encrypt(EncryptionUtil.getKey(), receiptId);
+                    String url = HOST_URL + "/receipt/"+encryptPhone+"/"+encryptReceiptId;
+                    alarmTalkService.sendASReceipt(phone,receiptId,name,phoneNumber,address,comment,url);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+
             });
 
 

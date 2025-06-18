@@ -4,6 +4,7 @@ import com.chatbot.base.annotation.PassAuth;
 import com.chatbot.base.common.AlarmTalkService;
 import com.chatbot.base.common.GoogleSheetUtil;
 import com.chatbot.base.common.HttpService;
+import com.chatbot.base.common.util.EncryptionUtil;
 import com.chatbot.base.domain.member.constant.MemberRole;
 import com.chatbot.base.domain.member.dto.MemberDTO;
 import com.chatbot.base.domain.member.service.MemberService;
@@ -36,10 +37,13 @@ public class AsController {
     @GetMapping("{managerPhone}/{id}")
     public String getReceipt(@PathVariable String managerPhone, @PathVariable String id, Model model) {
         try {
+            managerPhone = EncryptionUtil.decrypt(EncryptionUtil.getKey(), managerPhone);
+            String receiptId = EncryptionUtil.decrypt(EncryptionUtil.getKey(), id);
+
             String sheetName;
             String category;
-            if (id.contains("_")) {
-                String prefix = id.split("_")[0]; // "1", "2", ..., "12" 등
+            if (receiptId.contains("_")) {
+                String prefix = receiptId.split("_")[0]; // "1", "2", ..., "12" 등
                 category = "A/S 접수내역";
                 switch (prefix) {
                     case "1":
@@ -79,15 +83,13 @@ public class AsController {
                         sheetName = "A/S접수_12월";
                         break;
                     default:
-                        throw new RuntimeException("올바르지 않은 접수번호입니다. id = "+id);
+                        throw new RuntimeException("올바르지 않은 접수번호입니다. receiptId = "+receiptId);
                 }
             } else {
                 category = "기타 문의내역";
                 sheetName = "기타문의사항 접수내역"; // 접두어가 없는 경우
             }
-            List<Object> manager = googleSheetUtil.readMemberSheetByPhone(SHEET_ID, managerPhone);
-            String managerName = String.valueOf(manager.get(0));
-            String recentManagerPhone = String.valueOf(manager.get(1));
+
 
             List<List<Object>> receiptList = googleSheetUtil.readAllSheet(SHEET_ID, sheetName);
 
@@ -95,11 +97,11 @@ public class AsController {
             Collections.reverse(reversedList);
 
             List<Object> receipt = reversedList.stream()
-                    .filter(row -> row.size() > 1 && id.equals(row.get(1)))
+                    .filter(row -> row.size() > 1 && receiptId.equals(row.get(1)))
                     .findFirst()
-                    .orElseThrow(() -> new NoSuchElementException("접수내역을 찾을 수 없습니다. id = " + id));
+                    .orElseThrow(() -> new NoSuchElementException("접수내역을 찾을 수 없습니다. receiptId = " + receiptId));
 
-            String receiptId = String.valueOf(receipt.get(1));
+            String recentReceiptId = String.valueOf(receipt.get(1));
             String status = String.valueOf(receipt.get(2));
             String customerName = String.valueOf(receipt.get(3));
             String customerPhone = String.valueOf(receipt.get(4));
@@ -119,6 +121,15 @@ public class AsController {
                 symptom = String.valueOf(receipt.get(6));
                 receiptDate = String.valueOf(receipt.get(7));
             }
+            String managerName = "";
+            String recentManagerPhone = "";
+
+            if (status.equals("접수")) {
+                List<Object> manager = googleSheetUtil.readMemberSheetByPhone(SHEET_ID, managerPhone);
+                managerName = String.valueOf(manager.get(0));
+                recentManagerPhone = String.valueOf(manager.get(1));
+            }
+
             model.addAttribute("managerName",managerName);
             model.addAttribute("managerPhone",managerPhone);
             model.addAttribute("sheetName",sheetName);
