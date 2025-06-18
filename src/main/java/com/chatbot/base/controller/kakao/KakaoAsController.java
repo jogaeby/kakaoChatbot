@@ -141,14 +141,19 @@ public class KakaoAsController {
 
             String appUserId = chatBotRequest.getAppUserId();
             if (appUserId == null) throw new AuthenticationException("appUserId 없음");
+            // TODO: KakaoProfileDto에서 사용자 정보 가져오기
+            KakaoProfileDto kakaoProfile = kakaoApiService.getKakaoProfile(appUserId);
 
-            String id = eventService.asReceipt(address, comment,appUserId);
+            String receiptId = eventService.asReceipt(address, comment,kakaoProfile);
+
+            eventService.sendReceiptAlarmTalk(receiptId,address,comment,kakaoProfile);
+
 
             ChatBotResponse chatBotResponse = new ChatBotResponse();
             Button firstMenuButton = new Button("처음으로",ButtonAction.블럭이동,"684ff639b721652da7a7ce99");
             TextCard textCard = new TextCard();
             textCard.setDescription("\uD83D\uDCE9 접수 완료!\n" +
-                    "접수번호 : "+id+"\n" +
+                    "접수번호 : "+receiptId+"\n" +
                     "\n" +
                     "담당자가 확인 후 순차적으로 연락드립니다.\n" +
                     "빠르게 처리해드릴게요. 감사합니다!(크크)");

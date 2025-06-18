@@ -34,7 +34,7 @@ public class EventServiceImpl implements EventService {
     @Value("${google.sheet.id}")
     private String SHEET_ID;
     @Override
-    public String asReceipt(String address, String comment, String appUserId) {
+    public String asReceipt(String address, String comment, KakaoProfileDto kakaoProfile) {
         final String SHEET_PREFIX = "A/S접수";
 
         // 날짜 및 시트 이름 생성
@@ -46,8 +46,6 @@ public class EventServiceImpl implements EventService {
         // 접수 ID 생성
         String id = monthValue + "_" + System.currentTimeMillis();
 
-        // TODO: KakaoProfileDto에서 사용자 정보 가져오기
-         KakaoProfileDto kakaoProfile = kakaoApiService.getKakaoProfile(appUserId);
 
         String userName = kakaoProfile.getKakaoAccount().getName();
         String phoneNumber = kakaoProfile.getPhoneNumber();
@@ -67,7 +65,7 @@ public class EventServiceImpl implements EventService {
             log.info("A/S 접수 성공 - ID: {}, 사용자: {}, 주소: {}", id, userName, address);
             return id;
         } catch (Exception e) {
-            log.error("A/S 접수 실패 - appUserId: {}, address: {}, 오류: {}", appUserId, address, e.getMessage(), e);
+            log.error("A/S 접수 실패 - appUserId: {}, address: {}, 오류: {}", kakaoProfile.getId(), address, e.getMessage(), e);
             throw new RuntimeException("A/S 접수 처리 중 오류가 발생했습니다.", e);
         }
     }
@@ -111,7 +109,20 @@ public class EventServiceImpl implements EventService {
     }
 
     @Async
-    void sendReceiptAlarmTalk(String address, String comment, String appUserId) {
+    @Override
+    public void sendReceiptAlarmTalk(String receiptId, String address, String comment, KakaoProfileDto kakaoProfile) {
+        try {
+            List<List<Object>> lists = googleSheetUtil.readMemberSheet(SHEET_ID);
+            lists.forEach(objects -> {
+                String phone = String.valueOf(objects.get(4));
+                String name = kakaoProfile.getKakaoAccount().getName();
+                String phoneNumber = kakaoProfile.getPhoneNumber();
+                alarmTalkService.sendASReceipt(phone,receiptId,name,phoneNumber,address,comment,"");
+            });
 
+
+        }catch (Exception e) {
+            log.error("{}",e.getMessage(),e);
+        }
     }
 }
