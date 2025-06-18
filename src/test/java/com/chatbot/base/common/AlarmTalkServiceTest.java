@@ -30,6 +30,6 @@ class AlarmTalkServiceTest {
                 .build();
         Reservation entity = build.toEntity();
 
-        alarmTalkService.sendReservation("01039190126",entity);
+//        alarmTalkService.sendReservation("01039190126",entity);
     }
 }

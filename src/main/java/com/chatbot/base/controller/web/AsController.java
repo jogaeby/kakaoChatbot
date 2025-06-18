@@ -1,6 +1,7 @@
 package com.chatbot.base.controller.web;
 
 import com.chatbot.base.annotation.PassAuth;
+import com.chatbot.base.common.AlarmTalkService;
 import com.chatbot.base.common.GoogleSheetUtil;
 import com.chatbot.base.common.HttpService;
 import com.chatbot.base.domain.member.constant.MemberRole;
@@ -16,10 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -27,9 +25,13 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("receipt")
 public class AsController {
-    private final GoogleSheetUtil googleSheetUtil;
     @Value("${google.sheet.id}")
     private String SHEET_ID;
+
+    private final GoogleSheetUtil googleSheetUtil;
+
+    private final AlarmTalkService alarmTalkService;
+
     @PassAuth
     @GetMapping("{managerPhone}/{id}")
     public String getReceipt(@PathVariable String managerPhone, @PathVariable String id, Model model) {
@@ -83,13 +85,19 @@ public class AsController {
                 category = "기타 문의내역";
                 sheetName = "기타문의사항 접수내역"; // 접두어가 없는 경우
             }
+            List<Object> manager = googleSheetUtil.readMemberSheetByPhone(SHEET_ID, managerPhone);
+            String managerName = String.valueOf(manager.get(0));
+            String recentManagerPhone = String.valueOf(manager.get(1));
 
             List<List<Object>> receiptList = googleSheetUtil.readAllSheet(SHEET_ID, sheetName);
 
-            List<Object> receipt = receiptList.stream()
+            List<List<Object>> reversedList = new ArrayList<>(receiptList);
+            Collections.reverse(reversedList);
+
+            List<Object> receipt = reversedList.stream()
                     .filter(row -> row.size() > 1 && id.equals(row.get(1)))
                     .findFirst()
-                    .orElseThrow(() -> new NoSuchElementException("접수내역을 찾을 수 없습니다. id = "+id));
+                    .orElseThrow(() -> new NoSuchElementException("접수내역을 찾을 수 없습니다. id = " + id));
 
             String receiptId = String.valueOf(receipt.get(1));
             String status = String.valueOf(receipt.get(2));
@@ -109,8 +117,11 @@ public class AsController {
             if (category.equals("A/S 접수내역")) {
                 address = String.valueOf(receipt.get(5));
                 symptom = String.valueOf(receipt.get(6));
+                receiptDate = String.valueOf(receipt.get(7));
             }
+            model.addAttribute("managerName",managerName);
             model.addAttribute("managerPhone",managerPhone);
+            model.addAttribute("sheetName",sheetName);
             model.addAttribute("status", status);
             model.addAttribute("category", category);
             model.addAttribute("receiptId", receiptId); // 모델에 데이터 추가
@@ -129,6 +140,31 @@ public class AsController {
             return "error";
         }
 
+    }
+    @PassAuth
+    @PostMapping("assign")
+    public ResponseEntity receiptAssign(@RequestBody Map<String,String> data) {
+        try {
+            String receiptId = data.get("id");
+            String sheetName = data.get("sheetName");
+            String managerName = data.get("managerName");
+            String managerPhone = data.get("managerPhone");
+            String customerName = data.get("customerName");
+            String customerPhone = data.get("customerPhone");
+            String address = data.get("address");
+            String symptom = data.get("symptom");
+
+            googleSheetUtil.updateColumnsByReceiptId(SHEET_ID,sheetName,receiptId,"배정완료",managerName,"'"+managerPhone);
+
+//            alarmTalkService.sendASAssignment(managerPhone, receiptId,customerName,customerPhone,address,symptom,managerName,managerPhone,"");
+
+            return ResponseEntity.ok()
+                    .build();
+        }catch (Exception e) {
+            log.error("{}",e.getMessage(),e);
+            return ResponseEntity.status(400)
+                    .build();
+        }
     }
 
 }

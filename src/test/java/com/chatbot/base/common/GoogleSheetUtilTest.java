@@ -38,9 +38,15 @@ class GoogleSheetUtilTest {
     }
 
     @Test
-    void name() throws GeneralSecurityException, IOException {
+    void appendToSheet() throws GeneralSecurityException, IOException {
         List<Object> rowData = new ArrayList<>();
         rowData.add("test");
         googleSheetUtil.appendToSheet("1676Rgmx9eOPNTvrKJSNmnoPpnYF5dXYByvB9ZME7QFs","이벤트",rowData);
+    }
+
+    @Test
+    void name() throws GeneralSecurityException, IOException {
+
+        googleSheetUtil.updateColumnsByReceiptId("1xgwEkqVXh3iQBlnHN-yZIAYk5xr68pCQzCVETaRGwTw","기타문의사항 접수내역","1750070749532","배정","테스트","01077554433");
     }
 }

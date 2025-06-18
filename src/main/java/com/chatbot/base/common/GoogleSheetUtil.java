@@ -24,9 +24,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.GeneralSecurityException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -53,13 +51,6 @@ public class GoogleSheetUtil {
                 .build();
     }
 
-    // 이벤트를 추가하는 메서드
-    public void insertEvent(String calendarId, Event event) throws IOException {
-        Calendar service = getCalendarService();
-        event = service.events().insert(calendarId, event).execute();
-        System.out.println("이벤트가 등록되었습니다: " + event.getHtmlLink());
-    }
-
     private Sheets getSheetsService() throws IOException, GeneralSecurityException {
         if (sheetsService == null) {
             GoogleCredentials credentials = GoogleCredentials.fromStream(new ClassPathResource(CREDENTIALS_FILE_PATH).getInputStream())
@@ -71,6 +62,14 @@ public class GoogleSheetUtil {
         }
         return sheetsService;
     }
+
+    // 이벤트를 추가하는 메서드
+    public void insertEvent(String calendarId, Event event) throws IOException {
+        Calendar service = getCalendarService();
+        event = service.events().insert(calendarId, event).execute();
+        System.out.println("이벤트가 등록되었습니다: " + event.getHtmlLink());
+    }
+
     // 구글 시트의 모든 데이터를 읽어오기
     public List<List<Object>> readAllSheet(String spreadSheetId, String sheetName) throws GeneralSecurityException, IOException {
         // Sheets API 클라이언트 빌드
@@ -87,17 +86,42 @@ public class GoogleSheetUtil {
             return Collections.emptyList(); // 빈 리스트 반환
         } else {
             // 데이터 출력 (원하면 유지)
-            values.forEach(row -> row.forEach(cell -> log.info("{}", cell)));
             return values;
         }
+    }
+
+    public List<List<Object>> readMemberByAlarmTalkOnSheet(String spreadSheetId) throws GeneralSecurityException, IOException {
+        List<List<Object>> engineers = readAllSheet(spreadSheetId, "엔지니어");
+        List<List<Object>> on = engineers.stream()
+                .filter(row -> row.size() > 1 && "ON".equalsIgnoreCase(row.get(2).toString()))
+                .collect(Collectors.toList());
+        return on;
     }
 
     public List<List<Object>> readMemberSheet(String spreadSheetId) throws GeneralSecurityException, IOException {
         List<List<Object>> engineers = readAllSheet(spreadSheetId, "엔지니어");
         List<List<Object>> on = engineers.stream()
-                .filter(row -> row.size() > 1 && "ON".equalsIgnoreCase(row.get(1).toString()))
+                .filter(row -> row.size() > 1 )
                 .collect(Collectors.toList());
         return on;
+    }
+
+    public List<Object> readMemberSheetByPhone(String spreadSheetId, String phone) throws GeneralSecurityException, IOException {
+        List<List<Object>> lists = readMemberSheet(spreadSheetId);
+
+        // 최신 데이터부터 조회
+        Collections.reverse(lists);
+
+        for (List<Object> row : lists) {
+            if (row.size() > 2) { // 최소한 전화번호 열까지 있어야 함
+                String rowPhone = row.get(1).toString(); // 예: 전화번호가 C열(3번째)일 경우
+                if (phone.equals(rowPhone)) {
+                    return row;
+                }
+            }
+        }
+
+        throw new NoSuchElementException("전화번호가 '" + phone + "'인 데이터를 찾을 수 없습니다.");
     }
 
     public void appendToSheet(String spreadSheetId, String sheetName, List<Object> newRowData) throws GeneralSecurityException, IOException {
@@ -150,6 +174,63 @@ public class GoogleSheetUtil {
 //        int endCol = startCol + 1;        // 체크박스 범위
 //
 //        addCheckboxToSheet(service, spreadSheetId, sheetName, lastRow+1, lastRow + 2, startCol, endCol); // C열에 체크박스 추가
+    }
+
+    public void updateColumnsByReceiptId(String spreadSheetId, String sheetName, String receiptId,
+                                         Object newC, Object newI, Object newJ) throws GeneralSecurityException, IOException {
+        Sheets service = getSheetsService();
+
+        // 최소한 A ~ J열 범위 조회
+        String range = sheetName + "!A:J";
+        ValueRange response = service.spreadsheets().values().get(spreadSheetId, range).execute();
+        List<List<Object>> originalValues = response.getValues();
+
+        if (originalValues == null || originalValues.isEmpty()) {
+            throw new NoSuchElementException("시트에 데이터가 없습니다.");
+        }
+
+        // 복사본을 만들어 최신 데이터부터 조회
+        List<List<Object>> reversedValues = new ArrayList<>(originalValues);
+        Collections.reverse(reversedValues);
+
+        int reversedIndex = -1;
+        for (int i = 0; i < reversedValues.size(); i++) {
+            List<Object> row = reversedValues.get(i);
+            // B열: receiptId, C열: 상태
+            if (row.size() > 2 && receiptId.equals(row.get(1).toString()) && "접수".equals(row.get(2).toString())) {
+                reversedIndex = i;
+                break;
+            }
+        }
+
+        if (reversedIndex == -1) {
+            throw new NoSuchElementException("receiptId = " + receiptId + "인 데이터를 찾을 수 없습니다.");
+        }
+
+        // 실제 시트 기준 행 번호 계산 (1-based index)
+        int rowNumber = originalValues.size() - reversedIndex;
+
+        // 각 열의 셀 범위 정의
+        String rangeC = String.format("%s!C%d", sheetName, rowNumber);
+        String rangeI = String.format("%s!I%d", sheetName, rowNumber);
+        String rangeJ = String.format("%s!J%d", sheetName, rowNumber);
+
+        // 각 셀에 대한 요청 생성
+        List<ValueRange> data = List.of(
+                new ValueRange().setRange(rangeC).setValues(List.of(List.of(newC))),
+                new ValueRange().setRange(rangeI).setValues(List.of(List.of(newI))),
+                new ValueRange().setRange(rangeJ).setValues(List.of(List.of(newJ)))
+        );
+
+        BatchUpdateValuesRequest body = new BatchUpdateValuesRequest()
+                .setValueInputOption("USER_ENTERED")
+                .setData(data);
+
+        BatchUpdateValuesResponse result = service.spreadsheets().values()
+                .batchUpdate(spreadSheetId, body)
+                .execute();
+
+        log.info("C, I, J열 수정 완료 (row {}): 업데이트된 셀 수 = {}", rowNumber, result.getTotalUpdatedCells());
     }
 
     public void appendToSheetByAll(String spreadSheetId, String sheetName, List<List<Object>> newRows) throws GeneralSecurityException, IOException {

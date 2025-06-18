@@ -10,6 +10,26 @@
         <link rel="stylesheet" th:href="@{/css/styles.css}">
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <style>
+            #loadingOverlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(255, 255, 255, 0.5);
+                z-index: 9999;
+            }
+
+            #loadingOverlay img {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+
+        </style>
     </head>
     <body class="bg-primary">
         <div id="layoutAuthentication">
@@ -27,20 +47,22 @@
                                                 <h2 th:text="${category}"></h2>
                                             </div>
 
+                                            <span id="managerName" th:text="${managerName}" hidden="hidden"></span>
                                             <span id="managerPhone" th:text="${managerPhone}" hidden="hidden"></span>
+                                            <span id="sheetName" th:text="${sheetName}" hidden="hidden"></span>
                                             <!-- 기본 정보 -->
                                             <div class="mb-2" th:if="${receiptId}">접수번호: <span id="receiptId" th:text="${receiptId}"></span></div>
-                                            <div class="mb-2" th:if="${customerName}">고객명: <span th:text="${customerName}"></span></div>
-                                            <div class="mb-2" th:if="${customerPhone}">연락처: <span th:text="${customerPhone}"></span></div>
-                                            <div class="mb-2" th:if="${address}">주소: <span th:text="${address}"></span></div>
-                                            <div class="mb-2" th:if="${receiptDate}">접수일자: <span th:text="${receiptDate}"></span></div>
+                                            <div class="mb-2" th:if="${customerName}">고객명: <span id="customerName" th:text="${customerName}"></span></div>
+                                            <div class="mb-2" th:if="${customerPhone}">연락처: <span id="customerPhone" th:text="${customerPhone}"></span></div>
+                                            <div class="mb-2" th:if="${address}">주소: <span id="address" th:text="${address}"></span></div>
+                                            <div class="mb-4" th:if="${receiptDate}">접수일자: <span is="receiptDate" th:text="${receiptDate}"></span></div>
 
                                             <!-- 구분선 (문의사항 또는 증상 존재 시) -->
 <!--                                            <div th:if="${inquiries != null or symptom != null}" style="width: 100%; height: 2px; background-color: black; margin: 20px 0;"></div>-->
 
                                             <!-- 문의사항/증상 -->
-                                            <div class="mb-2" th:if="${inquiries}">문의사항: <span th:text="${inquiries}"></span></div>
-                                            <div class="mb-4" th:if="${symptom}">증상: <span th:text="${symptom}"></span></div>
+                                            <div class="mb-2" th:if="${inquiries}">문의사항: <span id="inquiries" th:text="${inquiries}"></span></div>
+                                            <div class="mb-4" th:if="${symptom}">증상: <span id="symptom" th:text="${symptom}"></span></div>
 
                                             <!-- 상태 메시지 -->
                                             <div class="mb-4" th:if="${status != '접수'}" style="color: red; font-weight: bold;">
@@ -58,6 +80,9 @@
                         </div>
                     </div>
                 </main>
+                <div id="loadingOverlay">
+                    <img src="/loading.gif" alt="로딩 중...">
+                </div>
             </div>
             <div id="layoutAuthentication_footer">
                 <th:block th:replace="fragments/footer :: footer"></th:block>

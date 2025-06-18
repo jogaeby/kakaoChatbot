@@ -112,7 +112,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public void sendReceiptAlarmTalk(String receiptId, String address, String comment, KakaoProfileDto kakaoProfile) {
         try {
-            List<List<Object>> lists = googleSheetUtil.readMemberSheet(SHEET_ID);
+            List<List<Object>> lists = googleSheetUtil.readMemberByAlarmTalkOnSheet(SHEET_ID);
             lists.forEach(objects -> {
                 String phone = String.valueOf(objects.get(4));
                 String name = kakaoProfile.getKakaoAccount().getName();
