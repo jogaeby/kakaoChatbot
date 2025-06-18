@@ -125,7 +125,8 @@ public class EventServiceImpl implements EventService {
                 try {
                     String encryptPhone = EncryptionUtil.encrypt(EncryptionUtil.getKey(), managerPhone);
                     String encryptReceiptId = EncryptionUtil.encrypt(EncryptionUtil.getKey(), receiptId);
-                    String url = HOST_URL + "/receipt/"+encryptPhone+"/"+encryptReceiptId;
+                    String url = HOST_URL + "/receipt/"+encryptPhone+"/"+encryptReceiptId
+                            .replaceAll("http://","");
                     alarmTalkService.sendASReceipt(managerPhone,receiptId,name,phoneNumber,address,comment,url);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
