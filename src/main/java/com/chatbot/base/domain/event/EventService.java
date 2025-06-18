@@ -11,4 +11,6 @@ public interface EventService {
 
     String inquiriesReceipt(String comment, String appUserId) throws GeneralSecurityException, IOException;
     void sendReceiptAlarmTalk(String receiptId, String address, String comment, KakaoProfileDto kakaoProfile);
+
+    void sendReceiptCompleteAlarmTalk(String receiptId, String completerName);
 }

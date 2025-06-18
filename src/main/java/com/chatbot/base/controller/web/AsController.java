@@ -5,6 +5,7 @@ import com.chatbot.base.common.AlarmTalkService;
 import com.chatbot.base.common.GoogleSheetUtil;
 import com.chatbot.base.common.HttpService;
 import com.chatbot.base.common.util.EncryptionUtil;
+import com.chatbot.base.domain.event.EventService;
 import com.chatbot.base.domain.member.constant.MemberRole;
 import com.chatbot.base.domain.member.dto.MemberDTO;
 import com.chatbot.base.domain.member.service.MemberService;
@@ -37,6 +38,8 @@ public class AsController {
     private final GoogleSheetUtil googleSheetUtil;
 
     private final AlarmTalkService alarmTalkService;
+
+    private final EventService eventService;
 
     @PassAuth
     @GetMapping("{managerPhone}/{id}")
@@ -177,7 +180,7 @@ public class AsController {
 
             googleSheetUtil.updateColumnsByReceiptId(SHEET_ID,sheetName,receiptId,"배정완료",managerName,"'"+managerPhone);
 
-//            alarmTalkService.sendASAssignment(managerPhone, receiptId,customerName,customerPhone,address,symptom,managerName,managerPhone,url);
+            alarmTalkService.sendASAssignment(managerPhone, receiptId,customerName,customerPhone,address,symptom,managerName,managerPhone,url);
 
             return ResponseEntity.ok()
                     .build();
@@ -322,11 +325,15 @@ public class AsController {
             String address = data.get("address");
             String symptom = data.get("symptom");
 
+            if (receiptId.isEmpty() || managerName.isEmpty()) {
+                throw new RuntimeException("잘못된 접근입니다. receiptId = "+receiptId + " managerName = " + managerName);
+            }
+
             String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
 
             googleSheetUtil.updateColumnsCAndLByReceiptId(SHEET_ID,sheetName,receiptId,"AS완료", now);
 
-//            alarmTalkService.sendASAssignment(managerPhone, receiptId,customerName,customerPhone,address,symptom,managerName,managerPhone,url);
+            eventService.sendReceiptCompleteAlarmTalk(receiptId,managerName);
 
             return ResponseEntity.ok()
                     .build();

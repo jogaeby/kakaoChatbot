@@ -118,14 +118,36 @@ public class EventServiceImpl implements EventService {
         try {
             List<List<Object>> lists = googleSheetUtil.readMemberByAlarmTalkOnSheet(SHEET_ID);
             lists.forEach(objects -> {
-                String phone = String.valueOf(objects.get(4));
+                String managerPhone = String.valueOf(objects.get(1));
+
                 String name = kakaoProfile.getKakaoAccount().getName();
                 String phoneNumber = kakaoProfile.getPhoneNumber();
                 try {
-                    String encryptPhone = EncryptionUtil.encrypt(EncryptionUtil.getKey(), phone);
+                    String encryptPhone = EncryptionUtil.encrypt(EncryptionUtil.getKey(), managerPhone);
                     String encryptReceiptId = EncryptionUtil.encrypt(EncryptionUtil.getKey(), receiptId);
                     String url = HOST_URL + "/receipt/"+encryptPhone+"/"+encryptReceiptId;
-                    alarmTalkService.sendASReceipt(phone,receiptId,name,phoneNumber,address,comment,url);
+                    alarmTalkService.sendASReceipt(managerPhone,receiptId,name,phoneNumber,address,comment,url);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+
+            });
+
+
+        }catch (Exception e) {
+            log.error("{}",e.getMessage(),e);
+        }
+    }
+    @Async
+    @Override
+    public void sendReceiptCompleteAlarmTalk(String receiptId, String completerName) {
+        try {
+            List<List<Object>> lists = googleSheetUtil.readMemberByAlarmTalkOnSheet(SHEET_ID);
+
+            lists.forEach(objects -> {
+                String managerPhone = String.valueOf(objects.get(1));
+                try {
+                    alarmTalkService.sendASComplete(managerPhone,receiptId,completerName);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }

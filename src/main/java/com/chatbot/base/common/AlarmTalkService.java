@@ -101,7 +101,7 @@ public class AlarmTalkService {
         }
     }
 
-    public MultipleDetailMessageSentResponse sendASComplete(String targetPhone, String receiptId, String engineerName, String url) {
+    public MultipleDetailMessageSentResponse sendASComplete(String targetPhone, String receiptId, String engineerName) {
         DefaultMessageService messageService =  NurigoApp.INSTANCE.initialize(API_KEY, API_SECRET_KEY, "https://api.solapi.com");
 
         KakaoOption kakaoOption = new KakaoOption();
