@@ -31,6 +31,7 @@ public class EventServiceImpl implements EventService {
     private final KakaoApiService kakaoApiService;
     private final GoogleSheetUtil googleSheetUtil;
     private final AlarmTalkService alarmTalkService;
+
     @Value("${host.url}")
     private String HOST_URL;
 

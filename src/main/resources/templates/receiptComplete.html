@@ -65,8 +65,8 @@
                                             <div class="mb-4" th:if="${symptom}">증상: <span id="symptom" th:text="${symptom}"></span></div>
 
                                             <!-- 상태 메시지 -->
-                                            <div class="mb-4" th:if="${status == '배정완료'}" style="color: red; font-weight: bold;">
-                                                이미 배정이 완료된 접수내역입니다.
+                                            <div class="mb-4" th:if="${status == '배정완료'}" style="color: grey; font-weight: bold;">
+                                                조치가 완료되었다면 아래 조치완료 버튼을 눌러주세요.
                                             </div>
                                             <div class="mb-4" th:if="${status == 'AS완료'}" style="color: red; font-weight: bold;">
                                                 이미 AS가 완료된 접수내역입니다.
@@ -75,7 +75,8 @@
 
                                         <!-- 배정 버튼 -->
                                         <div class="d-flex justify-content-center gap-2 mt-4 mb-0">
-                                            <button class="btn btn-primary" id="quotation" type="button" th:if="${status == '접수'}" onclick="executeAssign()">배정</button>
+                                            <button class="btn btn-primary" type="button" th:if="${status == '배정완료'}" onclick="executeComplete()">조치완료</button>
+                                            <button class="btn btn-primary" type="button" th:if="${status == '접수'}" onclick="executeAssign()">배정</button>
                                         </div>
                                     </div>
                                 </div>
