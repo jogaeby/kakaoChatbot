@@ -146,7 +146,7 @@ public class KakaoAsController {
 
             String receiptId = eventService.asReceipt(address, comment,kakaoProfile);
 
-            eventService.sendReceiptAlarmTalk(receiptId,address,comment,kakaoProfile);
+//            eventService.sendReceiptAlarmTalk(receiptId,address,comment,kakaoProfile);
 
 
             ChatBotResponse chatBotResponse = new ChatBotResponse();
