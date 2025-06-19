@@ -175,8 +175,8 @@ public class AsController {
 
             String encryptPhone = EncryptionUtil.encrypt(EncryptionUtil.getKey(), managerPhone);
             String encryptReceiptId = EncryptionUtil.encrypt(EncryptionUtil.getKey(), receiptId);
-
-            String url = HOST_URL + "/receipt/complete/"+encryptPhone+"/"+encryptReceiptId;
+            String cleanedHostUrl = HOST_URL.replaceFirst("https?://", "");
+            String url = cleanedHostUrl + "/receipt/complete/"+encryptPhone+"/"+encryptReceiptId;
 
             googleSheetUtil.updateColumnsByReceiptId(SHEET_ID,sheetName,receiptId,"배정완료",managerName,"'"+managerPhone);
 
