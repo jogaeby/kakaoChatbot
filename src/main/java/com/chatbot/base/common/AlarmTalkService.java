@@ -1,5 +1,6 @@
 package com.chatbot.base.common;
 
+import com.chatbot.base.common.util.StringFormatterUtil;
 import com.chatbot.base.domain.reservation.Reservation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +50,7 @@ public class AlarmTalkService {
 
         Message message = new Message();
         message.setFrom(CALLER_1_ID);
-        message.setTo(targetPhone);
+        message.setTo(StringFormatterUtil.cleanPhoneNumber(targetPhone));
         message.setKakaoOptions(kakaoOption);
 
         try {
@@ -86,7 +87,7 @@ public class AlarmTalkService {
 
         Message message = new Message();
         message.setFrom(CALLER_1_ID);
-        message.setTo(targetPhone);
+        message.setTo(StringFormatterUtil.cleanPhoneNumber(targetPhone));
         message.setKakaoOptions(kakaoOption);
 
         try {
@@ -117,7 +118,7 @@ public class AlarmTalkService {
 
         Message message = new Message();
         message.setFrom(CALLER_1_ID);
-        message.setTo(targetPhone);
+        message.setTo(StringFormatterUtil.cleanPhoneNumber(targetPhone));
         message.setKakaoOptions(kakaoOption);
 
         try {

@@ -46,7 +46,24 @@ public class StringFormatterUtil {
 
         return result;
     }
+    public static String cleanPhoneNumber(String input) {
+        if (input == null) {
+            throw new IllegalArgumentException("전화번호가 null입니다.");
+        }
 
+        // 1. 국제전화 형식 제거: +82 -> 0
+        input = input.replaceAll("^\\+82", "0");
+
+        // 2. 괄호, 하이픈, 공백, 점 등 모든 구분 기호 제거
+        input = input.replaceAll("[^0-9]", "");
+
+        // 3. 010으로 시작하고 11자리일 경우만 유효
+        if (!input.matches("^010\\d{8}$")) {
+            throw new IllegalArgumentException("올바르지 않은 전화번호 형식입니다: " + input);
+        }
+
+        return input;
+    }
 
     public static String formatCurrency(String amount) {
         if (amount == null || amount.equals("0")) {
