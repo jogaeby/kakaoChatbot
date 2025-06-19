@@ -1,7 +1,7 @@
 host:
-  url: http://223.130.157.107:8080
+  url: http://223.130.157.107:28080
   ip: http://223.130.157.107
-  port: 8080
+  port: 28080
 spring:
   servlet:
     multipart:
