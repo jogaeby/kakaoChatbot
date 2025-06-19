@@ -166,7 +166,7 @@ public class KakaoAsController {
             return kakaoChatBotView.authView();
         }catch (Exception e) {
             log.error("receiptAs: {}", e.getMessage(), e);
-            return chatBotExceptionResponse.createException("제출을 실패하였습니다.");
+            return chatBotExceptionResponse.createException("접수를 실패하였습니다.");
         }
     }
 
