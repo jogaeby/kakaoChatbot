@@ -95,10 +95,10 @@ public class EventServiceImpl implements EventService {
 
         List<Object> newRowData = new ArrayList<>(Arrays.asList(
                 id,
+                "접수",
                 userName,
                 "'"+phoneNumber,
                 comment,
-                "접수",
                 now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
         ));
 
