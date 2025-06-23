@@ -2,8 +2,6 @@ package com.chatbot.base.interceptor;
 
 
 import com.chatbot.base.annotation.PassAuth;
-import com.chatbot.base.common.JwtService;
-import com.chatbot.base.domain.member.dto.MemberDTO;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -19,7 +17,6 @@ import java.lang.annotation.Annotation;
 @Component
 @RequiredArgsConstructor
 public class Interceptor implements HandlerInterceptor {
-    private final JwtService jwtService;
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         log.info("interceptor client IP = {} {} {}",request.getRemoteAddr(), request.getMethod(),request.getRequestURL());
@@ -39,14 +36,6 @@ public class Interceptor implements HandlerInterceptor {
                 }
             }
         }
-
-        if (accessToken == null || accessToken.isEmpty() || !(jwtService.isValidateToken(accessToken))) {
-            throw new Exception("잘못된 토큰입니다.");
-        }
-
-        MemberDTO memberDTO = jwtService.getMemberDTOFromToken(accessToken);
-
-        request.setAttribute("memberInfo",memberDTO);
 
         return true;
     }

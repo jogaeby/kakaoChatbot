@@ -3,17 +3,11 @@ package com.chatbot.base.controller.web;
 import com.chatbot.base.annotation.PassAuth;
 import com.chatbot.base.common.AlarmTalkService;
 import com.chatbot.base.common.GoogleSheetUtil;
-import com.chatbot.base.common.HttpService;
 import com.chatbot.base.common.util.EncryptionUtil;
 import com.chatbot.base.domain.event.EventService;
-import com.chatbot.base.domain.member.constant.MemberRole;
-import com.chatbot.base.domain.member.dto.MemberDTO;
-import com.chatbot.base.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor

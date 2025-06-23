@@ -1,8 +1,6 @@
 package com.chatbot.base.controller.web;
 
 import com.chatbot.base.annotation.PassAuth;
-import com.chatbot.base.common.JwtService;
-import com.chatbot.base.common.LoginService;
 import com.chatbot.base.dto.LoginRequest;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,7 +15,6 @@ import org.springframework.web.servlet.view.RedirectView;
 @Controller
 @RequestMapping("login")
 public class LoginController {
-    private final LoginService loginService;
 
     @PassAuth
     @GetMapping("")
@@ -31,12 +28,12 @@ public class LoginController {
     public RedirectView login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
         RedirectView redirectView = new RedirectView();
         try {
-            String token = loginService.createToken(loginRequest);
+//            String token = loginService.createToken(loginRequest);
             //만료시간 1시간
             int maxAgeInSeconds = 1 * 60 * 60;
 
             // JWT 토큰을 쿠키에 저장하여 클라이언트에게 전달합니다.
-            Cookie cookie = new Cookie("session-id", token);
+            Cookie cookie = new Cookie("session-id", "token");
             cookie.setPath("/"); // 모든 경로에서 접근 가능하도록 설정
             cookie.setHttpOnly(false); // JavaScript로 접근하지 못하도록 설정 (보안을 위해)
             cookie.setMaxAge(maxAgeInSeconds);

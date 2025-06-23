@@ -1,6 +1,5 @@
 package com.chatbot.base.dto.kakao.request;
 
-import com.chatbot.base.domain.reservation.dto.ReservationDto;
 import com.chatbot.base.dto.kakao.sync.KakaoProfileRequestDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -118,7 +117,6 @@ public class ChatBotRequest {
             private String pageNumber;
             private String firstNumber;
             private String lastNumber;
-            private ReservationDto reservation;
         }
 
         @Getter
@@ -252,11 +250,6 @@ public class ChatBotRequest {
     public String getCommentParam(){
         if (Objects.isNull(action.getClientExtra().getComment())) return null;
         return action.getClientExtra().getComment();
-    }
-
-    public ReservationDto getReservation(){
-        if (Objects.isNull(action.getClientExtra().getReservation())) return null;
-        return action.getClientExtra().getReservation();
     }
 
     public String getProductId(){

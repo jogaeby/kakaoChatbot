@@ -1,7 +1,6 @@
 package com.chatbot.base.common;
 
 import com.chatbot.base.common.util.StringFormatterUtil;
-import com.chatbot.base.domain.reservation.Reservation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.nurigo.sdk.NurigoApp;
@@ -12,7 +11,6 @@ import net.nurigo.sdk.message.response.MultipleDetailMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 import org.springframework.stereotype.Service;
 
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 
 @Slf4j
