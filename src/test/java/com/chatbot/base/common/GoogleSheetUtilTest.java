@@ -34,7 +34,13 @@ class GoogleSheetUtilTest {
 
     @Test
     void readAllSheet() throws GeneralSecurityException, IOException {
-        googleSheetUtil.readAllSheet("1xgwEkqVXh3iQBlnHN-yZIAYk5xr68pCQzCVETaRGwTw","기타문의사항 접수내역");
+        List<List<Object>> lists = googleSheetUtil.readAllSheet("1XU_k61ZxQZ7PPaaOcjiEeGJAqAniL91piZvFsGP63Uc", "시트1");
+        lists.forEach(objects -> {
+            Object o = objects.get(0);
+            Object o1 = objects.get(1);
+
+            System.out.println("o = " + o + " "+o1);
+        });
     }
 
     @Test
@@ -48,5 +54,13 @@ class GoogleSheetUtilTest {
     void name() throws GeneralSecurityException, IOException {
 
         googleSheetUtil.updateColumnsByReceiptId("1xgwEkqVXh3iQBlnHN-yZIAYk5xr68pCQzCVETaRGwTw","기타문의사항 접수내역","1750070749532","배정","테스트","01077554433");
+    }
+
+    @Test
+    void readMemberByAlarmTalkOnSheet() throws GeneralSecurityException, IOException {
+        List<List<Object>> lists = googleSheetUtil.readMemberByAlarmTalkOnSheet("1XU_k61ZxQZ7PPaaOcjiEeGJAqAniL91piZvFsGP63Uc");
+        lists.forEach(objects -> {
+            System.out.println("objects = " + objects.get(3));
+        });
     }
 }

@@ -18,12 +18,16 @@ public class StringFormatterUtil {
 
 
     public static String formatPhoneNumber(String phoneNumber) {
-        // +82를 0으로 바꾸고 나머지 부분에서 공백과 대시를 제거
-        if (phoneNumber.startsWith("+82")) {
-            phoneNumber = phoneNumber.replace("+82", "0");
+        if (phoneNumber == null || phoneNumber.isEmpty()) {
+            return "";
         }
-        // 공백과 대시 제거
+
+        // +82 또는 +82- 또는 +82  를 0으로 변환
+        phoneNumber = phoneNumber.replaceFirst("^\\+82[-\\s]?", "0");
+
+        // 모든 공백, 하이픈 제거
         phoneNumber = phoneNumber.replaceAll("[\\s-]", "");
+
         return phoneNumber;
     }
 

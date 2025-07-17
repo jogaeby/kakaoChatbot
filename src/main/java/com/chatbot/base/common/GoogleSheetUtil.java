@@ -93,11 +93,11 @@ public class GoogleSheetUtil {
     }
 
     public List<List<Object>> readMemberByAlarmTalkOnSheet(String spreadSheetId) throws GeneralSecurityException, IOException {
-        List<List<Object>> engineers = readAllSheet(spreadSheetId, "엔지니어");
-        List<List<Object>> on = engineers.stream()
-                .filter(row -> row.size() > 1 && "ON".equalsIgnoreCase(row.get(2).toString()))
-                .collect(Collectors.toList());
-        return on;
+        List<List<Object>> engineers = readAllSheet(spreadSheetId, "지점 목록");
+//        List<List<Object>> on = engineers.stream()
+//                .filter(row -> row.size() > 1 && "ON".equalsIgnoreCase(row.get(2).toString()))
+//                .collect(Collectors.toList());
+        return engineers;
     }
 
     public List<List<Object>> readMemberSheet(String spreadSheetId) throws GeneralSecurityException, IOException {
