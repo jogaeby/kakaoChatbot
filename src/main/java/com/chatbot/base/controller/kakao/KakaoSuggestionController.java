@@ -31,7 +31,7 @@ import java.util.Optional;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping(value = "/kakao/chatbot/as")
+@RequestMapping(value = "/kakao/chatbot/suggestion")
 public class KakaoSuggestionController {
     private final GoogleSheetUtil googleSheetUtil;
 
@@ -43,7 +43,7 @@ public class KakaoSuggestionController {
     @Value("${google.sheet.id}")
     private String SHEET_ID;
 
-    @PostMapping(value = "validation")
+    @PostMapping(value = "input/validation")
     public ChatBotResponse validation(@RequestBody ChatBotRequest chatBotRequest) {
         try {
             ChatBotResponse chatBotResponse = new ChatBotResponse();
