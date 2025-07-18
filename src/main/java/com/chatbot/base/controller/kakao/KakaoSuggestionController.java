@@ -93,12 +93,12 @@ public class KakaoSuggestionController {
             itemCard.setDescription(comment);
 
             chatBotResponse.addTextCard(textCard);
-            chatBotResponse.addCarousel(carousel);
+//            chatBotResponse.addCarousel(carousel);
             chatBotResponse.addItemCard(itemCard);
 
             return chatBotResponse;
         }catch (Exception e) {
-            log.error("receiptReservation: {}", e.getMessage(), e);
+            log.error("ERROR: {}", e.getMessage(), e);
             return chatBotExceptionResponse.createException();
         }
     }
