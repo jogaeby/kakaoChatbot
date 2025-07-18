@@ -76,6 +76,7 @@ public class KakaoSuggestionController {
             textCard.setDescription("해당 내용으로 건의사항 접수를 진행하시겠습니까?(궁금)\n" +
                     "\n" +
                     "※ 아래에 있는 버튼을 눌러 계속 진행하세요.");
+
             Carousel carousel = new Carousel();
 
             images.forEach(image -> {
@@ -94,7 +95,7 @@ public class KakaoSuggestionController {
 
             chatBotResponse.addTextCard(textCard);
 //            chatBotResponse.addCarousel(carousel);
-            chatBotResponse.addItemCard(itemCard);
+//            chatBotResponse.addItemCard(itemCard);
 
             return chatBotResponse;
         }catch (Exception e) {
