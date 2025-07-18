@@ -83,7 +83,7 @@ public class KakaoSuggestionController {
             images.forEach(image -> {
                 BasicCard basicCard = new BasicCard();
                 log.info("{}",image);
-                basicCard.setThumbnail(image);
+                basicCard.setThumbnail(image,true);
                 carousel.addComponent(basicCard);
             });
 
