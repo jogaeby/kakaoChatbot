@@ -70,6 +70,7 @@ public class KakaoSuggestionController {
                 chatBotResponse.addSimpleText("제휴되지 않은 상태입니다.");
                 return chatBotResponse;
             }
+
             List<Object> branch = matchedRow.get();
 
             TextCard textCard = new TextCard();
