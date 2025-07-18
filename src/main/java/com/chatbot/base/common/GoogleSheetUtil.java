@@ -93,7 +93,7 @@ public class GoogleSheetUtil {
     }
 
     public List<List<Object>> readMemberByAlarmTalkOnSheet(String spreadSheetId) throws GeneralSecurityException, IOException {
-        List<List<Object>> engineers = readAllSheet(spreadSheetId, "지점 목록");
+        List<List<Object>> engineers = readAllSheet(spreadSheetId, "제휴지점 목록");
 //        List<List<Object>> on = engineers.stream()
 //                .filter(row -> row.size() > 1 && "ON".equalsIgnoreCase(row.get(2).toString()))
 //                .collect(Collectors.toList());

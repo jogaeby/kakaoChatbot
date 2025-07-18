@@ -98,7 +98,8 @@ public class KakaoSuggestionController {
             chatBotResponse.addTextCard(textCard);
             chatBotResponse.addCarousel(carousel);
             chatBotResponse.addItemCard(itemCard);
-
+            chatBotResponse.addQuickButton("다시입력",ButtonAction.블럭이동,"687867e59619bd57f0997a62");
+            chatBotResponse.addQuickButton("접수하기",ButtonAction.블럭이동,"687867e59619bd57f0997a62");
             return chatBotResponse;
         }catch (Exception e) {
             log.error("ERROR: {}", e.getMessage(), e);
