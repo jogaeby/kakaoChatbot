@@ -95,7 +95,8 @@ public class KakaoSuggestionController {
             itemCard.setDescription(comment);
 
             chatBotResponse.addTextCard(textCard);
-//            chatBotResponse.addCarousel(carousel);
+            chatBotResponse.addCarousel(carousel);
+
 //            chatBotResponse.addItemCard(itemCard);
 
             return chatBotResponse;
