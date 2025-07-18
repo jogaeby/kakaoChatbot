@@ -118,7 +118,7 @@ public class ChatBotRequest {
             private String pageNumber;
             private String firstNumber;
             private String lastNumber;
-            private SuggestionInfoDto suggestionInfoDto;
+            private SuggestionInfoDto suggestionInfo;
         }
 
         @Getter
@@ -245,8 +245,8 @@ public class ChatBotRequest {
     }
 
     public SuggestionInfoDto getSuggestionInfo(){
-        if (Objects.isNull(action.getClientExtra().getSuggestionInfoDto())) return null;
-        return action.getClientExtra().getSuggestionInfoDto();
+        if (Objects.isNull(action.getClientExtra().getSuggestionInfo())) return null;
+        return action.getClientExtra().getSuggestionInfo();
     }
 
     public String getAddressParam(){
