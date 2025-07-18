@@ -1,5 +1,7 @@
 package com.chatbot.base.common;
 
+import com.chatbot.base.common.util.StringFormatterUtil;
+import com.chatbot.base.dto.BranchDto;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
@@ -98,6 +100,31 @@ public class GoogleSheetUtil {
 //                .filter(row -> row.size() > 1 && "ON".equalsIgnoreCase(row.get(2).toString()))
 //                .collect(Collectors.toList());
         return engineers;
+    }
+
+    public Optional<BranchDto> getBranchByPhone(String phone, String spreadSheetId) throws GeneralSecurityException, IOException {
+        List<List<Object>> members = readMemberByAlarmTalkOnSheet(spreadSheetId);
+
+        return members.stream()
+                .filter(row -> row.size() >= 7 && row.get(4) != null)
+                .filter(row -> {
+                    String sheetPhone = row.get(4).toString();
+                    return StringFormatterUtil.formatPhoneNumber(sheetPhone)
+                            .equals(StringFormatterUtil.formatPhoneNumber(phone));
+                })
+                .map(row -> BranchDto.builder()
+                        .brandName(safeGet(row, 1))
+                        .branchName(safeGet(row, 2))
+                        .name(safeGet(row, 3))
+                        .phone(safeGet(row, 4))
+                        .managerName(safeGet(row, 5))
+                        .managerPhone(safeGet(row, 6))
+                        .build())
+                .findFirst();
+    }
+
+    private String safeGet(List<Object> row, int index) {
+        return (row.size() > index && row.get(index) != null) ? row.get(index).toString() : "";
     }
 
     public List<List<Object>> readMemberSheet(String spreadSheetId) throws GeneralSecurityException, IOException {
