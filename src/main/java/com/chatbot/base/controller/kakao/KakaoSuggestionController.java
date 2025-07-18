@@ -51,6 +51,8 @@ public class KakaoSuggestionController {
             String comment = chatBotRequest.getComment();
             List<String> images = chatBotRequest.getImages();
 
+            log.info("{} {} {}", phone,comment,images);
+
             List<List<Object>> members = googleSheetUtil.readMemberByAlarmTalkOnSheet(SHEET_ID);
             // 시트에서 전화번호가 존재하는지 확인
             Optional<List<Object>> matchedRow = members.stream()
