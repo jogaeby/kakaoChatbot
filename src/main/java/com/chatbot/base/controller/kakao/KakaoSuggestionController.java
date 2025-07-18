@@ -80,11 +80,12 @@ public class KakaoSuggestionController {
 
             Carousel carousel = new Carousel();
 
-//            images.forEach(image -> {
-//                BasicCard basicCard = new BasicCard();
-//                basicCard.setThumbnail(image);
-//                carousel.addComponent(branch);
-//            });
+            images.forEach(image -> {
+                BasicCard basicCard = new BasicCard();
+                log.info("{}",image);
+                basicCard.setThumbnail(image);
+                carousel.addComponent(basicCard);
+            });
 
             ItemCard itemCard = new ItemCard();
             itemCard.setItemListAlignment("right");
