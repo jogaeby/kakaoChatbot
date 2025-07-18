@@ -1,6 +1,6 @@
 host:
-  url: http://121.162.6.21:8080
-  ip: http://121.162.6.21
+  url: http://52.79.237.119:8080
+  ip: http://52.79.237.119
   port: 8080
 spring:
   servlet:

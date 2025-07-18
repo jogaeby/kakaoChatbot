@@ -1,33 +1,33 @@
 services:
   mysql:
     image: 'mysql:8.0'
-    container_name: mysql-container-didim
+    container_name: mysql-container-yesClean
     environment:
-      - 'MYSQL_DATABASE=didim'
-      - 'MYSQL_USER=didim'
-      - 'MYSQL_PASSWORD=didim2025!'
-      - 'MYSQL_ROOT_PASSWORD=didim2025!'
+      - 'MYSQL_DATABASE=yesClean'
+      - 'MYSQL_USER=yesClean'
+      - 'MYSQL_PASSWORD=yesClean2025!'
+      - 'MYSQL_ROOT_PASSWORD=yesClean2025!'
     ports:
-      - '23306:3306'
+      - '3306:3306'
     volumes:
       - mysql_data:/var/lib/mysql   # 호스트의 볼륨을 컨테이너의 MySQL 데이터 디렉토리에 마운트
   redis:
     image: 'redis:latest'
     ports:
-      - '26379:6379'
+      - '6379:6379'
   spring-app_prod:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: spring_app_prod_didim
+    container_name: spring_app_prod_yesClean
     environment:
-      - 'SPRING_DATASOURCE_URL=jdbc:mysql://mysql-container-didim:3306/didim'
-      - 'SPRING_DATASOURCE_USERNAME=didim'
-      - 'SPRING_DATASOURCE_PASSWORD=didim2025!'
+      - 'SPRING_DATASOURCE_URL=jdbc:mysql://mysql-container-yesClean:3306/yesClean'
+      - 'SPRING_DATASOURCE_USERNAME=yesClean'
+      - 'SPRING_DATASOURCE_PASSWORD=yesClean2025!'
       - 'SPRING_DATA_REDIS_HOST=redis'
       - 'SPRING_DATA_REDIS_PORT=6379'
     ports:
-      - "28080:8080"
+      - "8080:8080"
     depends_on:
       - redis
       - mysql
