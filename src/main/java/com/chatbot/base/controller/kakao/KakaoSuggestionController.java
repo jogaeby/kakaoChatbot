@@ -80,11 +80,11 @@ public class KakaoSuggestionController {
 
             Carousel carousel = new Carousel();
 
-            images.forEach(image -> {
-                BasicCard basicCard = new BasicCard();
-                basicCard.setThumbnail(image);
-                carousel.addComponent(branch);
-            });
+//            images.forEach(image -> {
+//                BasicCard basicCard = new BasicCard();
+//                basicCard.setThumbnail(image);
+//                carousel.addComponent(branch);
+//            });
 
             ItemCard itemCard = new ItemCard();
             itemCard.setItemListAlignment("right");
@@ -95,9 +95,9 @@ public class KakaoSuggestionController {
             itemCard.setDescription(comment);
 
             chatBotResponse.addTextCard(textCard);
-            chatBotResponse.addCarousel(carousel);
+//            chatBotResponse.addCarousel(carousel);
 
-//            chatBotResponse.addItemCard(itemCard);
+            chatBotResponse.addItemCard(itemCard);
 
             return chatBotResponse;
         }catch (Exception e) {
