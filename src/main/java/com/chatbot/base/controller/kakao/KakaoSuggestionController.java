@@ -139,6 +139,7 @@ public class KakaoSuggestionController {
             String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
             List<Object> newRowData = new ArrayList<>();
             newRowData.add(id);
+            newRowData.add("접수");
             newRowData.add(branchDto.getBrandName());
             newRowData.add(branchDto.getBranchName());
             newRowData.add(branchDto.getName());
@@ -150,7 +151,7 @@ public class KakaoSuggestionController {
             newRowData.add("");
             newRowData.add(now);
             newRowData.add("");
-            newRowData.add("접수");
+
 
             LocalDateTime expiredDateTime = LocalDateTime.now().plusDays(1);
 
