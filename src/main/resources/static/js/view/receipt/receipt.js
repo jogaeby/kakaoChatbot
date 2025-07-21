@@ -26,12 +26,12 @@ function executeAssign() {
 
         const id = $("#receiptId").text();
         const type = $("#type").text();
-
+        const sheetName = $("#sheetName").text();
         // FormData 객체 생성
         const formData = new FormData();
         formData.append("id", id);
         formData.append("type", type);
-
+        formData.append("sheetName", sheetName);
         // 이미지 파일들 추가
         for (let i = 0; i < imageFiles.length; i++) {
             formData.append("images", imageFiles[i]); // 서버에서는 images[]로 받을 수도 있음

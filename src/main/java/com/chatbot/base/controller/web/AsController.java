@@ -85,7 +85,8 @@ public class AsController {
             log.info("{} {} {} {} {} {}",recentReceiptId,images,receiptDateTime,status,comment,managerName);
 
             model.addAttribute("title",title);
-            model.addAttribute("type",sheetName);
+            model.addAttribute("type",type);
+            model.addAttribute("sheetName",sheetName);
             model.addAttribute("status", status);
             model.addAttribute("receiptId", receiptId); // 모델에 데이터 추가
             model.addAttribute("brandName", brandName); // 모델에 데이터 추가
@@ -108,6 +109,7 @@ public class AsController {
     @PostMapping("assign")
     public ResponseEntity receiptAssign(@RequestParam("id") String id,
                                         @RequestParam("type") String type,
+                                        @RequestParam("sheetName") String sheetName,
                                         @RequestParam("images") List<MultipartFile> images) {
         try {
             log.info("{} {} {}",id,type,images);
@@ -127,7 +129,7 @@ public class AsController {
                         .append("\n");
             });
 
-            googleSheetUtil.updateColumnsCAndLByReceiptId(SHEET_ID,type,id,"조치완료",imageUrlsStr.toString(),LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+            googleSheetUtil.updateColumnsCAndLByReceiptId(SHEET_ID,sheetName,id,"조치완료",imageUrlsStr.toString(),LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
 
             return ResponseEntity.ok()
                     .build();
