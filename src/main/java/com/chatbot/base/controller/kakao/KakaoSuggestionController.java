@@ -145,8 +145,8 @@ public class KakaoSuggestionController {
             textCard.setDescription("\uD83D\uDCE9 접수 완료!\n" +
                     "접수번호 : "+id+"\n" +
                     "\n" +
-                    "담당자가 확인 후 순차적으로 연락드립니다.\n" +
-                    "빠르게 처리해드릴게요. 감사합니다!(크크)");
+                    "담당자가 확인 후 빠르게 조치하겠습니다.\n" +
+                    "감사합니다!(크크)");
             chatBotResponse.addTextCard(textCard);
 
             return chatBotResponse;
