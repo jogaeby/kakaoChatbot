@@ -4,7 +4,6 @@ import com.chatbot.base.annotation.PassAuth;
 import com.chatbot.base.common.AlarmTalkService;
 import com.chatbot.base.common.GoogleSheetUtil;
 import com.chatbot.base.common.util.EncryptionUtil;
-import com.chatbot.base.domain.event.EventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,8 +30,6 @@ public class AsController {
     private final GoogleSheetUtil googleSheetUtil;
 
     private final AlarmTalkService alarmTalkService;
-
-    private final EventService eventService;
 
     @PassAuth
     @GetMapping("{managerPhone}/{id}")
@@ -172,8 +169,6 @@ public class AsController {
             String url = cleanedHostUrl + "/receipt/complete/"+encryptPhone+"/"+encryptReceiptId;
 
             googleSheetUtil.updateColumnsByReceiptId(SHEET_ID,sheetName,receiptId,"배정완료",managerName,"'"+managerPhone);
-
-            alarmTalkService.sendASAssignment(managerPhone, receiptId,customerName,customerPhone,address,symptom,managerName,managerPhone,url);
 
             return ResponseEntity.ok()
                     .build();
@@ -325,8 +320,6 @@ public class AsController {
             String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
 
             googleSheetUtil.updateColumnsCAndLByReceiptId(SHEET_ID,sheetName,receiptId,"AS완료", now);
-
-            eventService.sendReceiptCompleteAlarmTalk(receiptId,managerName);
 
             return ResponseEntity.ok()
                     .build();

@@ -34,7 +34,7 @@ class GoogleSheetUtilTest {
 
     @Test
     void readAllSheet() throws GeneralSecurityException, IOException {
-        List<List<Object>> lists = googleSheetUtil.readAllSheet("1XU_k61ZxQZ7PPaaOcjiEeGJAqAniL91piZvFsGP63Uc", "시트1");
+        List<List<Object>> lists = googleSheetUtil.readAllSheet("1XU_k61ZxQZ7PPaaOcjiEeGJAqAniL91piZvFsGP63Uc", "제휴지점 목록");
         lists.forEach(objects -> {
             Object o = objects.get(0);
             Object o1 = objects.get(1);

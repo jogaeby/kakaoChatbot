@@ -11,6 +11,6 @@ class AlarmTalkServiceTest {
     @Test
     void sendRoomTourAssignment() {
 
-//        alarmTalkService.sendReservation("01039190126",entity);
+        alarmTalkService.sendSuggestionReceipt("01077131548","테스트","2025-07-21","www.naver.com");
     }
 }

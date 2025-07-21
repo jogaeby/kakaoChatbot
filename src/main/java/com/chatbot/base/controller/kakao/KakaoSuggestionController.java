@@ -1,7 +1,7 @@
 package com.chatbot.base.controller.kakao;
 
+import com.chatbot.base.common.AlarmTalkService;
 import com.chatbot.base.common.GoogleSheetUtil;
-import com.chatbot.base.domain.event.EventService;
 import com.chatbot.base.dto.BranchDto;
 import com.chatbot.base.dto.SuggestionInfoDto;
 import com.chatbot.base.dto.kakao.constatnt.button.ButtonAction;
@@ -9,12 +9,10 @@ import com.chatbot.base.dto.kakao.constatnt.button.ButtonParamKey;
 import com.chatbot.base.dto.kakao.request.ChatBotRequest;
 import com.chatbot.base.dto.kakao.response.ChatBotExceptionResponse;
 import com.chatbot.base.dto.kakao.response.ChatBotResponse;
-import com.chatbot.base.dto.kakao.response.property.common.Button;
 import com.chatbot.base.dto.kakao.response.property.components.BasicCard;
 import com.chatbot.base.dto.kakao.response.property.components.Carousel;
 import com.chatbot.base.dto.kakao.response.property.components.ItemCard;
 import com.chatbot.base.dto.kakao.response.property.components.TextCard;
-import com.chatbot.base.view.KakaoChatBotView;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -37,10 +34,10 @@ import java.util.Optional;
 public class KakaoSuggestionController {
     private final GoogleSheetUtil googleSheetUtil;
 
-    private final EventService eventService;
+    private final AlarmTalkService alarmTalkService;
+
     private final ChatBotExceptionResponse chatBotExceptionResponse = new ChatBotExceptionResponse();
 
-    private final KakaoChatBotView kakaoChatBotView;
 
     @Value("${google.sheet.id}")
     private String SHEET_ID;
@@ -122,6 +119,7 @@ public class KakaoSuggestionController {
                 chatBotResponse.addSimpleText("제휴되지 않은 상태입니다.");
                 return chatBotResponse;
             }
+
             BranchDto branchDto = branchByPhone.get();
             String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
             List<Object> newRowData = new ArrayList<>();
@@ -137,8 +135,11 @@ public class KakaoSuggestionController {
             newRowData.add(now);
             newRowData.add("접수");
 
+            LocalDateTime expiredDateTime = LocalDateTime.now().plusDays(1);
 
             googleSheetUtil.appendToSheet(SHEET_ID,"건의 접수내역",newRowData);
+
+            alarmTalkService.sendSuggestionReceipt(branchDto.getManagerPhone(),branchDto.getBranchName(),expiredDateTime.toString(),"www.naver.com");
 
             TextCard textCard = new TextCard();
             textCard.setDescription("\uD83D\uDCE9 접수 완료!\n" +

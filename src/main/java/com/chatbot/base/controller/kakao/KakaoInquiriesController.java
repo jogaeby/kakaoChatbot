@@ -1,7 +1,6 @@
 package com.chatbot.base.controller.kakao;
 
 import com.chatbot.base.common.KakaoApiService;
-import com.chatbot.base.domain.event.EventService;
 import com.chatbot.base.dto.kakao.constatnt.button.ButtonAction;
 import com.chatbot.base.dto.kakao.constatnt.button.ButtonParamKey;
 import com.chatbot.base.dto.kakao.request.ChatBotRequest;
@@ -27,7 +26,6 @@ import javax.naming.AuthenticationException;
 @RequestMapping(value = "/kakao/chatbot/inquiries")
 public class KakaoInquiriesController {
 
-    private final EventService eventService;
     private final ChatBotExceptionResponse chatBotExceptionResponse = new ChatBotExceptionResponse();
 
     private final KakaoChatBotView kakaoChatBotView;
@@ -103,14 +101,12 @@ public class KakaoInquiriesController {
             String appUserId = chatBotRequest.getAppUserId();
             if (appUserId == null) throw new AuthenticationException("appUserId 없음");
 
-            String id = eventService.inquiriesReceipt(comment,appUserId);
 
             ChatBotResponse chatBotResponse = new ChatBotResponse();
             Button firstMenuButton = new Button("처음으로",ButtonAction.블럭이동,"684ff639b721652da7a7ce99");
 
             TextCard textCard = new TextCard();
             textCard.setDescription("\uD83D\uDCE9 접수 완료!\n" +
-                    "접수번호 : "+id+"\n" +
                     "\n" +
                     "담당자가 확인 후 순차적으로 연락드립니다.\n" +
                     "빠르게 처리해드릴게요. 감사합니다!(크크)");
