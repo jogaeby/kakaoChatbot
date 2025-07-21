@@ -3,6 +3,8 @@ package com.chatbot.base.controller.kakao;
 import com.chatbot.base.common.AlarmTalkService;
 import com.chatbot.base.common.GoogleSheetUtil;
 import com.chatbot.base.common.ImageUtil;
+import com.chatbot.base.common.PasswordUtil;
+import com.chatbot.base.common.util.EncryptionUtil;
 import com.chatbot.base.dto.BranchDto;
 import com.chatbot.base.dto.SuggestionInfoDto;
 import com.chatbot.base.dto.kakao.constatnt.button.ButtonAction;
@@ -153,7 +155,10 @@ public class KakaoSuggestionController {
 
             googleSheetUtil.appendToSheet(SHEET_ID,"건의 접수내역",newRowData);
 
-            alarmTalkService.sendSuggestionReceipt(branchDto.getManagerPhone(),branchDto.getBranchName(),expiredDateTime.toString(),HOST_URL);
+            String BaseUrl = HOST_URL.replaceAll("http://", "");
+            BaseUrl = BaseUrl+"/suggestion/"+ EncryptionUtil.encrypt(EncryptionUtil.getKey(),id);
+
+            alarmTalkService.sendSuggestionReceipt(branchDto.getManagerPhone(),branchDto.getBranchName(),expiredDateTime.toString(),BaseUrl);
 
             TextCard textCard = new TextCard();
             textCard.setDescription("\uD83D\uDCE9 접수 완료!\n" +
