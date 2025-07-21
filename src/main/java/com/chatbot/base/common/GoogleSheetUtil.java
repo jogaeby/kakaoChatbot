@@ -265,7 +265,7 @@ public class GoogleSheetUtil {
         log.info("C, I, J, K열 수정 완료 (row {}): 업데이트된 셀 수 = {}", rowNumber, result.getTotalUpdatedCells());
     }
     public void updateColumnsCAndLByReceiptId(String spreadSheetId, String sheetName, String receiptId,
-                                              Object newC, Object newL)
+                                              Object newC, Object newL, Object newN)
             throws GeneralSecurityException, IOException {
 
         Sheets service = getSheetsService();
@@ -285,25 +285,27 @@ public class GoogleSheetUtil {
         int reversedIndex = -1;
         for (int i = 0; i < reversedValues.size(); i++) {
             List<Object> row = reversedValues.get(i);
-            if (row.size() > 2 && receiptId.equals(row.get(1).toString()) && "배정완료".equals(row.get(2).toString())) {
+            if (row.size() > 2 && receiptId.equals(row.get(1).toString()) && "접수".equals(row.get(2).toString())) {
                 reversedIndex = i;
                 break;
             }
         }
 
         if (reversedIndex == -1) {
-            throw new NoSuchElementException("receiptId = " + receiptId + " status = 배정완료 접수인 데이터를 찾을 수 없습니다.");
+            throw new NoSuchElementException("receiptId = " + receiptId + " status = 접수 접수인 데이터를 찾을 수 없습니다.");
         }
 
         int rowNumber = originalValues.size() - reversedIndex;
 
-        // C열 (3번째), L열 (12번째)
+        // C열 (3번째), L열 (12번째), N열 (14번째)
         String rangeC = String.format("%s!C%d", sheetName, rowNumber);
         String rangeL = String.format("%s!L%d", sheetName, rowNumber);
+        String rangeN = String.format("%s!N%d", sheetName, rowNumber);
 
         List<ValueRange> data = List.of(
                 new ValueRange().setRange(rangeC).setValues(List.of(List.of(newC))),
-                new ValueRange().setRange(rangeL).setValues(List.of(List.of(newL)))
+                new ValueRange().setRange(rangeL).setValues(List.of(List.of(newL))),
+                new ValueRange().setRange(rangeN).setValues(List.of(List.of(newN)))
         );
 
         BatchUpdateValuesRequest body = new BatchUpdateValuesRequest()
@@ -314,7 +316,7 @@ public class GoogleSheetUtil {
                 .batchUpdate(spreadSheetId, body)
                 .execute();
 
-        log.info("C, L열 수정 완료 (row {}): 업데이트된 셀 수 = {}", rowNumber, result.getTotalUpdatedCells());
+        log.info("C, L, N열 수정 완료 (row {}): 업데이트된 셀 수 = {}", rowNumber, result.getTotalUpdatedCells());
     }
     public void appendToSheetByAll(String spreadSheetId, String sheetName, List<List<Object>> newRows) throws GeneralSecurityException, IOException {
         log.info("{} {}", spreadSheetId, sheetName);

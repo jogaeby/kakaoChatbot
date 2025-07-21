@@ -147,7 +147,9 @@ public class KakaoSuggestionController {
             newRowData.add(branchDto.getManagerPhone());
             newRowData.add(suggestionInfoDto.getComment());
             newRowData.add(imageUrlsSt.toString());
+            newRowData.add("");
             newRowData.add(now);
+            newRowData.add("");
             newRowData.add("접수");
 
             LocalDateTime expiredDateTime = LocalDateTime.now().plusDays(1);
@@ -156,9 +158,9 @@ public class KakaoSuggestionController {
             googleSheetUtil.appendToSheet(SHEET_ID,"건의 접수내역",newRowData);
 
             String BaseUrl = HOST_URL.replaceAll("http://", "");
-            BaseUrl = BaseUrl+"/suggestion/"+ EncryptionUtil.encrypt(EncryptionUtil.getKey(),id);
+            BaseUrl = BaseUrl+"/receipt/suggestion/"+ EncryptionUtil.encrypt(EncryptionUtil.getKey(),id);
 
-            alarmTalkService.sendSuggestionReceipt(branchDto.getManagerPhone(),branchDto.getBranchName(),expiredDateTime.toString(),BaseUrl);
+            alarmTalkService.sendSuggestionReceipt(branchDto.getManagerPhone(),branchDto.getBranchName(),expiredDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")),BaseUrl);
 
             TextCard textCard = new TextCard();
             textCard.setDescription("\uD83D\uDCE9 접수 완료!\n" +

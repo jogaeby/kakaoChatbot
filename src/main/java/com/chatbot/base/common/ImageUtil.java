@@ -29,24 +29,25 @@ public class ImageUtil {
 
     private final String BASE_DIR = "images";
 
-    public String saveFile(MultipartFile file, String id) throws IOException {
+    public String saveFile(MultipartFile file, String type, String receiptNumber) throws IOException {
         byte[] bytes = file.getBytes();
-        String filePathString = BASE_DIR + "/" + id + "/" + "productImages" + "/" + file.getOriginalFilename();
-        Path dirPath = Paths.get(BASE_DIR + File.separator + id);
-        Path complatePath = Paths.get(BASE_DIR + File.separator + id + File.separator + "productImages");
-        Path filePath = Paths.get(filePathString);
-        // 부모 디렉토리를 생성합니다.
-        if (!Files.exists(dirPath)) {
-            Files.createDirectories(dirPath);
+
+        String fileName = receiptNumber+"_"+file.getOriginalFilename();
+
+        // 저장 경로: BASE_DIR/suggestion/{receiptNumber}/actionCompleted
+        Path directoryPath = Paths.get(BASE_DIR, type, receiptNumber, "actionCompleted");
+        Path filePath = directoryPath.resolve(fileName);
+
+        // 디렉토리 생성 (없으면)
+        if (!Files.exists(directoryPath)) {
+            Files.createDirectories(directoryPath);
         }
 
-        if (!Files.exists(complatePath)) {
-            Files.createDirectories(complatePath);
-        }
-
+        // 파일 저장
         Files.write(filePath, bytes);
 
-        return HOST_IP + ":" + HOST_PORT+"/"+filePathString;
+        // 접근 가능한 URL 반환
+        return HOST_IP + ":" + HOST_PORT + "/images/suggestion/" + receiptNumber + "/actionCompleted/" + fileName;
     }
 
 
