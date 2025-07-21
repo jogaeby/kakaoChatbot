@@ -122,4 +122,54 @@ public class ImageController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
+
+    @GetMapping("{dirName}/{date}/{receiptNumber}/{subDirName}/{imageName}")
+    public ResponseEntity<byte[]> getImage(
+            @PathVariable("dirName") String dirName,
+            @PathVariable("date") String date,
+            @PathVariable("receiptNumber") String receiptNumber,
+            @PathVariable("subDirName") String subDirName,
+            @PathVariable("imageName") String imageName) {
+        try {
+            // URL 디코딩
+            String decodedImageName = URLDecoder.decode(imageName, StandardCharsets.UTF_8);
+
+            // 기본 이미지 경로
+            Path basePath = Paths.get("images").toAbsolutePath();
+            Path imagePath = basePath.resolve(dirName)
+                    .resolve(date)
+                    .resolve(receiptNumber)
+                    .resolve(subDirName)
+                    .resolve(decodedImageName)
+                    .normalize();
+
+            // 보안 확인: path traversal 방지
+            if (!imagePath.startsWith(basePath)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+            }
+
+            File file = imagePath.toFile();
+
+            if (!file.exists() || file.isDirectory()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+
+            // MIME 타입 결정
+            String mimeType = Files.probeContentType(file.toPath());
+            if (mimeType == null) {
+                mimeType = MediaType.APPLICATION_OCTET_STREAM_VALUE;
+            }
+
+            byte[] fileBytes = Files.readAllBytes(file.toPath());
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(mimeType))
+                    .cacheControl(CacheControl.maxAge(30, TimeUnit.DAYS))
+                    .body(fileBytes);
+
+        } catch (Exception e) {
+            log.error("[ERROR] {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
 }
