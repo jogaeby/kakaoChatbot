@@ -79,7 +79,9 @@ public class AsController {
                     .filter(s -> !s.isEmpty())
                     .collect(Collectors.toList());
             String receiptDateTime = String.valueOf(receipt.get(12));
-            String completedDateTime = String.valueOf(receipt.get(13));
+            String completedDateTime = (receipt.size() > 13 && receipt.get(13) != null)
+                    ? String.valueOf(receipt.get(13))
+                    : "";
             log.info("{} {} {} {} {} {}",recentReceiptId,images,receiptDateTime,status,comment,managerName);
 
             model.addAttribute("title",title);
