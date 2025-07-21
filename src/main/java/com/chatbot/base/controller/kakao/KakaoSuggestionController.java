@@ -2,6 +2,7 @@ package com.chatbot.base.controller.kakao;
 
 import com.chatbot.base.common.AlarmTalkService;
 import com.chatbot.base.common.GoogleSheetUtil;
+import com.chatbot.base.common.ImageUtil;
 import com.chatbot.base.dto.BranchDto;
 import com.chatbot.base.dto.SuggestionInfoDto;
 import com.chatbot.base.dto.kakao.constatnt.button.ButtonAction;
@@ -36,8 +37,12 @@ public class KakaoSuggestionController {
 
     private final AlarmTalkService alarmTalkService;
 
+    private final ImageUtil imageUtil;
+
     private final ChatBotExceptionResponse chatBotExceptionResponse = new ChatBotExceptionResponse();
 
+    @Value("${host.url}")
+    private String HOST_URL;
 
     @Value("${google.sheet.id}")
     private String SHEET_ID;
@@ -110,7 +115,7 @@ public class KakaoSuggestionController {
 
             SuggestionInfoDto suggestionInfoDto = chatBotRequest.getSuggestionInfo();
             String phone = suggestionInfoDto.getPhone();
-
+            List<String> images = suggestionInfoDto.getImages();
             String id = String.valueOf(System.currentTimeMillis());
 
             Optional<BranchDto> branchByPhone = googleSheetUtil.getBranchByPhone(phone, SHEET_ID);
@@ -119,6 +124,14 @@ public class KakaoSuggestionController {
                 chatBotResponse.addSimpleText("제휴되지 않은 상태입니다.");
                 return chatBotResponse;
             }
+            StringBuilder imageUrlsSt = new StringBuilder();
+            List<String> imageUrls = imageUtil.downloadImage(images,"suggestion","건의사항",id);
+            imageUrls.forEach(url -> {
+                imageUrlsSt.append(url)
+                        .append("\n")
+                ;
+            });
+
 
             BranchDto branchDto = branchByPhone.get();
             String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
@@ -131,15 +144,16 @@ public class KakaoSuggestionController {
             newRowData.add(branchDto.getManagerName());
             newRowData.add(branchDto.getManagerPhone());
             newRowData.add(suggestionInfoDto.getComment());
-            newRowData.add("이미지");
+            newRowData.add(imageUrlsSt);
             newRowData.add(now);
             newRowData.add("접수");
 
             LocalDateTime expiredDateTime = LocalDateTime.now().plusDays(1);
 
+
             googleSheetUtil.appendToSheet(SHEET_ID,"건의 접수내역",newRowData);
 
-            alarmTalkService.sendSuggestionReceipt(branchDto.getManagerPhone(),branchDto.getBranchName(),expiredDateTime.toString(),"www.naver.com");
+            alarmTalkService.sendSuggestionReceipt(branchDto.getManagerPhone(),branchDto.getBranchName(),expiredDateTime.toString(),HOST_URL);
 
             TextCard textCard = new TextCard();
             textCard.setDescription("\uD83D\uDCE9 접수 완료!\n" +
