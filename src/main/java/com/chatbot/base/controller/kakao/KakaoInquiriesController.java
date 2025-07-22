@@ -160,11 +160,12 @@ public class KakaoInquiriesController {
             itemCard.addItemList("지점명",branchName);
             itemCard.addItemList("연락처",phone);
             itemCard.addItemList("연락수단",contact);
+
             TextCard commentTextCard = new TextCard();
             commentTextCard.setDescription(comment);
 
             chatBotResponse.addTextCard(textCard);
-            chatBotResponse.addItemCard(itemCard);
+//            chatBotResponse.addItemCard(itemCard);
             chatBotResponse.addTextCard(commentTextCard);
 
             chatBotResponse.addQuickButton("처음으로",ButtonAction.블럭이동,"687864224d48f80cb480b862");
