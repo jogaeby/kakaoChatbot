@@ -80,18 +80,28 @@ public class KakaoInquiriesController {
 
             List<List<Object>> brandList = googleSheetUtil.readAllSheet(SHEET_ID, "브랜드 목록");
 
+            // ✅ 0번째 행(헤더) 제외
+            if (brandList.size() <= 1) {
+                TextCard noBrandText = new TextCard();
+                noBrandText.setDescription("브랜드 목록이 없습니다.");
+                chatBotResponse.addTextCard(noBrandText);
+                return chatBotResponse;
+            }
+
+            // ✅ 1번째 행부터 시작
+            List<List<Object>> dataList = brandList.subList(1, brandList.size());
+
             TextCard textCard = new TextCard();
             textCard.setDescription("문의주실 브랜드를 선택해주세요.");
             chatBotResponse.addTextCard(textCard);
 
             int pageSize = 10;
-            int total = brandList.size();
+            int total = dataList.size();
             int start = page * pageSize;
             int end = Math.min(start + pageSize, total);
 
-            // 해당 페이지에 해당하는 브랜드만 버튼 생성
             for (int i = start; i < end; i++) {
-                List<Object> row = brandList.get(i);
+                List<Object> row = dataList.get(i);
                 String brandName = String.valueOf(row.get(1));
 
                 SuggestionInfoDto newDto = SuggestionInfoDto.builder()
@@ -108,42 +118,43 @@ public class KakaoInquiriesController {
                 );
             }
 
-            // 다음 페이지가 있다면 "다음" 버튼 추가
+            // 다음 페이지
             if (end < total) {
                 SuggestionInfoDto nextPageDto = SuggestionInfoDto.builder()
                         .phone(suggestionInfoDto.getPhone())
                         .build();
-                Button nextButton = new Button(     "다음",
+
+                Button nextButton = new Button(
+                        "다음",
                         ButtonAction.블럭이동,
                         "687ee42da467e1683c88debd",
                         ButtonParamKey.suggestionInfo,
-                        nextPageDto);
-                nextButton.setExtra(ButtonParamKey.pageNumber,page+1);
-                chatBotResponse.addQuickButton(
-                        nextButton
+                        nextPageDto
                 );
+                nextButton.setExtra(ButtonParamKey.pageNumber, page + 1);
+                chatBotResponse.addQuickButton(nextButton);
             }
 
-            // 이전 페이지가 있다면 "이전" 버튼 추가
+            // 이전 페이지
             if (page > 0) {
                 SuggestionInfoDto prevPageDto = SuggestionInfoDto.builder()
                         .phone(suggestionInfoDto.getPhone())
                         .build();
 
-                Button prevButton = new Button(     "다음",
+                Button prevButton = new Button(
+                        "이전",
                         ButtonAction.블럭이동,
                         "687ee42da467e1683c88debd",
                         ButtonParamKey.suggestionInfo,
-                        prevPageDto);
-                prevButton.setExtra(ButtonParamKey.pageNumber,page-1);
-
-                chatBotResponse.addQuickButton(
-                        prevButton
+                        prevPageDto
                 );
+                prevButton.setExtra(ButtonParamKey.pageNumber, page - 1);
+                chatBotResponse.addQuickButton(prevButton);
             }
 
             return chatBotResponse;
-        }catch (Exception e) {
+
+        } catch (Exception e) {
             log.error("ERROR: {}", e.getMessage(), e);
             return chatBotExceptionResponse.createException();
         }
