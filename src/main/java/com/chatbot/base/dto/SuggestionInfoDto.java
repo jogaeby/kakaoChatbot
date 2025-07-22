@@ -18,5 +18,7 @@ public class SuggestionInfoDto {
     private String brandName;
     private String comment;
     private String status;
+    private String date;
+    private String contact;
     private String createAt;
 }

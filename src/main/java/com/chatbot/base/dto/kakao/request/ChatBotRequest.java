@@ -133,6 +133,7 @@ public class ChatBotRequest {
             private String profile;
             private String message;
             private String comment;
+            private String branchName;
             private String images;
         }
 
@@ -222,6 +223,11 @@ public class ChatBotRequest {
     public String getComment(){
         if (Objects.isNull(action.getParams().getComment())) return null;
         return action.getParams().getComment();
+    }
+
+    public String getBranchName(){
+        if (Objects.isNull(action.getParams().getBranchName())) return null;
+        return action.getParams().getBranchName();
     }
 
     public LocalDate getDate() {

@@ -40,7 +40,6 @@ public class KakaoSuggestionController {
     private final AlarmTalkService alarmTalkService;
 
     private final ImageUtil imageUtil;
-
     private final ChatBotExceptionResponse chatBotExceptionResponse = new ChatBotExceptionResponse();
 
     @Value("${host.url}")
@@ -261,6 +260,4 @@ public class KakaoSuggestionController {
             return chatBotExceptionResponse.createException("접수를 실패하였습니다.");
         }
     }
-
-
 }
