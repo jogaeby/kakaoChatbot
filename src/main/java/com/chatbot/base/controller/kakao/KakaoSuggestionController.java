@@ -228,7 +228,7 @@ public class KakaoSuggestionController {
             newRowData.add(branchDto.getName());
             newRowData.add(branchDto.getPhone());
             newRowData.add(branchDto.getManagerName());
-            newRowData.add(branchDto.getManagerPhone());
+            newRowData.add("'"+branchDto.getManagerPhone());
             newRowData.add(suggestionInfoDto.getComment());
             newRowData.add(imageUrlsSt.toString());
             newRowData.add("");
