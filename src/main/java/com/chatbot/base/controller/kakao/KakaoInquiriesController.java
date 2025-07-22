@@ -84,7 +84,9 @@ public class KakaoInquiriesController {
 
             chatBotResponse.addTextCard(textCard);
             brandList.forEach(objects -> {
+
                 String brandName = String.valueOf(objects.get(1));
+                log.info("{}",brandName);
                 SuggestionInfoDto newSuggestionInfoDto = SuggestionInfoDto.builder()
                         .phone(suggestionInfoDto.getPhone())
                         .branchName(brandName)
