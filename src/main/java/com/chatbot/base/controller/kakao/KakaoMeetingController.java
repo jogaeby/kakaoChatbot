@@ -121,6 +121,7 @@ public class KakaoMeetingController {
             if (end < total) {
                 SuggestionInfoDto nextPageDto = SuggestionInfoDto.builder()
                         .phone(suggestionInfoDto.getPhone())
+                        .date(suggestionInfoDto.getDate())
                         .build();
 
                 Button nextButton = new Button(
@@ -138,6 +139,7 @@ public class KakaoMeetingController {
             if (page > 0) {
                 SuggestionInfoDto prevPageDto = SuggestionInfoDto.builder()
                         .phone(suggestionInfoDto.getPhone())
+                        .date(suggestionInfoDto.getDate())
                         .build();
 
                 Button prevButton = new Button(
