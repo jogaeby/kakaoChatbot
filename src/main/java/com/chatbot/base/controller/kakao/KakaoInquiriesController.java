@@ -123,6 +123,8 @@ public class KakaoInquiriesController {
                     ListItem item = new ListItem(brandName);
                     item.setImageUrl(thumbnail);
                     item.setExtra("687ee5104d48f80cb481eebe",ButtonParamKey.suggestionInfo,newDto);
+
+                    listCard.setItem(item);
                 }
 
                 chatBotResponse.addListCard(listCard);
