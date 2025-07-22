@@ -10,7 +10,10 @@ import com.chatbot.base.dto.kakao.request.ChatBotRequest;
 import com.chatbot.base.dto.kakao.response.ChatBotExceptionResponse;
 import com.chatbot.base.dto.kakao.response.ChatBotResponse;
 import com.chatbot.base.dto.kakao.response.property.common.Button;
+import com.chatbot.base.dto.kakao.response.property.common.ListItem;
+import com.chatbot.base.dto.kakao.response.property.components.Carousel;
 import com.chatbot.base.dto.kakao.response.property.components.ItemCard;
+import com.chatbot.base.dto.kakao.response.property.components.ListCard;
 import com.chatbot.base.dto.kakao.response.property.components.TextCard;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -92,67 +95,45 @@ public class KakaoMeetingController {
             TextCard textCard = new TextCard();
             textCard.setDescription("문의주실 브랜드를 선택해주세요.");
             chatBotResponse.addTextCard(textCard);
+            Carousel carousel = new Carousel();
 
-            int pageSize = 10;
             int total = dataList.size();
-            int start = page * pageSize;
-            int end = Math.min(start + pageSize, total);
+            int maxCardCount = 5;
+            int maxItemPerCard = 5;
 
-            for (int i = start; i < end; i++) {
-                List<Object> row = dataList.get(i);
-                String brandName = String.valueOf(row.get(1));
+            int maxDataCount = Math.min(total, maxCardCount * maxItemPerCard);
 
-                SuggestionInfoDto newDto = SuggestionInfoDto.builder()
-                        .phone(suggestionInfoDto.getPhone())
-                        .date(suggestionInfoDto.getDate())
-                        .brandName(brandName)
-                        .build();
+            for (int cardIndex = 0; cardIndex < maxCardCount; cardIndex++) {
+                int startIndex = cardIndex * maxItemPerCard;
+                if (startIndex >= maxDataCount) break;
 
-                chatBotResponse.addQuickButton(
-                        brandName,
-                        ButtonAction.블럭이동,
-                        "687f14faf06e075c82f0e7f7",
-                        ButtonParamKey.suggestionInfo,
-                        newDto
-                );
+                ListCard listCard = new ListCard();
+                listCard.setHeader("브랜드");
+
+                for (int itemIndex = 0; itemIndex < maxItemPerCard; itemIndex++) {
+                    int dataIndex = startIndex + itemIndex;
+                    if (dataIndex >= maxDataCount) break;
+
+                    List<Object> row = dataList.get(dataIndex);
+                    String brandName = String.valueOf(row.get(1));
+                    String thumbnail = String.valueOf(row.get(2));
+
+                    SuggestionInfoDto newDto = SuggestionInfoDto.builder()
+                            .phone(suggestionInfoDto.getPhone())
+                            .date(suggestionInfoDto.getDate())
+                            .brandName(brandName)
+                            .build();
+                    ListItem item = new ListItem(brandName);
+                    item.setImageUrl(thumbnail);
+                    item.setExtra("687f14faf06e075c82f0e7f7",ButtonParamKey.suggestionInfo,newDto);
+
+                    listCard.setItem(item);
+                }
+
+                carousel.addComponent(listCard);
             }
 
-            // 다음 페이지
-            if (end < total) {
-                SuggestionInfoDto nextPageDto = SuggestionInfoDto.builder()
-                        .phone(suggestionInfoDto.getPhone())
-                        .date(suggestionInfoDto.getDate())
-                        .build();
-
-                Button nextButton = new Button(
-                        "다음으로➡\uFE0F",
-                        ButtonAction.블럭이동,
-                        "687f14f4fb41966f133ec39c",
-                        ButtonParamKey.suggestionInfo,
-                        nextPageDto
-                );
-                nextButton.setExtra(ButtonParamKey.pageNumber, page + 1);
-                chatBotResponse.addQuickButton(nextButton);
-            }
-
-            // 이전 페이지
-            if (page > 0) {
-                SuggestionInfoDto prevPageDto = SuggestionInfoDto.builder()
-                        .phone(suggestionInfoDto.getPhone())
-                        .date(suggestionInfoDto.getDate())
-                        .build();
-
-                Button prevButton = new Button(
-                        "⬅\uFE0F이전으로",
-                        ButtonAction.블럭이동,
-                        "687f14f4fb41966f133ec39c",
-                        ButtonParamKey.suggestionInfo,
-                        prevPageDto
-                );
-                prevButton.setExtra(ButtonParamKey.pageNumber, page - 1);
-                chatBotResponse.addQuickButton(prevButton);
-            }
-
+            chatBotResponse.addCarousel(carousel);
             return chatBotResponse;
 
         } catch (Exception e) {

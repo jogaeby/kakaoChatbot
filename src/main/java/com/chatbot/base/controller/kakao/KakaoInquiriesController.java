@@ -129,41 +129,6 @@ public class KakaoInquiriesController {
 
                 carousel.addComponent(listCard);
             }
-//
-//            // 다음 페이지
-//            if (end < total) {
-//                SuggestionInfoDto nextPageDto = SuggestionInfoDto.builder()
-//                        .phone(suggestionInfoDto.getPhone())
-//                        .build();
-//
-//                Button nextButton = new Button(
-//                        "다음으로➡\uFE0F",
-//                        ButtonAction.블럭이동,
-//                        "687ee42da467e1683c88debd",
-//                        ButtonParamKey.suggestionInfo,
-//                        nextPageDto
-//                );
-//                nextButton.setExtra(ButtonParamKey.pageNumber, page + 1);
-//                chatBotResponse.addQuickButton(nextButton);
-//            }
-//
-//            // 이전 페이지
-//            if (page > 0) {
-//                SuggestionInfoDto prevPageDto = SuggestionInfoDto.builder()
-//                        .phone(suggestionInfoDto.getPhone())
-//                        .build();
-//
-//                Button prevButton = new Button(
-//                        "⬅\uFE0F이전으로",
-//                        ButtonAction.블럭이동,
-//                        "687ee42da467e1683c88debd",
-//                        ButtonParamKey.suggestionInfo,
-//                        prevPageDto
-//                );
-//                prevButton.setExtra(ButtonParamKey.pageNumber, page - 1);
-//                chatBotResponse.addQuickButton(prevButton);
-//            }
-//
 
             chatBotResponse.addCarousel(carousel);
             return chatBotResponse;
