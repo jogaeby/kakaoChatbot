@@ -128,7 +128,7 @@ public class KakaoSuggestionController {
             suggestionInfoDto.setImages(images);
 
             TextCard textCard = new TextCard();
-            textCard.setDescription("이미지를 추가하였습니다.\n" +
+            textCard.setDescription("사진을 추가하였습니다.\n" +
                     "\n" +
                     "※ 아래에 있는 버튼을 눌러 계속 진행하세요.");
 
@@ -159,14 +159,6 @@ public class KakaoSuggestionController {
                     "\n" +
                     "※ 아래에 있는 버튼을 눌러 계속 진행하세요.");
 
-            Carousel carousel = new Carousel();
-
-            images.forEach(image -> {
-                BasicCard basicCard = new BasicCard();
-                log.info("{}",image);
-                basicCard.setThumbnail(image,true);
-                carousel.addComponent(basicCard);
-            });
 
 
             ItemCard itemCard = new ItemCard();
@@ -179,7 +171,19 @@ public class KakaoSuggestionController {
 
 
             chatBotResponse.addTextCard(textCard);
-            chatBotResponse.addCarousel(carousel);
+
+            if (!images.isEmpty()) {
+                Carousel carousel = new Carousel();
+
+                images.forEach(image -> {
+                    BasicCard basicCard = new BasicCard();
+                    log.info("{}",image);
+                    basicCard.setThumbnail(image,true);
+                    carousel.addComponent(basicCard);
+                });
+                chatBotResponse.addCarousel(carousel);
+            }
+
             chatBotResponse.addItemCard(itemCard);
             chatBotResponse.addQuickButton("처음으로",ButtonAction.블럭이동,"687867e59619bd57f0997a62");
             chatBotResponse.addQuickButton("접수하기",ButtonAction.블럭이동,"6879f63cfb41966f133dec84",ButtonParamKey.suggestionInfo, suggestionInfoDto);
