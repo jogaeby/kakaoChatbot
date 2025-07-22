@@ -89,10 +89,8 @@ public class KakaoInquiriesController {
                 log.info("{}",brandName);
                 SuggestionInfoDto newSuggestionInfoDto = SuggestionInfoDto.builder()
                         .phone(suggestionInfoDto.getPhone())
-                        .branchName(brandName)
+                        .brandName(brandName)
                         .build();
-
-                suggestionInfoDto.setBrandName(brandName);
                 chatBotResponse.addQuickButton(brandName,ButtonAction.블럭이동,"687ee5104d48f80cb481eebe",ButtonParamKey.suggestionInfo,newSuggestionInfoDto);
             });
             return chatBotResponse;
