@@ -208,7 +208,6 @@ public class KakaoMeetingController {
             String comment = suggestionInfoDto.getComment();
             String contact = suggestionInfoDto.getContact();
             String date = suggestionInfoDto.getDate();
-            log.info("{}",date);
             TextCard textCard = new TextCard();
             textCard.setDescription("해당 내용으로 미팅 예약을 진행하시겠습니까?(궁금)\n" +
                     "\n" +
