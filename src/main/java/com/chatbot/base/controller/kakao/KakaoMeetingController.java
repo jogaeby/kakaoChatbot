@@ -55,7 +55,7 @@ public class KakaoMeetingController {
                     .build();
 
             TextCard textCard = new TextCard();
-            textCard.setDescription("연락처를 입력하였습니다.\n" +
+            textCard.setDescription("연락처와 미팅날짜를 입력하였습니다.\n" +
                     "\n" +
                     "※ 아래에 있는 버튼을 눌러 계속 진행하세요.");
             chatBotResponse.addTextCard(textCard);
