@@ -54,11 +54,6 @@ public class KakaoSuggestionController {
         try {
             ChatBotResponse chatBotResponse = new ChatBotResponse();
             String phone = chatBotRequest.getPhone();
-            String comment = chatBotRequest.getComment();
-            List<String> images = chatBotRequest.getImages();
-
-            log.info("{} {} {}", phone,comment,images);
-
 
             Optional<BranchDto> branchByPhone = googleSheetUtil.getBranchByPhone(phone, SHEET_ID);
 
@@ -68,6 +63,96 @@ public class KakaoSuggestionController {
             }
 
             BranchDto branch = branchByPhone.get();
+
+            TextCard textCard = new TextCard();
+            textCard.setDescription("지점 확인 되었습니다.\n" +
+                    "\n" +
+                    "※ 아래에 있는 버튼을 눌러 계속 진행하세요.");
+
+            ItemCard itemCard = new ItemCard();
+            itemCard.setItemListAlignment("right");
+            itemCard.addItemList("브랜드",branch.getBrandName());
+            itemCard.addItemList("지점명",branch.getBranchName());
+            itemCard.addItemList("연락처",phone);
+
+            SuggestionInfoDto suggestionInfoDto = SuggestionInfoDto.builder()
+                    .brandName(branch.getBrandName())
+                    .branchName(branch.getBranchName())
+                    .phone(phone)
+                    .build();
+
+            chatBotResponse.addTextCard(textCard);
+            chatBotResponse.addItemCard(itemCard);
+            chatBotResponse.addQuickButton("다시입력",ButtonAction.블럭이동,"687867e59619bd57f0997a62");
+            chatBotResponse.addQuickButton("진행하기",ButtonAction.블럭이동,"687ed30c4d48f80cb481e9f4",ButtonParamKey.suggestionInfo, suggestionInfoDto);
+            return chatBotResponse;
+        }catch (Exception e) {
+            log.error("ERROR: {}", e.getMessage(), e);
+            return chatBotExceptionResponse.createException();
+        }
+    }
+
+    @PostMapping(value = "input/comment")
+    public ChatBotResponse comment(@RequestBody ChatBotRequest chatBotRequest) {
+        try {
+            ChatBotResponse chatBotResponse = new ChatBotResponse();
+            SuggestionInfoDto suggestionInfoDto = chatBotRequest.getSuggestionInfo();
+            String comment = chatBotRequest.getComment();
+            suggestionInfoDto.setComment(comment);
+            suggestionInfoDto.setImages(new ArrayList<>());
+
+            TextCard textCard = new TextCard();
+            textCard.setDescription("건의사항을 입력하였습니다.\n" +
+                    "건의사항에 대한 사진 등록이 필요하신 경우 사진을 등록 부탁드립니다."+
+                    "\n\n" +
+                    "※ 아래에 있는 버튼을 눌러 계속 진행하세요.");
+
+            chatBotResponse.addTextCard(textCard);
+            chatBotResponse.addQuickButton("다시입력",ButtonAction.블럭이동,"687ed30c4d48f80cb481e9f4",ButtonParamKey.suggestionInfo, suggestionInfoDto);
+            chatBotResponse.addQuickButton("사진등록하기",ButtonAction.블럭이동,"687ed33b9619bd57f09aa97a",ButtonParamKey.suggestionInfo, suggestionInfoDto);
+            chatBotResponse.addQuickButton("사진등록 없이 진행하기",ButtonAction.블럭이동,"687ed684b8541d6f084c1515",ButtonParamKey.suggestionInfo, suggestionInfoDto);
+            return chatBotResponse;
+        }catch (Exception e) {
+            log.error("ERROR: {}", e.getMessage(), e);
+            return chatBotExceptionResponse.createException();
+        }
+    }
+
+    @PostMapping(value = "input/images")
+    public ChatBotResponse images(@RequestBody ChatBotRequest chatBotRequest) {
+        try {
+            ChatBotResponse chatBotResponse = new ChatBotResponse();
+
+            SuggestionInfoDto suggestionInfoDto = chatBotRequest.getSuggestionInfo();
+            List<String> images = chatBotRequest.getImages();
+            suggestionInfoDto.setImages(images);
+
+            TextCard textCard = new TextCard();
+            textCard.setDescription("이미지를 추가하였습니다.\n" +
+                    "\n" +
+                    "※ 아래에 있는 버튼을 눌러 계속 진행하세요.");
+
+            chatBotResponse.addTextCard(textCard);
+            chatBotResponse.addQuickButton("다시입력",ButtonAction.블럭이동,"687ed33b9619bd57f09aa97a",ButtonParamKey.suggestionInfo, suggestionInfoDto);
+            chatBotResponse.addQuickButton("진행하기",ButtonAction.블럭이동,"687ed684b8541d6f084c1515",ButtonParamKey.suggestionInfo, suggestionInfoDto);
+            return chatBotResponse;
+        }catch (Exception e) {
+            log.error("ERROR: {}", e.getMessage(), e);
+            return chatBotExceptionResponse.createException();
+        }
+    }
+
+    @PostMapping(value = "input/final")
+    public ChatBotResponse finalConfirm(@RequestBody ChatBotRequest chatBotRequest) {
+        try {
+            ChatBotResponse chatBotResponse = new ChatBotResponse();
+
+            SuggestionInfoDto suggestionInfoDto = chatBotRequest.getSuggestionInfo();
+            List<String> images = suggestionInfoDto.getImages();
+            String brandName = suggestionInfoDto.getBrandName();
+            String branchName = suggestionInfoDto.getBranchName();
+            String phone = suggestionInfoDto.getPhone();
+            String comment = suggestionInfoDto.getComment();
 
             TextCard textCard = new TextCard();
             textCard.setDescription("해당 내용으로 건의사항 접수를 진행하시겠습니까?(궁금)\n" +
@@ -86,22 +171,17 @@ public class KakaoSuggestionController {
 
             ItemCard itemCard = new ItemCard();
             itemCard.setItemListAlignment("right");
-            itemCard.addItemList("브랜드",branch.getBrandName());
-            itemCard.addItemList("지점명",branch.getBranchName());
+            itemCard.addItemList("브랜드",brandName);
+            itemCard.addItemList("지점명",branchName);
             itemCard.addItemList("연락처",phone);
             itemCard.setTitle("건의사항");
             itemCard.setDescription(comment);
 
-            SuggestionInfoDto suggestionInfoDto = SuggestionInfoDto.builder()
-                    .images(images)
-                    .phone(phone)
-                    .comment(comment)
-                    .build();
 
             chatBotResponse.addTextCard(textCard);
             chatBotResponse.addCarousel(carousel);
             chatBotResponse.addItemCard(itemCard);
-            chatBotResponse.addQuickButton("다시입력",ButtonAction.블럭이동,"687867e59619bd57f0997a62");
+            chatBotResponse.addQuickButton("처음으로",ButtonAction.블럭이동,"687867e59619bd57f0997a62");
             chatBotResponse.addQuickButton("접수하기",ButtonAction.블럭이동,"6879f63cfb41966f133dec84",ButtonParamKey.suggestionInfo, suggestionInfoDto);
             return chatBotResponse;
         }catch (Exception e) {
