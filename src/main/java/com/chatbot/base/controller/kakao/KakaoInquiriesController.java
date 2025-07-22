@@ -125,7 +125,7 @@ public class KakaoInquiriesController {
                         .build();
 
                 Button nextButton = new Button(
-                        "다음",
+                        "다음으로➡\uFE0F",
                         ButtonAction.블럭이동,
                         "687ee42da467e1683c88debd",
                         ButtonParamKey.suggestionInfo,
@@ -142,7 +142,7 @@ public class KakaoInquiriesController {
                         .build();
 
                 Button prevButton = new Button(
-                        "이전",
+                        "⬅\uFE0F이전으로",
                         ButtonAction.블럭이동,
                         "687ee42da467e1683c88debd",
                         ButtonParamKey.suggestionInfo,

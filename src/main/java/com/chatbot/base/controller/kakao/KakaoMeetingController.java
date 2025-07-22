@@ -125,7 +125,7 @@ public class KakaoMeetingController {
                         .build();
 
                 Button nextButton = new Button(
-                        "다음",
+                        "다음으로➡\uFE0F",
                         ButtonAction.블럭이동,
                         "687f14f4fb41966f133ec39c",
                         ButtonParamKey.suggestionInfo,
@@ -143,7 +143,7 @@ public class KakaoMeetingController {
                         .build();
 
                 Button prevButton = new Button(
-                        "이전",
+                        "⬅\uFE0F이전으로",
                         ButtonAction.블럭이동,
                         "687f14f4fb41966f133ec39c",
                         ButtonParamKey.suggestionInfo,
