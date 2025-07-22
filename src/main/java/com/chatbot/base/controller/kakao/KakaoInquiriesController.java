@@ -148,7 +148,7 @@ public class KakaoInquiriesController {
             String phone = suggestionInfoDto.getPhone();
             String comment = suggestionInfoDto.getComment();
             String contact = suggestionInfoDto.getContact();
-
+            log.info("{} {} {} {} {}",branchName,branchName,phone,comment,contact);
             TextCard textCard = new TextCard();
             textCard.setDescription("해당 내용으로 문의사항 접수를 진행하시겠습니까?(궁금)\n" +
                     "\n" +
@@ -162,10 +162,11 @@ public class KakaoInquiriesController {
             itemCard.addItemList("연락수단",contact);
 
             TextCard commentTextCard = new TextCard();
+            commentTextCard.setTitle("문의내용");
             commentTextCard.setDescription(comment);
 
             chatBotResponse.addTextCard(textCard);
-//            chatBotResponse.addItemCard(itemCard);
+            chatBotResponse.addItemCard(itemCard);
             chatBotResponse.addTextCard(commentTextCard);
 
             chatBotResponse.addQuickButton("처음으로",ButtonAction.블럭이동,"687864224d48f80cb480b862");
