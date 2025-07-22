@@ -250,7 +250,7 @@ public class KakaoInquiriesController {
             newRowData.add("접수");
             newRowData.add(suggestionInfoDto.getBrandName());
             newRowData.add(suggestionInfoDto.getBranchName());
-            newRowData.add(suggestionInfoDto.getPhone());
+            newRowData.add("'"+suggestionInfoDto.getPhone());
             newRowData.add(suggestionInfoDto.getContact());
             newRowData.add(suggestionInfoDto.getComment());
             newRowData.add(now);
