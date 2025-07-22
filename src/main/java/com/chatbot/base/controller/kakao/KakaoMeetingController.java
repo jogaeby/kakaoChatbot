@@ -49,6 +49,7 @@ public class KakaoMeetingController {
             ChatBotResponse chatBotResponse = new ChatBotResponse();
             String phone = chatBotRequest.getPhone();
             LocalDateTime reservationDateTime = chatBotRequest.getReservationDateTime();
+
             SuggestionInfoDto suggestionInfoDto = SuggestionInfoDto.builder()
                     .phone(phone)
                     .date(reservationDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")))
@@ -103,6 +104,7 @@ public class KakaoMeetingController {
 
                 SuggestionInfoDto newDto = SuggestionInfoDto.builder()
                         .phone(suggestionInfoDto.getPhone())
+                        .date(suggestionInfoDto.getDate())
                         .brandName(brandName)
                         .build();
 
