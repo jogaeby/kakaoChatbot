@@ -117,10 +117,9 @@
 
                                             <!-- 문의사항/증상 -->
                                             <div class="mb-4" th:if="${comment}">건의사항: <span id="inquiries" th:text="${comment}"></span></div>
-
+                                            <div>접수 이미지</div>
                                             <!-- 이미지 슬라이드 -->
-                                            <div id="imageCarousel" class="carousel slide mb-4" data-bs-ride="carousel" th:if="${imageUrls}">
-                                                <div>접수 이미지</div>
+                                            <div id="imageCarousel" class="carousel slide m-4" data-bs-ride="carousel" th:if="${imageUrls}">
                                                 <div class="carousel-inner">
                                                     <div class="carousel-item position-relative"
                                                          th:each="url, stat : ${imageUrls}"
@@ -149,7 +148,10 @@
                                                     <span class="visually-hidden">다음</span>
                                                 </button>
                                             </div>
-
+                                            <!-- 이미지가 없을 때 메시지 표시 -->
+                                            <div th:if="${imageUrls == null or imageUrls.isEmpty()}" class="text-center text-muted mb-4">
+                                                접수된 이미지가 없습니다.
+                                            </div>
                                             <!-- ✅ 확대보기 모달 -->
                                             <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
                                                 <div class="modal-dialog modal-fullscreen-sm-down modal-dialog-centered">
