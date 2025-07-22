@@ -146,7 +146,7 @@ public class KakaoInquiriesController {
             String phone = suggestionInfoDto.getPhone();
             String comment = suggestionInfoDto.getComment();
             String contact = suggestionInfoDto.getContact();
-            log.info("{} {} {} {} {}",branchName,branchName,phone,comment,contact);
+
             TextCard textCard = new TextCard();
             textCard.setDescription("해당 내용으로 문의사항 접수를 진행하시겠습니까?(궁금)\n" +
                     "\n" +
