@@ -75,24 +75,73 @@ public class KakaoInquiriesController {
     public ChatBotResponse brand(@RequestBody ChatBotRequest chatBotRequest) {
         try {
             ChatBotResponse chatBotResponse = new ChatBotResponse();
+            int page = chatBotRequest.getPageNumber();
             SuggestionInfoDto suggestionInfoDto = chatBotRequest.getSuggestionInfo();
 
             List<List<Object>> brandList = googleSheetUtil.readAllSheet(SHEET_ID, "브랜드 목록");
 
             TextCard textCard = new TextCard();
             textCard.setDescription("문의주실 브랜드를 선택해주세요.");
-
             chatBotResponse.addTextCard(textCard);
-            brandList.forEach(objects -> {
 
-                String brandName = String.valueOf(objects.get(1));
-                log.info("{}",brandName);
-                SuggestionInfoDto newSuggestionInfoDto = SuggestionInfoDto.builder()
+            int pageSize = 10;
+            int total = brandList.size();
+            int start = page * pageSize;
+            int end = Math.min(start + pageSize, total);
+
+            // 해당 페이지에 해당하는 브랜드만 버튼 생성
+            for (int i = start; i < end; i++) {
+                List<Object> row = brandList.get(i);
+                String brandName = String.valueOf(row.get(1));
+
+                SuggestionInfoDto newDto = SuggestionInfoDto.builder()
                         .phone(suggestionInfoDto.getPhone())
                         .brandName(brandName)
                         .build();
-                chatBotResponse.addQuickButton(brandName,ButtonAction.블럭이동,"687ee5104d48f80cb481eebe",ButtonParamKey.suggestionInfo,newSuggestionInfoDto);
-            });
+
+                chatBotResponse.addQuickButton(
+                        brandName,
+                        ButtonAction.블럭이동,
+                        "687ee5104d48f80cb481eebe",
+                        ButtonParamKey.suggestionInfo,
+                        newDto
+                );
+            }
+
+            // 다음 페이지가 있다면 "다음" 버튼 추가
+            if (end < total) {
+                SuggestionInfoDto nextPageDto = SuggestionInfoDto.builder()
+                        .phone(suggestionInfoDto.getPhone())
+                        .build();
+                Button nextButton = new Button(     "다음",
+                        ButtonAction.블럭이동,
+                        "687ee42da467e1683c88debd",
+                        ButtonParamKey.suggestionInfo,
+                        nextPageDto);
+                nextButton.setExtra(ButtonParamKey.pageNumber,page+1);
+                chatBotResponse.addQuickButton(
+                        nextButton
+                );
+            }
+
+            // 이전 페이지가 있다면 "이전" 버튼 추가
+            if (page > 0) {
+                SuggestionInfoDto prevPageDto = SuggestionInfoDto.builder()
+                        .phone(suggestionInfoDto.getPhone())
+                        .build();
+
+                Button prevButton = new Button(     "다음",
+                        ButtonAction.블럭이동,
+                        "687ee42da467e1683c88debd",
+                        ButtonParamKey.suggestionInfo,
+                        prevPageDto);
+                prevButton.setExtra(ButtonParamKey.pageNumber,page-1);
+
+                chatBotResponse.addQuickButton(
+                        prevButton
+                );
+            }
+
             return chatBotResponse;
         }catch (Exception e) {
             log.error("ERROR: {}", e.getMessage(), e);
