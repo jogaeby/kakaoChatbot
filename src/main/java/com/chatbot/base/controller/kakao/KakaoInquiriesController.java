@@ -127,7 +127,7 @@ public class KakaoInquiriesController {
                     listCard.setItem(item);
                 }
 
-                chatBotResponse.addListCard(listCard);
+                carousel.addComponent(listCard);
             }
 //
 //            // 다음 페이지
