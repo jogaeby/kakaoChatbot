@@ -115,9 +115,10 @@ public class KakaoInquiriesController {
                 }
 
                 List<Object> row = dataList.get(dataIndex++);
+                String no = String.valueOf(row.get(0));
                 String brandName = String.valueOf(row.get(1));
                 String thumbnail = String.valueOf(row.get(2));
-
+                log.info("{} {} {}",no,brandName,thumbnail);
                 SuggestionInfoDto newDto = SuggestionInfoDto.builder()
                         .phone(suggestionInfoDto.getPhone())
                         .brandName(brandName)
