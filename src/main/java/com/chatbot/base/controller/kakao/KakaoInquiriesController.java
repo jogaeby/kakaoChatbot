@@ -119,7 +119,6 @@ public class KakaoInquiriesController {
                 String no = (row.size() > 0 && row.get(0) != null) ? String.valueOf(row.get(0)) : "";
                 String brandName = (row.size() > 1 && row.get(1) != null) ? String.valueOf(row.get(1)) : "";
                 String thumbnail = (row.size() > 2 && row.get(2) != null) ? String.valueOf(row.get(2)) : "";
-                log.info("{} {} {}", no, brandName, thumbnail);
 
                 SuggestionInfoDto newDto = SuggestionInfoDto.builder()
                         .phone(suggestionInfoDto.getPhone())
@@ -155,7 +154,6 @@ public class KakaoInquiriesController {
             carousel.addComponent(currentCard);
 
             chatBotResponse.addCarousel(carousel);
-            StringFormatterUtil.objectToString(chatBotResponse); // 로깅 목적이라면 그대로 유지
             return chatBotResponse;
         } catch (Exception e) {
             log.error("ERROR: {}", e.getMessage(), e);
