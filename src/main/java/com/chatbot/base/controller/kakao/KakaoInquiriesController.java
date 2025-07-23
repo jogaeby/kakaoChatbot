@@ -73,7 +73,6 @@ public class KakaoInquiriesController {
     public ChatBotResponse brand(@RequestBody ChatBotRequest chatBotRequest) {
         try {
             ChatBotResponse chatBotResponse = new ChatBotResponse();
-            int page = chatBotRequest.getPageNumber();
             SuggestionInfoDto suggestionInfoDto = chatBotRequest.getSuggestionInfo();
 
             List<List<Object>> brandList = googleSheetUtil.readAllSheet(SHEET_ID, "브랜드 목록");
@@ -154,8 +153,8 @@ public class KakaoInquiriesController {
             carousel.addComponent(currentCard);
 
             chatBotResponse.addCarousel(carousel);
+            log.info("{}",chatBotResponse);
             return chatBotResponse;
-
         } catch (Exception e) {
             log.error("ERROR: {}", e.getMessage(), e);
             return chatBotExceptionResponse.createException();
