@@ -145,12 +145,11 @@ public class KakaoMeetingController {
             SuggestionInfoDto etcDto = SuggestionInfoDto.builder()
                     .phone(suggestionInfoDto.getPhone())
                     .date(suggestionInfoDto.getDate())
-                    .brandName("기타")
                     .build();
 
             ListItem etcItem = new ListItem("기타 브랜드 문의하기");
             etcItem.setImageUrl("http://k.kakaocdn.net/dn/cZbdjj/btsPtViqGGC/XjkURg4zpSrjK6kPI2AdD0/resize.jpg");
-            etcItem.setExtra("687f14faf06e075c82f0e7f7", ButtonParamKey.suggestionInfo, etcDto);
+            etcItem.setExtra("68806c24a467e1683c893df1", ButtonParamKey.suggestionInfo, etcDto);
 
             currentCard.setItem(etcItem);
 
@@ -165,7 +164,26 @@ public class KakaoMeetingController {
             return chatBotExceptionResponse.createException();
         }
     }
+    @PostMapping(value = "input/brand/passivity")
+    public ChatBotResponse brandPassivity(@RequestBody ChatBotRequest chatBotRequest) {
+        try {
+            ChatBotResponse chatBotResponse = new ChatBotResponse();
+            SuggestionInfoDto suggestionInfoDto = chatBotRequest.getSuggestionInfo();
+            String brandName = chatBotRequest.getBrandName();
+            suggestionInfoDto.setBrandName(brandName);
 
+            TextCard textCard = new TextCard();
+            textCard.setDescription("기타 브랜드를 입력하였습니다.\n브랜드명: "+brandName);
+
+            chatBotResponse.addTextCard(textCard);
+            chatBotResponse.addQuickButton("다시입력",ButtonAction.블럭이동,"68806c24a467e1683c893df1",ButtonParamKey.suggestionInfo, suggestionInfoDto);
+            chatBotResponse.addQuickButton("진행하기",ButtonAction.블럭이동,"687f14faf06e075c82f0e7f7",ButtonParamKey.suggestionInfo, suggestionInfoDto);
+            return chatBotResponse;
+        }catch (Exception e) {
+            log.error("ERROR: {}", e.getMessage(), e);
+            return chatBotExceptionResponse.createException();
+        }
+    }
     @PostMapping(value = "input/branch")
     public ChatBotResponse branch(@RequestBody ChatBotRequest chatBotRequest) {
         try {

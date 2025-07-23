@@ -134,6 +134,7 @@ public class ChatBotRequest {
             private String message;
             private String comment;
             private String branchName;
+            private String brandName;
             private String images;
         }
 
@@ -228,6 +229,11 @@ public class ChatBotRequest {
     public String getBranchName(){
         if (Objects.isNull(action.getParams().getBranchName())) return null;
         return action.getParams().getBranchName();
+    }
+
+    public String getBrandName(){
+        if (Objects.isNull(action.getParams().getBrandName())) return null;
+        return action.getParams().getBrandName();
     }
 
     public LocalDate getDate() {
