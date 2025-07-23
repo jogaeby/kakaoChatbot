@@ -146,7 +146,7 @@ public class KakaoInquiriesController {
                     .build();
 
             ListItem etcItem = new ListItem("기타 브랜드 문의하기");
-            etcItem.setImageUrl("https://your-domain.com/etc-thumbnail.png");
+            etcItem.setImageUrl("http://k.kakaocdn.net/dn/cZbdjj/btsPtViqGGC/XjkURg4zpSrjK6kPI2AdD0/resize.jpg");
             etcItem.setExtra("687ee5104d48f80cb481eebe", ButtonParamKey.suggestionInfo, etcDto);
 
             currentCard.setItem(etcItem);
