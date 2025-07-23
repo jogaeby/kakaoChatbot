@@ -4,6 +4,7 @@ import com.chatbot.base.common.AlarmTalkService;
 import com.chatbot.base.common.GoogleSheetUtil;
 import com.chatbot.base.common.ImageUtil;
 import com.chatbot.base.common.util.EncryptionUtil;
+import com.chatbot.base.common.util.StringFormatterUtil;
 import com.chatbot.base.dto.BranchDto;
 import com.chatbot.base.dto.SuggestionInfoDto;
 import com.chatbot.base.dto.kakao.constatnt.button.ButtonAction;
@@ -153,7 +154,7 @@ public class KakaoInquiriesController {
             carousel.addComponent(currentCard);
 
             chatBotResponse.addCarousel(carousel);
-            log.info("{}",chatBotResponse);
+            StringFormatterUtil.objectToString(chatBotResponse);
             return chatBotResponse;
         } catch (Exception e) {
             log.error("ERROR: {}", e.getMessage(), e);
