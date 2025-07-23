@@ -111,9 +111,14 @@ public class KakaoInquiriesController {
                 }
 
                 List<Object> row = dataList.get(dataIndex++);
-                String no = String.valueOf(row.get(0));
-                String brandName = String.valueOf(row.get(1));
-                String thumbnail = String.valueOf(row.get(2));
+
+                if (row.size() <= 1 || row.get(1) == null || String.valueOf(row.get(1)).trim().isEmpty()) {
+                    continue;
+                }
+
+                String no = (row.size() > 0 && row.get(0) != null) ? String.valueOf(row.get(0)) : "";
+                String brandName = (row.size() > 1 && row.get(1) != null) ? String.valueOf(row.get(1)) : "";
+                String thumbnail = (row.size() > 2 && row.get(2) != null) ? String.valueOf(row.get(2)) : "";
                 log.info("{} {} {}", no, brandName, thumbnail);
 
                 SuggestionInfoDto newDto = SuggestionInfoDto.builder()
@@ -141,7 +146,6 @@ public class KakaoInquiriesController {
                     .build();
 
             ListItem etcItem = new ListItem("기타 브랜드 문의하기");
-            etcItem.setDescription("찾으시는 브랜드가 없으신가요?");
             etcItem.setImageUrl("https://your-domain.com/etc-thumbnail.png");
             etcItem.setExtra("687ee5104d48f80cb481eebe", ButtonParamKey.suggestionInfo, etcDto);
 
