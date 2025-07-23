@@ -133,7 +133,6 @@ public class KakaoInquiriesController {
 
             // ✅ 기타 항목 추가
             if (currentCard.getItems().size() >= maxItemPerCard) {
-                carousel.addComponent(currentCard);
                 currentCard = new ListCard();
                 currentCard.setHeader("브랜드");
             }
