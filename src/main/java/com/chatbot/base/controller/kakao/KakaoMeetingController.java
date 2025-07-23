@@ -124,6 +124,7 @@ public class KakaoMeetingController {
 
                 SuggestionInfoDto newDto = SuggestionInfoDto.builder()
                         .phone(suggestionInfoDto.getPhone())
+                        .date(suggestionInfoDto.getDate())
                         .brandName(brandName)
                         .build();
 
@@ -143,6 +144,7 @@ public class KakaoMeetingController {
 
             SuggestionInfoDto etcDto = SuggestionInfoDto.builder()
                     .phone(suggestionInfoDto.getPhone())
+                    .date(suggestionInfoDto.getDate())
                     .brandName("기타")
                     .build();
 
