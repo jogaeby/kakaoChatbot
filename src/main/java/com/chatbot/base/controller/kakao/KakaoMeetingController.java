@@ -173,7 +173,7 @@ public class KakaoMeetingController {
             suggestionInfoDto.setBrandName(brandName);
 
             TextCard textCard = new TextCard();
-            textCard.setDescription("기타 브랜드를 입력하였습니다.\n브랜드명: "+brandName);
+            textCard.setDescription("기타 브랜드를 입력하였습니다.\n\n브랜드명: "+brandName);
 
             chatBotResponse.addTextCard(textCard);
             chatBotResponse.addQuickButton("다시입력",ButtonAction.블럭이동,"68806c24a467e1683c893df1",ButtonParamKey.suggestionInfo, suggestionInfoDto);

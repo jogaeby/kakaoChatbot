@@ -141,12 +141,11 @@ public class KakaoInquiriesController {
 
             SuggestionInfoDto etcDto = SuggestionInfoDto.builder()
                     .phone(suggestionInfoDto.getPhone())
-                    .brandName("기타")
                     .build();
 
             ListItem etcItem = new ListItem("기타 브랜드 문의하기");
             etcItem.setImageUrl("http://k.kakaocdn.net/dn/cZbdjj/btsPtViqGGC/XjkURg4zpSrjK6kPI2AdD0/resize.jpg");
-            etcItem.setExtra("687ee5104d48f80cb481eebe", ButtonParamKey.suggestionInfo, etcDto);
+            etcItem.setExtra("688091c44d48f80cb48255ae", ButtonParamKey.suggestionInfo, etcDto);
 
             currentCard.setItem(etcItem);
 
@@ -156,6 +155,27 @@ public class KakaoInquiriesController {
             chatBotResponse.addCarousel(carousel);
             return chatBotResponse;
         } catch (Exception e) {
+            log.error("ERROR: {}", e.getMessage(), e);
+            return chatBotExceptionResponse.createException();
+        }
+    }
+
+    @PostMapping(value = "input/brand/passivity")
+    public ChatBotResponse brandPassivity(@RequestBody ChatBotRequest chatBotRequest) {
+        try {
+            ChatBotResponse chatBotResponse = new ChatBotResponse();
+            SuggestionInfoDto suggestionInfoDto = chatBotRequest.getSuggestionInfo();
+            String brandName = chatBotRequest.getBrandName();
+            suggestionInfoDto.setBrandName(brandName);
+
+            TextCard textCard = new TextCard();
+            textCard.setDescription("기타 브랜드를 입력하였습니다.\n\n브랜드명: "+brandName);
+
+            chatBotResponse.addTextCard(textCard);
+            chatBotResponse.addQuickButton("다시입력",ButtonAction.블럭이동,"688091c44d48f80cb48255ae",ButtonParamKey.suggestionInfo, suggestionInfoDto);
+            chatBotResponse.addQuickButton("진행하기",ButtonAction.블럭이동,"687ee5104d48f80cb481eebe",ButtonParamKey.suggestionInfo, suggestionInfoDto);
+            return chatBotResponse;
+        }catch (Exception e) {
             log.error("ERROR: {}", e.getMessage(), e);
             return chatBotExceptionResponse.createException();
         }
