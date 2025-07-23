@@ -99,7 +99,7 @@ public class KakaoMeetingController {
 
             int total = dataList.size();
             int maxCardCount = 5;
-            int maxItemPerCard = 4;
+            int maxItemPerCard = 5;
 
             int maxDataCount = Math.min(total, maxCardCount * maxItemPerCard);
 

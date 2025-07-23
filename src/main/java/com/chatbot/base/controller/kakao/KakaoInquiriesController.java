@@ -97,7 +97,7 @@ public class KakaoInquiriesController {
 
             int total = dataList.size();
             int maxCardCount = 5;
-            int maxItemPerCard = 5;
+            int maxItemPerCard = 4;
             int maxItems = maxCardCount * maxItemPerCard; // 25개
 
             // ✅ 마지막 하나는 '기타'를 위해 비워둠
