@@ -91,17 +91,13 @@ public class KakaoInquiriesController {
             chatBotResponse.addTextCard(textCard);
 
             Carousel carousel = new Carousel();
-
-            // ✅ 1번째 행부터 시작
             List<List<Object>> dataList = brandList.subList(1, brandList.size());
 
             int total = dataList.size();
             int maxCardCount = 5;
             int maxItemPerCard = 4;
-            int maxItems = maxCardCount * maxItemPerCard; // 25개
-
-            // ✅ 마지막 하나는 '기타'를 위해 비워둠
-            int brandItemLimit = Math.min(total, maxItems - 1); // 최대 24개만 브랜드
+            int maxItems = maxCardCount * maxItemPerCard; // 20개
+            int brandItemLimit = Math.min(total, maxItems - 1); // 19개까지 브랜드
 
             int dataIndex = 0;
             ListCard currentCard = new ListCard();
@@ -118,7 +114,8 @@ public class KakaoInquiriesController {
                 String no = String.valueOf(row.get(0));
                 String brandName = String.valueOf(row.get(1));
                 String thumbnail = String.valueOf(row.get(2));
-                log.info("{} {} {}",no,brandName,thumbnail);
+                log.info("{} {} {}", no, brandName, thumbnail);
+
                 SuggestionInfoDto newDto = SuggestionInfoDto.builder()
                         .phone(suggestionInfoDto.getPhone())
                         .brandName(brandName)
@@ -133,6 +130,7 @@ public class KakaoInquiriesController {
 
             // ✅ 기타 항목 추가
             if (currentCard.getItems().size() >= maxItemPerCard) {
+                carousel.addComponent(currentCard);
                 currentCard = new ListCard();
                 currentCard.setHeader("브랜드");
             }
@@ -144,7 +142,7 @@ public class KakaoInquiriesController {
 
             ListItem etcItem = new ListItem("기타 브랜드 문의하기");
             etcItem.setDescription("찾으시는 브랜드가 없으신가요?");
-            etcItem.setImageUrl("https://your-domain.com/etc-thumbnail.png"); // 이미지 필요 없으면 생략
+            etcItem.setImageUrl("https://your-domain.com/etc-thumbnail.png");
             etcItem.setExtra("687ee5104d48f80cb481eebe", ButtonParamKey.suggestionInfo, etcDto);
 
             currentCard.setItem(etcItem);
@@ -153,7 +151,7 @@ public class KakaoInquiriesController {
             carousel.addComponent(currentCard);
 
             chatBotResponse.addCarousel(carousel);
-            StringFormatterUtil.objectToString(chatBotResponse);
+            StringFormatterUtil.objectToString(chatBotResponse); // 로깅 목적이라면 그대로 유지
             return chatBotResponse;
         } catch (Exception e) {
             log.error("ERROR: {}", e.getMessage(), e);
