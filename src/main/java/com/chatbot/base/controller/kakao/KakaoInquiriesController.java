@@ -278,6 +278,12 @@ public class KakaoInquiriesController {
 
             googleSheetUtil.appendToSheet(SHEET_ID,"문의 접수내역",newRowData);
 
+            List<List<Object>> admins = googleSheetUtil.readMemberSheet(SHEET_ID);
+            admins.forEach(admin -> {
+                String adminPhone = String.valueOf(admin.get(2));
+                alarmTalkService.sendInquiriesReceipt(adminPhone);
+            });
+
             TextCard textCard = new TextCard();
             textCard.setDescription("\uD83D\uDCE9 문의내용 접수 되었습니다.\n" +
                     "접수번호 : "+id+"\n" +

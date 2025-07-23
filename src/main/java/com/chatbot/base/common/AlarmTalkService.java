@@ -18,8 +18,8 @@ import java.util.HashMap;
 @RequiredArgsConstructor
 public class AlarmTalkService {
     private final String SUGGESTION_RECEIPT_TEMPLATE_ID = "KA01TP250718013926202fU9vtoYPbBM";
-
-
+    private final String INQUIRIES_RECEIPT_TEMPATE_ID = "KA01TP250723051406499b6FElxSnfDw";
+    private final String MEETING_RECEIPT_TEMPATE_ID = "KA01TP25072305143720661iMKGU3EgZ";
     private final String CALLER_1_ID = "010-2322-5435";
     private final String CHANNEL_ID = "KA01PF250717113750014hzmu28fxYvA";
     private final String API_KEY = "NCSJMX2VW5DE5CXS";
@@ -38,6 +38,64 @@ public class AlarmTalkService {
         variables.put("#{지점명}", branchName);
         variables.put("#{만료시간}",date);
         variables.put("#{url}", url);
+
+        kakaoOption.setVariables(variables);
+
+        Message message = new Message();
+        message.setFrom(CALLER_1_ID);
+        message.setTo(StringFormatterUtil.cleanPhoneNumber(targetPhone));
+        message.setKakaoOptions(kakaoOption);
+
+        try {
+            // send 메소드로 ArrayList<Message> 객체를 넣어도 동작합니다!
+            return messageService.send(message);
+        } catch (NurigoMessageNotReceivedException e) {
+            log.error("{} {}",e.getFailedMessageList(),e.getMessage());
+            throw new RuntimeException(e.getMessage());
+        } catch (Exception e) {
+            log.error("{} {}",e.getMessage(),e.getStackTrace());
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public MultipleDetailMessageSentResponse sendInquiriesReceipt(String targetPhone) {
+        DefaultMessageService messageService =  NurigoApp.INSTANCE.initialize(API_KEY, API_SECRET_KEY, "https://api.solapi.com");
+
+        KakaoOption kakaoOption = new KakaoOption();
+        kakaoOption.setPfId(CHANNEL_ID);
+        kakaoOption.setTemplateId(INQUIRIES_RECEIPT_TEMPATE_ID);
+        kakaoOption.setDisableSms(true);
+
+        HashMap<String, String> variables = new HashMap<>();
+
+        kakaoOption.setVariables(variables);
+
+        Message message = new Message();
+        message.setFrom(CALLER_1_ID);
+        message.setTo(StringFormatterUtil.cleanPhoneNumber(targetPhone));
+        message.setKakaoOptions(kakaoOption);
+
+        try {
+            // send 메소드로 ArrayList<Message> 객체를 넣어도 동작합니다!
+            return messageService.send(message);
+        } catch (NurigoMessageNotReceivedException e) {
+            log.error("{} {}",e.getFailedMessageList(),e.getMessage());
+            throw new RuntimeException(e.getMessage());
+        } catch (Exception e) {
+            log.error("{} {}",e.getMessage(),e.getStackTrace());
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public MultipleDetailMessageSentResponse sendMeetingReceipt(String targetPhone) {
+        DefaultMessageService messageService =  NurigoApp.INSTANCE.initialize(API_KEY, API_SECRET_KEY, "https://api.solapi.com");
+
+        KakaoOption kakaoOption = new KakaoOption();
+        kakaoOption.setPfId(CHANNEL_ID);
+        kakaoOption.setTemplateId(MEETING_RECEIPT_TEMPATE_ID);
+        kakaoOption.setDisableSms(true);
+
+        HashMap<String, String> variables = new HashMap<>();
 
         kakaoOption.setVariables(variables);
 

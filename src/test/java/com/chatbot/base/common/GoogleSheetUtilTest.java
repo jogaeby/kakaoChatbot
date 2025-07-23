@@ -63,4 +63,13 @@ class GoogleSheetUtilTest {
             System.out.println("objects = " + objects.get(3));
         });
     }
+
+    @Test
+    void readMemberSheet() throws GeneralSecurityException, IOException {
+        List<List<Object>> lists = googleSheetUtil.readMemberSheet("1XU_k61ZxQZ7PPaaOcjiEeGJAqAniL91piZvFsGP63Uc");
+
+        lists.forEach(objects -> {
+            System.out.println("objects = " + objects.get(2));
+        });
+    }
 }

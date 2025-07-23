@@ -128,29 +128,11 @@ public class GoogleSheetUtil {
     }
 
     public List<List<Object>> readMemberSheet(String spreadSheetId) throws GeneralSecurityException, IOException {
-        List<List<Object>> engineers = readAllSheet(spreadSheetId, "엔지니어");
-        List<List<Object>> on = engineers.stream()
-                .filter(row -> row.size() > 1 )
+        List<List<Object>> engineers = readAllSheet(spreadSheetId, "관리자");
+        return engineers.stream()
+                .filter(row -> row.size() > 3) // 최소한 4번째 컬럼이 존재해야 함
+                .filter(row -> "on".equalsIgnoreCase(String.valueOf(row.get(3))))
                 .collect(Collectors.toList());
-        return on;
-    }
-
-    public List<Object> readMemberSheetByPhone(String spreadSheetId, String phone) throws GeneralSecurityException, IOException {
-        List<List<Object>> lists = readMemberSheet(spreadSheetId);
-
-        // 최신 데이터부터 조회
-        Collections.reverse(lists);
-
-        for (List<Object> row : lists) {
-            if (row.size() > 2) { // 최소한 전화번호 열까지 있어야 함
-                String rowPhone = row.get(1).toString(); // 예: 전화번호가 C열(3번째)일 경우
-                if (phone.equals(rowPhone)) {
-                    return row;
-                }
-            }
-        }
-
-        throw new NoSuchElementException("전화번호가 '" + phone + "'인 데이터를 찾을 수 없습니다.");
     }
 
     public void appendToSheet(String spreadSheetId, String sheetName, List<Object> newRowData) throws GeneralSecurityException, IOException {

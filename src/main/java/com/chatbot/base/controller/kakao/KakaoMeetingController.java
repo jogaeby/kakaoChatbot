@@ -283,6 +283,12 @@ public class KakaoMeetingController {
 
             googleSheetUtil.appendToSheet(SHEET_ID,"미팅 예약내역",newRowData);
 
+//            List<List<Object>> admins = googleSheetUtil.readMemberSheet(SHEET_ID);
+//            admins.forEach(admin -> {
+//                String adminPhone = String.valueOf(admin.get(2));
+//                alarmTalkService.sendMeetingReceipt(adminPhone);
+//            });
+
             TextCard textCard = new TextCard();
             textCard.setDescription("\uD83D\uDCE9 미팅 예약이 접수 되었습니다.\n" +
                     "접수번호 : "+id+"\n" +
