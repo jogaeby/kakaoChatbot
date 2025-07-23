@@ -76,12 +76,11 @@ public class KakaoMeetingController {
     public ChatBotResponse brand(@RequestBody ChatBotRequest chatBotRequest) {
         try {
             ChatBotResponse chatBotResponse = new ChatBotResponse();
-            int page = chatBotRequest.getPageNumber();
             SuggestionInfoDto suggestionInfoDto = chatBotRequest.getSuggestionInfo();
 
             List<List<Object>> brandList = googleSheetUtil.readAllSheet(SHEET_ID, "브랜드 목록");
 
-            // ✅ 0번째 행(헤더) 제외
+            // ✅ 헤더 제외
             if (brandList.size() <= 1) {
                 TextCard noBrandText = new TextCard();
                 noBrandText.setDescription("브랜드 목록이 없습니다.");
@@ -89,49 +88,72 @@ public class KakaoMeetingController {
                 return chatBotResponse;
             }
 
-            // ✅ 1번째 행부터 시작
-            List<List<Object>> dataList = brandList.subList(1, brandList.size());
-
             TextCard textCard = new TextCard();
             textCard.setDescription("문의주실 브랜드를 선택해주세요.");
             chatBotResponse.addTextCard(textCard);
+
             Carousel carousel = new Carousel();
+            List<List<Object>> dataList = brandList.subList(1, brandList.size());
 
             int total = dataList.size();
             int maxCardCount = 5;
-            int maxItemPerCard = 5;
+            int maxItemPerCard = 4;
+            int maxItems = maxCardCount * maxItemPerCard; // 20개
+            int brandItemLimit = Math.min(total, maxItems - 1); // 19개까지 브랜드
 
-            int maxDataCount = Math.min(total, maxCardCount * maxItemPerCard);
+            int dataIndex = 0;
+            ListCard currentCard = new ListCard();
+            currentCard.setHeader("브랜드");
 
-            for (int cardIndex = 0; cardIndex < maxCardCount; cardIndex++) {
-                int startIndex = cardIndex * maxItemPerCard;
-                if (startIndex >= maxDataCount) break;
-
-                ListCard listCard = new ListCard();
-                listCard.setHeader("브랜드");
-
-                for (int itemIndex = 0; itemIndex < maxItemPerCard; itemIndex++) {
-                    int dataIndex = startIndex + itemIndex;
-                    if (dataIndex >= maxDataCount) break;
-
-                    List<Object> row = dataList.get(dataIndex);
-                    String brandName = String.valueOf(row.get(1));
-                    String thumbnail = String.valueOf(row.get(2));
-
-                    SuggestionInfoDto newDto = SuggestionInfoDto.builder()
-                            .phone(suggestionInfoDto.getPhone())
-                            .date(suggestionInfoDto.getDate())
-                            .brandName(brandName)
-                            .build();
-                    ListItem item = new ListItem(brandName);
-                    item.setImageUrl(thumbnail);
-                    item.setExtra("687f14faf06e075c82f0e7f7",ButtonParamKey.suggestionInfo,newDto);
-
-                    listCard.setItem(item);
+            for (int i = 0; i < brandItemLimit; i++) {
+                if (currentCard.getItems().size() >= maxItemPerCard) {
+                    carousel.addComponent(currentCard);
+                    currentCard = new ListCard();
+                    currentCard.setHeader("브랜드");
                 }
 
-                carousel.addComponent(listCard);
+                List<Object> row = dataList.get(dataIndex++);
+
+                if (row.size() <= 1 || row.get(1) == null || String.valueOf(row.get(1)).trim().isEmpty()) {
+                    continue;
+                }
+
+                String no = (row.size() > 0 && row.get(0) != null) ? String.valueOf(row.get(0)) : "";
+                String brandName = (row.size() > 1 && row.get(1) != null) ? String.valueOf(row.get(1)) : "";
+                String thumbnail = (row.size() > 2 && row.get(2) != null) ? String.valueOf(row.get(2)) : "";
+
+                SuggestionInfoDto newDto = SuggestionInfoDto.builder()
+                        .phone(suggestionInfoDto.getPhone())
+                        .brandName(brandName)
+                        .build();
+
+                ListItem item = new ListItem(brandName);
+                item.setImageUrl(thumbnail);
+                item.setExtra("687f14faf06e075c82f0e7f7", ButtonParamKey.suggestionInfo, newDto);
+
+                currentCard.setItem(item);
             }
+
+            // ✅ 기타 항목 추가
+            if (currentCard.getItems().size() >= maxItemPerCard) {
+                carousel.addComponent(currentCard);
+                currentCard = new ListCard();
+                currentCard.setHeader("브랜드");
+            }
+
+            SuggestionInfoDto etcDto = SuggestionInfoDto.builder()
+                    .phone(suggestionInfoDto.getPhone())
+                    .brandName("기타")
+                    .build();
+
+            ListItem etcItem = new ListItem("기타 브랜드 문의하기");
+            etcItem.setImageUrl("http://k.kakaocdn.net/dn/cZbdjj/btsPtViqGGC/XjkURg4zpSrjK6kPI2AdD0/resize.jpg");
+            etcItem.setExtra("687f14faf06e075c82f0e7f7", ButtonParamKey.suggestionInfo, etcDto);
+
+            currentCard.setItem(etcItem);
+
+            // ✅ 마지막 카드 추가
+            carousel.addComponent(currentCard);
 
             chatBotResponse.addCarousel(carousel);
             return chatBotResponse;
