@@ -15,7 +15,12 @@ class AlarmTalkServiceTest {
     }
 
     @Test
-    void name() {
+    void sendInquiriesReceipt() {
         alarmTalkService.sendInquiriesReceipt("01077131548");
+    }
+
+    @Test
+    void name() {
+        alarmTalkService.sendMeetingReceipt("01077131548");
     }
 }
