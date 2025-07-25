@@ -154,7 +154,7 @@ public class KakaoSuggestionController {
             String comment = suggestionInfoDto.getComment();
 
             TextCard textCard = new TextCard();
-            textCard.setDescription("해당 내용으로 건의사항 접수를 진행하시겠습니까?(궁금)\n" +
+            textCard.setDescription("해당 내용으로 건의사항 접수를 진행하시겠습니까?\n" +
                     "\n" +
                     "※ 아래에 있는 버튼을 눌러 계속 진행하세요.");
 

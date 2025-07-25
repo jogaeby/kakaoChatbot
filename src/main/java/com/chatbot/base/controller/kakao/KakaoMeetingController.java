@@ -232,7 +232,7 @@ public class KakaoMeetingController {
             String contact = suggestionInfoDto.getContact();
             String date = suggestionInfoDto.getDate();
             TextCard textCard = new TextCard();
-            textCard.setDescription("해당 내용으로 미팅 예약을 진행하시겠습니까?(궁금)\n" +
+            textCard.setDescription("해당 내용으로 미팅 예약을 진행하시겠습니까?\n" +
                     "\n" +
                     "※ 아래에 있는 버튼을 눌러 계속 진행하세요.");
 

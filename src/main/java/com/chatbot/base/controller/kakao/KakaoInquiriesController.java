@@ -228,7 +228,7 @@ public class KakaoInquiriesController {
             String contact = suggestionInfoDto.getContact();
 
             TextCard textCard = new TextCard();
-            textCard.setDescription("해당 내용으로 문의사항 접수를 진행하시겠습니까?(궁금)\n" +
+            textCard.setDescription("해당 내용으로 문의사항 접수를 진행하시겠습니까?\n" +
                     "\n" +
                     "※ 아래에 있는 버튼을 눌러 계속 진행하세요.");
 
