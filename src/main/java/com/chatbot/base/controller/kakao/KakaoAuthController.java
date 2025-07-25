@@ -28,14 +28,13 @@ public class KakaoAuthController {
     private final KakaoChatBotView kakaoChatBotView;
     private ChatBotExceptionResponse chatBotExceptionResponse = new ChatBotExceptionResponse();
 
-    @PostMapping("test")
-    public ChatBotResponse test(@RequestBody String chatBotRequest) {
+    @PostMapping("fallback")
+    public ChatBotResponse fallback(@RequestBody ChatBotRequest chatBotRequest) {
         ChatBotResponse chatBotResponse = new ChatBotResponse();
 
-        log.info("{}",chatBotRequest);
+        log.info("fallback 질문 {}",chatBotRequest.getUtterance());
 
-
-        chatBotResponse.addSimpleText("테스트중입니다.");
+        chatBotResponse.addSimpleText("");
         return chatBotResponse;
     }
 
