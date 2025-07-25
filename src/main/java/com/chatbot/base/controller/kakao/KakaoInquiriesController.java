@@ -3,9 +3,6 @@ package com.chatbot.base.controller.kakao;
 import com.chatbot.base.common.AlarmTalkService;
 import com.chatbot.base.common.GoogleSheetUtil;
 import com.chatbot.base.common.ImageUtil;
-import com.chatbot.base.common.util.EncryptionUtil;
-import com.chatbot.base.common.util.StringFormatterUtil;
-import com.chatbot.base.dto.BranchDto;
 import com.chatbot.base.dto.SuggestionInfoDto;
 import com.chatbot.base.dto.kakao.constatnt.button.ButtonAction;
 import com.chatbot.base.dto.kakao.constatnt.button.ButtonParamKey;
@@ -14,7 +11,10 @@ import com.chatbot.base.dto.kakao.response.ChatBotExceptionResponse;
 import com.chatbot.base.dto.kakao.response.ChatBotResponse;
 import com.chatbot.base.dto.kakao.response.property.common.Button;
 import com.chatbot.base.dto.kakao.response.property.common.ListItem;
-import com.chatbot.base.dto.kakao.response.property.components.*;
+import com.chatbot.base.dto.kakao.response.property.components.Carousel;
+import com.chatbot.base.dto.kakao.response.property.components.ItemCard;
+import com.chatbot.base.dto.kakao.response.property.components.ListCard;
+import com.chatbot.base.dto.kakao.response.property.components.TextCard;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,7 +27,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -285,7 +284,7 @@ public class KakaoInquiriesController {
             });
 
             TextCard textCard = new TextCard();
-            textCard.setDescription("\uD83D\uDCE9 문의내용 접수 되었습니다.\n" +
+            textCard.setDescription("문의내용 접수 되었습니다.\n" +
                     "접수번호 : "+id+"\n" +
                     "\n" +
                     "답변까지 최대 24시간 소요될 수 있으니 참고부탁드리며 최대한 빠르게 연락드리겠습니다.:-) "

@@ -247,7 +247,7 @@ public class KakaoSuggestionController {
             alarmTalkService.sendSuggestionReceipt(branchDto.getManagerPhone(),branchDto.getBranchName(),expiredDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")),BaseUrl);
 
             TextCard textCard = new TextCard();
-            textCard.setDescription("\uD83D\uDCE9 접수 완료!\n" +
+            textCard.setDescription("접수 완료!\n" +
                     "접수번호 : "+id+"\n" +
                     "\n" +
                     "담당자가 확인 후 빠르게 조치하겠습니다.\n" +

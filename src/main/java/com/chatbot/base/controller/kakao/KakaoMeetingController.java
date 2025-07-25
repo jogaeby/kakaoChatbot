@@ -290,7 +290,7 @@ public class KakaoMeetingController {
             });
 
             TextCard textCard = new TextCard();
-            textCard.setDescription("\uD83D\uDCE9 미팅 예약이 접수 되었습니다.\n" +
+            textCard.setDescription("미팅 예약이 접수 되었습니다.\n" +
                     "접수번호 : "+id+"\n" +
                     "\n" +
                     "답변까지 최대 24시간 소요될 수 있으니 참고부탁드리며 최대한 빠르게 연락드리겠습니다.:-) "
