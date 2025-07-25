@@ -251,7 +251,7 @@ public class KakaoSuggestionController {
                     "접수번호 : "+id+"\n" +
                     "\n" +
                     "담당자가 확인 후 빠르게 조치하겠습니다.\n" +
-                    "감사합니다!(크크)");
+                    "감사합니다!");
             chatBotResponse.addTextCard(textCard);
 
             return chatBotResponse;
