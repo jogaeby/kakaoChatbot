@@ -1,12 +1,12 @@
 services:
   mysql:
     image: 'mysql:8.0'
-    container_name: mysql-container-yesClean
+    container_name: mysql-container-sesameOil
     environment:
-      - 'MYSQL_DATABASE=yesClean'
-      - 'MYSQL_USER=yesClean'
-      - 'MYSQL_PASSWORD=yesClean2025!'
-      - 'MYSQL_ROOT_PASSWORD=yesClean2025!'
+      - 'MYSQL_DATABASE=sesameOil'
+      - 'MYSQL_USER=sesameOil'
+      - 'MYSQL_PASSWORD=sesameOil2025!'
+      - 'MYSQL_ROOT_PASSWORD=sesameOil2025!'
     ports:
       - '3306:3306'
     volumes:
@@ -19,11 +19,11 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: spring_app_prod_yesClean
+    container_name: spring_app_prod_sesameOil
     environment:
-      - 'SPRING_DATASOURCE_URL=jdbc:mysql://mysql-container-yesClean:3306/yesClean'
-      - 'SPRING_DATASOURCE_USERNAME=yesClean'
-      - 'SPRING_DATASOURCE_PASSWORD=yesClean2025!'
+      - 'SPRING_DATASOURCE_URL=jdbc:mysql://mysql-container-sesameOil:3306/sesameOil'
+      - 'SPRING_DATASOURCE_USERNAME=sesameOil'
+      - 'SPRING_DATASOURCE_PASSWORD=sesameOil2025!'
       - 'SPRING_DATA_REDIS_HOST=redis'
       - 'SPRING_DATA_REDIS_PORT=6379'
     ports:

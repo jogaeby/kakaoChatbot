@@ -11,36 +11,36 @@ spring:
     redis:
       host: localhost
       port: 6379
-#  jpa:
-#    hibernate:
-#      #create: ????? ?? ? ?? ?? (DROP + CREATE)
-#      #create-drop: create? ??? ????? ??? DROP
-#      #update: ???? ??(??DB??? ???? ??)
-#      #validate: ???? ???? ?? ??????? ??
-#      #none: ???? ??(??? ?? ???? ??? none??? ??.)
-#      ddl-auto: update
-#      naming:
-#        strategy: implicit
-#        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-#    show-sql: true
-#    properties:
-#      hibernate:
-#        dialect: org.hibernate.dialect.MySQL8Dialect
-#        format_sql: true
-#        type: trace
-#        highlight_sql: true
-#        id:
-#          new_generator_mappings: false
-#        jdbc:
-#          time_zone: Asia/Seoul
-#  datasource:
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://43.203.66.39:3306/tefal
-#    username: tefal
-#    password: tefal2025!
-#    hikari:
-#      maximum-pool-size: 10
-#      minimum-idle: 5
+  jpa:
+    hibernate:
+      #create: ????? ?? ? ?? ?? (DROP + CREATE)
+      #create-drop: create? ??? ????? ??? DROP
+      #update: ???? ??(??DB??? ???? ??)
+      #validate: ???? ???? ?? ??????? ??
+      #none: ???? ??(??? ?? ???? ??? none??? ??.)
+      ddl-auto: update
+      naming:
+        strategy: implicit
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+        type: trace
+        highlight_sql: true
+        id:
+          new_generator_mappings: false
+        jdbc:
+          time_zone: Asia/Seoul
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/sesameOil
+    username: sesameOil
+    password: sesameOil2025!
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
 jwt:
   secret: f8as1DD943kfdQWPz9v0z0POjrjklj12FZcCxVq713jf8LJK129Kk8LjkHF9971kjlf8f0231kJkl13JHfnc1LL21839ZX7381dhfkqwi74
 logging:
