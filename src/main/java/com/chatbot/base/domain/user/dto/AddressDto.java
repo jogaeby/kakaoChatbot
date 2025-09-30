@@ -18,5 +18,5 @@ public class AddressDto {
 
     private String fullAddress;
 
-    private boolean isDefault; // 기본 배송지 여부
+    private boolean defaultYn; // 기본 배송지 여부
 }

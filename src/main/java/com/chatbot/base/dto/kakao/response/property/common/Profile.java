@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Profile {
     private String nickname;
+    private String title;
     private String imageUrl = "https://pointman-file-repository.s3.ap-northeast-2.amazonaws.com/image/profile/icon-friends-ryan.png";
      /**
       * 이미지 사이즈는 180px X 180px 추천합니다.
@@ -19,6 +20,11 @@ public class Profile {
         this.nickname = nickname;
         this.imageUrl = imageUrl;
     }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public void changeProfileImage(String imageUrl){
         this.imageUrl = imageUrl;
     }

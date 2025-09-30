@@ -1,5 +1,6 @@
 package com.chatbot.base.dto.kakao.request;
 
+import com.chatbot.base.domain.user.dto.UserDto;
 import com.chatbot.base.dto.kakao.sync.KakaoProfileRequestDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -117,6 +118,7 @@ public class ChatBotRequest {
             private String pageNumber;
             private String firstNumber;
             private String lastNumber;
+            private UserDto user;
         }
 
         @Getter
@@ -252,6 +254,11 @@ public class ChatBotRequest {
     public String getChoiceParam(){
         if (Objects.isNull(action.getClientExtra().getChoice())) return null;
         return action.getClientExtra().getChoice();
+    }
+
+    public UserDto getUser(){
+        if (Objects.isNull(action.getClientExtra().getUser())) return null;
+        return action.getClientExtra().getUser();
     }
 
     public String getAddressParam(){

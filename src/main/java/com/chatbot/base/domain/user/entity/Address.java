@@ -47,16 +47,17 @@ public class Address extends BaseEntity {
         this.isDefault = isDefault;
     }
 
-    public static Address create(String fullAddress) {
+    public static Address create(String fullAddress, boolean isDefault) {
         return Address.builder()
                 .fullAddress(fullAddress)
+                .isDefault(isDefault)
                 .build();
     }
 
     public AddressDto toDto() {
         return AddressDto.builder()
                 .fullAddress(this.fullAddress)
-                .isDefault(this.isDefault)
+                .defaultYn(this.isDefault)
                 .build();
     }
 }

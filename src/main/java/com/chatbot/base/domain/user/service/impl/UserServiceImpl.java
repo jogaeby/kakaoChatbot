@@ -20,7 +20,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UserDto join(String channelName, String userKey, String name, String phone, String address, boolean privacyAgreed) {
+    public UserDto join(String channelName, String userKey, String name, String phone, String address, boolean addressDefault, boolean privacyAgreed) {
         Optional<UserDto> maybeUser = isUser(userKey);
 
         if (maybeUser.isPresent()) {
@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService {
         }
 
 
-        User user = User.create(channelName, userKey, name, phone, address, true);
+        User user = User.create(channelName, userKey, name, phone, address, addressDefault,true);
         User save = userRepository.save(user);
 
         return save.toDto();

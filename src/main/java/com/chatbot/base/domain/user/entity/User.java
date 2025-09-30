@@ -53,8 +53,8 @@ public class User extends BaseEntity {
         this.addresses = addresses;
     }
 
-    public static User create(String channelName, String userKey, String name, String phone, String fullAddress, boolean privacyAgreed) {
-        Address address = Address.create(fullAddress);
+    public static User create(String channelName, String userKey, String name, String phone, String fullAddress, boolean isDefault,boolean privacyAgreed) {
+        Address address = Address.create(fullAddress,isDefault);
         return User.builder()
                 .userKey(userKey)
                 .name(name)

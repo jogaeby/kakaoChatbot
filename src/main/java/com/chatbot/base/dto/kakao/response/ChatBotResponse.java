@@ -184,6 +184,15 @@ public class ChatBotResponse {
         this.template.getOutputs().add(component);
     }
 
+    public void addTextCard(String description){
+        TextCard textCard = new TextCard();
+        textCard.setDescription(description);
+
+        Component component = new Component(textCard);
+
+        this.template.getOutputs().add(component);
+    }
+
     public void addBasicCard(BasicCard basicCard){
         if(basicCard.getThumbnail().getImageUrl().isBlank()) throw new IllegalArgumentException("썸네일 이미지 URL은 필수입니다.");
 
