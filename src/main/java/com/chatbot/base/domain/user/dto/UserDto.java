@@ -16,6 +16,8 @@ public class UserDto {
 
     private String phone;
 
+    private String channelName;
+
     private boolean privacyAgreed;
 
     private LocalDateTime privacyAgreedAt;

@@ -28,6 +28,8 @@ public class User extends BaseEntity {
     private String name;
     @Column(nullable = false)
     private String phone;
+    @Column(nullable = false)
+    private String channelName;
 
     @Column(nullable = false)
     private boolean privacyAgreed;
@@ -41,21 +43,23 @@ public class User extends BaseEntity {
     private List<Address> addresses = new ArrayList<>();
 
     @Builder
-    public User(String userKey, String name, String phone, boolean privacyAgreed, LocalDateTime privacyAgreedAt, List<Address> addresses) {
+    public User(String channelName, String userKey, String name, String phone, boolean privacyAgreed, LocalDateTime privacyAgreedAt, List<Address> addresses) {
         this.userKey = userKey;
         this.name = name;
         this.phone = phone;
+        this.channelName = channelName;
         this.privacyAgreed = privacyAgreed;
         this.privacyAgreedAt = privacyAgreedAt;
         this.addresses = addresses;
     }
 
-    public static User create(String userKey, String name, String phone, String fullAddress, boolean privacyAgreed) {
+    public static User create(String channelName, String userKey, String name, String phone, String fullAddress, boolean privacyAgreed) {
         Address address = Address.create(fullAddress);
         return User.builder()
                 .userKey(userKey)
                 .name(name)
                 .phone(phone)
+                .channelName(channelName)
                 .addresses(new ArrayList<>(List.of(address))) // ✅ 수정 가능 리스트
                 .privacyAgreed(privacyAgreed)
                 .privacyAgreedAt(LocalDateTime.now())
@@ -74,6 +78,7 @@ public class User extends BaseEntity {
                 .userKey(this.userKey)
                 .name(this.name)
                 .phone(this.phone)
+                .channelName(this.channelName)
                 .privacyAgreed(this.privacyAgreed)
                 .privacyAgreedAt(this.privacyAgreedAt)
                 .addressDtos(addressDtos)

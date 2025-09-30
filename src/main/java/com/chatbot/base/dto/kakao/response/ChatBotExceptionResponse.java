@@ -21,9 +21,9 @@ public class ChatBotExceptionResponse {
     public ChatBotResponse createAuthException(){
         ChatBotResponse chatBotResponse = new ChatBotResponse();
         TextCard textCard = new TextCard();
-        textCard.setTitle("[개인정보 수집 동의]");
-        textCard.setDescription("서비스 이용을 위해 개인정보 동의가 필요합니다\n아래 버튼을 눌러 개인정보 수집 동의를 진행해주세요.");
-        textCard.setButtons(new Button("동의하러 가기", ButtonAction.블럭이동,"677b1de1614a6314a21dc5d4"));
+        textCard.setTitle("[간편가입]");
+        textCard.setDescription("서비스 이용을 위해 간편가입이 필요합니다.\n아래 버튼을 눌러 간편가입을 진행해주세요.");
+        textCard.setButtons(new Button("간편가입 하러가기", ButtonAction.블럭이동,"677b1de1614a6314a21dc5d4"));
         chatBotResponse.addTextCard(textCard);
         return chatBotResponse;
     }

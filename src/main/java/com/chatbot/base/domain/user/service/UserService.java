@@ -5,7 +5,7 @@ import com.chatbot.base.domain.user.dto.UserDto;
 import java.util.Optional;
 
 public interface UserService {
-    UserDto join(String userKey, String name, String phone, String address, boolean privacyAgreed);
+    UserDto join(String channelName, String userKey, String name, String phone, String address, boolean privacyAgreed);
 
     Optional<UserDto> isUser(String userKey);
 }
