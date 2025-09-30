@@ -23,14 +23,15 @@ public class ProductServiceImpl implements ProductService {
             List<ProductDto> productDtoList = lists.stream()
                     .skip(1)
                     .map(row -> {
-                        boolean soldOut = row.get(5).toString().equals("품절")?false:true;
+                        boolean soldOut = row.get(7).toString().equals("품절") ? true : false;
                         return ProductDto.builder()
                                 .name(row.get(1).toString())
                                 .price(Integer.parseInt(row.get(2).toString()))
                                 .discountRate(Integer.parseInt(row.get(3).toString()))
                                 .discount(0)
-                                .discountedPrice(0)
-                                .imageUrl(row.get(4).toString())
+                                .discountedPrice(Integer.parseInt(row.get(4).toString()))
+                                .description(row.get(5).toString())
+                                .imageUrl(row.get(6).toString())
                                 .isSoldOut(soldOut)
                                 .build();
                     })

@@ -1,5 +1,6 @@
 package com.chatbot.base.domain.product.controller;
 
+import com.chatbot.base.common.util.StringFormatterUtil;
 import com.chatbot.base.domain.product.dto.ProductDto;
 import com.chatbot.base.domain.product.service.ProductService;
 import com.chatbot.base.domain.user.dto.AddressDto;
@@ -48,14 +49,22 @@ public class KakaoProductController {
 
 
             products.forEach(productDto -> {
-                Button buyButton = new Button("구매하기", ButtonAction.블럭이동,"123123");
+                StringFormatterUtil.objectToString(productDto);
+                Button button;
+                if (productDto.isSoldOut()) {
+                    button = new Button("품절", ButtonAction.메시지,"품절된 상품입니다.");
+                }else {
+                    button = new Button("구매하기", ButtonAction.블럭이동,"123123");
+                }
 
                 CommerceCard commerceCard = new CommerceCard();
                 commerceCard.setTitle(productDto.getName());
                 commerceCard.setThumbnails(productDto.getImageUrl(),false);
                 commerceCard.setPrice(productDto.getPrice());
                 commerceCard.setDiscountRate(productDto.getDiscountRate());
-                commerceCard.setButton(buyButton);
+                commerceCard.setDiscountedPrice(productDto.getDiscountedPrice());
+                commerceCard.setDescription(productDto.getDescription());
+                commerceCard.setButton(button);
 
                 carousel.addComponent(commerceCard);
             });

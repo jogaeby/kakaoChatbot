@@ -145,8 +145,6 @@ public class KakaoUserController {
 
 
                 chatBotResponse.addItemCard(itemCard);
-                StringFormatterUtil.objectToString(chatBotResponse);
-
                 return chatBotResponse;
             }
 
