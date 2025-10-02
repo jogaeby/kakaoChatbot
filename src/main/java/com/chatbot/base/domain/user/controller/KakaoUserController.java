@@ -78,7 +78,7 @@ public class KakaoUserController {
             chatBotResponse.addItemCard(itemCard);
             chatBotResponse.addQuickButton("다시입력", ButtonAction.블럭이동,"68de3871539054197046e5b2");
             chatBotResponse.addQuickButton("가입하기", ButtonAction.블럭이동,"68de386847a9e61d1ae66a39", ButtonParamKey.user,joinForm);
-
+            StringFormatterUtil.objectToString(chatBotResponse);
             return chatBotResponse;
         }catch (Exception e) {
             log.error("ERROR: {}", e.getMessage(), e);
