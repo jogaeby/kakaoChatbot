@@ -29,7 +29,7 @@ public class ChatBotExceptionResponse {
         TextCard textCard = new TextCard();
         textCard.setTitle("[간편가입]");
         textCard.setDescription("서비스 이용을 위해 간편가입이 필요합니다.\n아래 버튼을 눌러 간편가입을 진행해주세요.");
-        textCard.setButtons(new Button("간편가입 하러가기", ButtonAction.블럭이동,"68db629147a9e61d1ae5add0"));
+        textCard.setButtons(new Button("간편가입 하러가기", ButtonAction.블럭이동,"68de385147a9e61d1ae66a34"));
         chatBotResponse.addTextCard(textCard);
         return chatBotResponse;
     }

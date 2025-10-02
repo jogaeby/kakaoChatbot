@@ -19,7 +19,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductDto> getProducts() {
         try {
-            List<List<Object>> lists = googleSheetUtil.readAllSheet("1ml0Gsk3drFGlap_pRSkC_T3gqdPkoM8hGB9PBWACQAw", "상품목록");
+            List<List<Object>> lists = googleSheetUtil.readAllSheet("12LK-mODVa9b5b8KA_m68GUF50AojwdOK7_0cok3inFM", "상품목록");
             List<ProductDto> productDtoList = lists.stream()
                     .skip(1)
                     .map(row -> {
