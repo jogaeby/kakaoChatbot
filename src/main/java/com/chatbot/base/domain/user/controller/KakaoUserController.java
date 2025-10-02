@@ -132,7 +132,7 @@ public class KakaoUserController {
                         .orElse("설정안됨");
 
                 Profile profile = new Profile();
-                profile.setTitle("프로필 정보");
+//                profile.setTitle("프로필 정보");
                 ItemCard itemCard = new ItemCard();
                 itemCard.setProfile(profile);
                 itemCard.setItemListAlignment("right");
