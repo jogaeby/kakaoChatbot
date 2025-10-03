@@ -58,7 +58,7 @@ public class ProductServiceImpl implements ProductService {
             order.add(id);
             order.add(userDto.getUserKey());
             order.add(userDto.getName());
-            order.add("'"+userDto.getPhone());
+            order.add(userDto.getPhone());
             order.add(userDto.getDefaultAddress().getFullAddress());
             order.add(productDto.getId());
             order.add(productDto.getName());
