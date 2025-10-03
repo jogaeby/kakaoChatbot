@@ -217,7 +217,7 @@ public class KakaoProductController {
 
             chatBotResponse.addTextCard(textCard);
             chatBotResponse.addItemCard(itemCard);
-            chatBotResponse.addTextCard(delivery);
+//            chatBotResponse.addTextCard(delivery);
             chatBotResponse.addQuickButton("처음으로",ButtonAction.블럭이동,"68de38ae47a9e61d1ae66a4f");
 
             Button orderButton = new Button("주문하기",ButtonAction.블럭이동,"68df7bdc5390541970472535",ButtonParamKey.product,product);
