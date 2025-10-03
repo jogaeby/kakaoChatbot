@@ -23,4 +23,12 @@ public class UserDto {
     private LocalDateTime privacyAgreedAt;
 
     private List<AddressDto> addressDtos;
+
+    public AddressDto getDefaultAddress() {
+        return addressDtos.stream()
+                .filter(AddressDto::isDefaultYn)
+                .findFirst()
+                .orElse(null);
+    }
+
 }

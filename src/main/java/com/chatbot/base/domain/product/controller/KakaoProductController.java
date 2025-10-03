@@ -14,6 +14,7 @@ import com.chatbot.base.dto.kakao.response.ChatBotResponse;
 import com.chatbot.base.dto.kakao.response.property.common.Button;
 import com.chatbot.base.dto.kakao.response.property.common.ListItem;
 import com.chatbot.base.dto.kakao.response.property.common.Profile;
+import com.chatbot.base.dto.kakao.response.property.common.Thumbnail;
 import com.chatbot.base.dto.kakao.response.property.components.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +35,8 @@ public class KakaoProductController {
     private final ChatBotExceptionResponse chatBotExceptionResponse = new ChatBotExceptionResponse();
 
     private final ProductService productService;
+
+    private final UserService service;
 
     @PostMapping(value = "list")
     public ChatBotResponse productList(@RequestBody ChatBotRequest chatBotRequest) {
@@ -110,6 +113,50 @@ public class KakaoProductController {
 
 
             chatBotResponse.addCommerceCard(commerceCard);
+
+            return chatBotResponse;
+        }catch (Exception e) {
+            log.error("ERROR: {}", e.getMessage(), e);
+            return chatBotExceptionResponse.createException();
+        }
+    }
+
+    @PostMapping(value = "orderSheet")
+    public ChatBotResponse productOrderSheet(@RequestBody ChatBotRequest chatBotRequest) {
+        try {
+            ChatBotResponse chatBotResponse = new ChatBotResponse();
+
+            Optional<UserDto> maybeUser = service.isUser(chatBotRequest.getUserKey());
+
+            if (maybeUser.isEmpty()) {
+                return chatBotExceptionResponse.createAuthException();
+            }
+
+            UserDto userDto = maybeUser.get();
+
+            ProductDto product = chatBotRequest.getProduct();
+
+            TextCard textCard = new TextCard();
+            textCard.setDescription("아래 내용으로 주문을 진행하시겠습니까?");
+
+            TextCard delivery = new TextCard();
+            delivery.setTitle("배송지");
+            delivery.setDescription(userDto.getDefaultAddress().getFullAddress());
+
+            int totalPrice = product.getDiscountedPrice() * product.getQuantity();
+
+            ItemCard itemCard = new ItemCard();
+            itemCard.setItemListAlignment("right");
+
+            itemCard.setThumbnail(new Thumbnail(product.getImageUrl()));
+            itemCard.addItemList("상품명",product.getName());
+            itemCard.addItemList("개당 가격",String.valueOf(product.getDiscountedPrice()));
+            itemCard.addItemList("수량",String.valueOf(product.getQuantity()));
+            itemCard.setSummary("총 결제 금액",String.valueOf(totalPrice)+"원");
+
+            chatBotResponse.addTextCard(textCard);
+            chatBotResponse.addItemCard(itemCard);
+            chatBotResponse.addTextCard(delivery);
 
             return chatBotResponse;
         }catch (Exception e) {
