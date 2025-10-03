@@ -8,9 +8,10 @@ import jakarta.persistence.EntityListeners;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
+@Getter
 @Entity
 @Table(name = "addresses")
 @EntityListeners(AuditingEntityListener.class)
@@ -59,5 +60,13 @@ public class Address extends BaseEntity {
                 .fullAddress(this.fullAddress)
                 .defaultYn(this.isDefault)
                 .build();
+    }
+
+    public void updateFullAddress(String fullAddress) {
+        this.fullAddress = fullAddress;
+    }
+
+    void updateDefaultStatus(boolean isDefault) {
+        this.isDefault = isDefault;
     }
 }

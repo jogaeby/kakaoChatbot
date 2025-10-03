@@ -39,4 +39,15 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByUserKey(userKey)
                 .map(User::toDto);
     }
+
+    @Transactional
+    @Override
+    public UserDto modifyAddress(UserDto userDto, String address) {
+        String userKey = userDto.getUserKey();
+
+        User user = userRepository.findByUserKey(userKey).get();
+        user.modifyDefaultAddress(address);
+
+        return user.toDto();
+    }
 }

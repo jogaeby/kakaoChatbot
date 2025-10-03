@@ -8,4 +8,6 @@ public interface UserService {
     UserDto join(String channelName, String userKey, String name, String phone, String address, boolean addressDefault, boolean privacyAgreed);
 
     Optional<UserDto> isUser(String userKey);
+
+    UserDto modifyAddress(UserDto userDto, String address);
 }

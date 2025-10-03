@@ -6,6 +6,7 @@ import com.chatbot.base.domain.user.dto.UserDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Getter
 @Entity
 @Table(name = "users") // 테이블 이름 users로 지정
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -83,5 +85,26 @@ public class User extends BaseEntity {
                 .privacyAgreedAt(this.privacyAgreedAt)
                 .addressDtos(addressDtos)
                 .build();
+    }
+
+    public void modifyDefaultAddress(String address) {
+        // 1. 현재 기본 배송지 있는지 확인
+        Optional<Address> maybeDefaultAddress = addresses.stream()
+                .filter(Address::isDefault)
+                .findFirst();
+
+        if (maybeDefaultAddress.isPresent()) {
+            // 2. 기존 기본 배송지 업데이트
+            Address defaultAddress = maybeDefaultAddress.get();
+            defaultAddress.updateFullAddress(address); // Address 엔티티에 update 메서드 필요
+        } else {
+            // 3. 기본 배송지 없으면 새로 생성
+            Address newDefaultAddress = Address.create(address, true);
+
+            // 다른 배송지들은 기본 아님 처리
+            addresses.forEach(addr -> addr.updateDefaultStatus(false));
+
+            addresses.add(newDefaultAddress);
+        }
     }
 }

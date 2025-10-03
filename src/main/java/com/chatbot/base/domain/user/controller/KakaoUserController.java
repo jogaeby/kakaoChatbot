@@ -9,6 +9,7 @@ import com.chatbot.base.dto.kakao.constatnt.button.ButtonParamKey;
 import com.chatbot.base.dto.kakao.request.ChatBotRequest;
 import com.chatbot.base.dto.kakao.response.ChatBotExceptionResponse;
 import com.chatbot.base.dto.kakao.response.ChatBotResponse;
+import com.chatbot.base.dto.kakao.response.property.common.Button;
 import com.chatbot.base.dto.kakao.response.property.common.Profile;
 import com.chatbot.base.dto.kakao.response.property.components.ItemCard;
 import com.chatbot.base.dto.kakao.response.property.components.TextCard;
@@ -138,10 +139,13 @@ public class KakaoUserController {
                 itemCard.setItemListAlignment("right");
 
                 itemCard.setProfile(profile);
+                itemCard.addItemList("고유번호",userDto.getUserKey());
                 itemCard.addItemList("이름",userDto.getName());
                 itemCard.addItemList("연락처",userDto.getPhone());
                 itemCard.setTitle("기본 배송지");
                 itemCard.setDescription(defaultAddressStr);
+
+                itemCard.addButton(new Button("기본 배송지 변경하기",ButtonAction.블럭이동,"68dfa315b85f48088da03587"));
 
 
                 chatBotResponse.addItemCard(itemCard);
@@ -155,5 +159,87 @@ public class KakaoUserController {
         }
     }
 
+    @PostMapping(value = "input/delivery")
+    public ChatBotResponse inputDeliveryUpdate(@RequestBody ChatBotRequest chatBotRequest) {
+        try {
+            ChatBotResponse chatBotResponse = new ChatBotResponse();
+
+            Optional<UserDto> maybeUser = userService.isUser(chatBotRequest.getUserKey());
+
+            if (maybeUser.isEmpty()) {
+                return chatBotExceptionResponse.createAuthException();
+            }
+
+            AddressDto defaultAddress = maybeUser.get().getDefaultAddress();
+
+            String address = chatBotRequest.getAddress();
+
+            AddressDto newAddress = AddressDto.builder()
+                    .fullAddress(address)
+                    .build();
+
+            TextCard textCard = new TextCard();
+            textCard.setDescription("[기존]\n"+defaultAddress.getFullAddress()+"\n\n[변경]"+address+"\n\n기본 배송지를 변경하시겠습니까?");
+
+            chatBotResponse.addTextCard(textCard);
+            chatBotResponse.addQuickButton("아니요",ButtonAction.블럭이동,"68de387a2c0d3f5ee717ece3");
+            chatBotResponse.addQuickButton("변경하기",ButtonAction.블럭이동,"68dfa537465dc163a63cbfe8",ButtonParamKey.address,newAddress);
+
+            return chatBotResponse;
+        }catch (Exception e) {
+            log.error("ERROR: {}", e.getMessage(), e);
+            return chatBotExceptionResponse.createException();
+        }
+    }
+
+    @PostMapping(value = "update/delivery")
+    public ChatBotResponse updateDeliveryUpdate(@RequestBody ChatBotRequest chatBotRequest) {
+        try {
+            ChatBotResponse chatBotResponse = new ChatBotResponse();
+            Optional<UserDto> maybeUser = userService.isUser(chatBotRequest.getUserKey());
+
+            if (maybeUser.isEmpty()) {
+                return chatBotExceptionResponse.createAuthException();
+            }
+            UserDto userDto = maybeUser.get();
+
+            AddressDto addressDto = chatBotRequest.getAddressDto();
+
+            UserDto updateUserDto = userService.modifyAddress(userDto, addressDto.getFullAddress());
+
+            List<AddressDto> addressDtos = updateUserDto.getAddressDtos();
+            // 기본 배송지 찾기 (없으면 Optional.empty)
+            Optional<AddressDto> defaultAddress = addressDtos.stream()
+                    .filter(AddressDto::isDefaultYn)
+                    .findFirst();
+
+            // 기본 배송지를 문자열로 추출, 없으면 "설정안됨"
+            String defaultAddressStr = defaultAddress
+                    .map(AddressDto::getFullAddress) // AddressDto에서 전체 주소를 가져오는 메서드 사용
+                    .orElse("설정안됨");
+
+            Profile profile = new Profile();
+//                profile.setTitle("프로필 정보");
+            ItemCard itemCard = new ItemCard();
+            itemCard.setProfile(profile);
+            itemCard.setItemListAlignment("right");
+
+            itemCard.setProfile(profile);
+            itemCard.addItemList("고유번호",updateUserDto.getUserKey());
+            itemCard.addItemList("이름",updateUserDto.getName());
+            itemCard.addItemList("연락처",updateUserDto.getPhone());
+            itemCard.setTitle("기본 배송지");
+            itemCard.setDescription(defaultAddressStr);
+
+            itemCard.addButton(new Button("기본 배송지 변경하기",ButtonAction.블럭이동,"68dfa315b85f48088da03587"));
+
+
+            chatBotResponse.addItemCard(itemCard);
+            return chatBotResponse;
+        }catch (Exception e) {
+            log.error("ERROR: {}", e.getMessage(), e);
+            return chatBotExceptionResponse.createException();
+        }
+    }
 
 }
