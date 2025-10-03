@@ -179,7 +179,7 @@ public class KakaoUserController {
                     .build();
 
             TextCard textCard = new TextCard();
-            textCard.setDescription("[기존]\n"+defaultAddress.getFullAddress()+"\n\n[변경]"+address+"\n\n기본 배송지를 변경하시겠습니까?");
+            textCard.setDescription("[기존]\n"+defaultAddress.getFullAddress()+"\n\n[변경]\n"+address+"\n\n기본 배송지를 변경하시겠습니까?");
 
             chatBotResponse.addTextCard(textCard);
             chatBotResponse.addQuickButton("아니요",ButtonAction.블럭이동,"68de387a2c0d3f5ee717ece3");
