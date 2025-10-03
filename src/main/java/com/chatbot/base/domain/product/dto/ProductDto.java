@@ -6,6 +6,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class ProductDto {
+    private String id;
     private String name;
     private String description;
     private int price;
@@ -13,5 +14,10 @@ public class ProductDto {
     private int discountRate;
     private int discountedPrice;
     private String imageUrl;
+    private int quantity;
     private boolean isSoldOut;
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 }

@@ -25,6 +25,7 @@ public class ProductServiceImpl implements ProductService {
                     .map(row -> {
                         boolean soldOut = row.get(7).toString().equals("품절") ? true : false;
                         return ProductDto.builder()
+                                .id(row.get(0).toString())
                                 .name(row.get(1).toString())
                                 .price(Integer.parseInt(row.get(2).toString()))
                                 .discountRate(Integer.parseInt(row.get(3).toString()))

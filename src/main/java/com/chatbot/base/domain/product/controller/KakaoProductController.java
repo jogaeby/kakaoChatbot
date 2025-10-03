@@ -7,6 +7,7 @@ import com.chatbot.base.domain.user.dto.AddressDto;
 import com.chatbot.base.domain.user.dto.UserDto;
 import com.chatbot.base.domain.user.service.UserService;
 import com.chatbot.base.dto.kakao.constatnt.button.ButtonAction;
+import com.chatbot.base.dto.kakao.constatnt.button.ButtonParamKey;
 import com.chatbot.base.dto.kakao.request.ChatBotRequest;
 import com.chatbot.base.dto.kakao.response.ChatBotExceptionResponse;
 import com.chatbot.base.dto.kakao.response.ChatBotResponse;
@@ -54,7 +55,7 @@ public class KakaoProductController {
                 if (productDto.isSoldOut()) {
                     button = new Button("품절", ButtonAction.메시지,"품절된 상품입니다.");
                 }else {
-                    button = new Button("구매하기", ButtonAction.블럭이동,"123123");
+                    button = new Button("구매하기", ButtonAction.블럭이동,"", ButtonParamKey.product,productDto);
                 }
 
                 CommerceCard commerceCard = new CommerceCard();
@@ -72,6 +73,46 @@ public class KakaoProductController {
             chatBotResponse.addCarousel(carousel);
             return chatBotResponse;
         } catch (Exception e) {
+            log.error("ERROR: {}", e.getMessage(), e);
+            return chatBotExceptionResponse.createException();
+        }
+    }
+
+    @PostMapping(value = "quantity")
+    public ChatBotResponse productQuantity(@RequestBody ChatBotRequest chatBotRequest) {
+        try {
+            ChatBotResponse chatBotResponse = new ChatBotResponse();
+
+            ProductDto productDto = chatBotRequest.getProduct();
+
+            CommerceCard commerceCard = new CommerceCard();
+            commerceCard.setTitle(productDto.getName());
+            commerceCard.setThumbnails(productDto.getImageUrl(),false);
+            commerceCard.setPrice(productDto.getPrice());
+            commerceCard.setDiscountRate(productDto.getDiscountRate());
+            commerceCard.setDiscountedPrice(productDto.getDiscountedPrice());
+            commerceCard.setDescription(productDto.getDescription());
+
+
+            for (int i = 1; i <= 10; i++) {
+                ProductDto quantityDto = ProductDto.builder()
+                        .id(productDto.getId())
+                        .name(productDto.getName())
+                        .price(productDto.getPrice())
+                        .discountRate(productDto.getDiscountRate())
+                        .discountedPrice(productDto.getDiscountedPrice())
+                        .imageUrl(productDto.getImageUrl())
+                        .description(productDto.getDescription())
+                        .quantity(i)  // 버튼별 수량 설정
+                        .build();
+                chatBotResponse.addQuickButton(i+"개",ButtonAction.블럭이동,"",ButtonParamKey.product,quantityDto);
+            }
+
+
+            chatBotResponse.addCommerceCard(commerceCard);
+
+            return chatBotResponse;
+        }catch (Exception e) {
             log.error("ERROR: {}", e.getMessage(), e);
             return chatBotExceptionResponse.createException();
         }
