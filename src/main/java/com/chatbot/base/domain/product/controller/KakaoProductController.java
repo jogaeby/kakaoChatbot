@@ -150,8 +150,8 @@ public class KakaoProductController {
 
             itemCard.setThumbnail(new Thumbnail(product.getImageUrl()));
             itemCard.addItemList("상품명",product.getName());
-            itemCard.addItemList("개당 가격",String.valueOf(product.getDiscountedPrice()));
-            itemCard.addItemList("수량",String.valueOf(product.getQuantity()));
+            itemCard.addItemList("개당 가격",String.format("%,d",product.getDiscountedPrice())+"원");
+            itemCard.addItemList("수량",product.getQuantity()+"개");
             itemCard.setSummary("총 결제금액",String.format("%,d",totalPrice)+"원");
 
             chatBotResponse.addTextCard(textCard);
