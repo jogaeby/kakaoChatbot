@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -16,7 +17,7 @@ import java.util.List;
 public class ItemCard {
     private Thumbnail thumbnail;
     private ImageTitle imageTitle;
-    private Profile profile;
+    private Map<String,String> profile;
     private String itemListAlignment;
     private List<ItemListSummary> itemList = new ArrayList<>();
     private ItemListSummary itemListSummary;

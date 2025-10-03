@@ -60,8 +60,10 @@ public class KakaoProductController {
                 }else {
                     button = new Button("구매하기", ButtonAction.블럭이동,"68df74c52c0d3f5ee7182bf2", ButtonParamKey.product,productDto);
                 }
+                Profile profile = new Profile("금빛방앗간","https://cafe24.poxo.com/ec01/niacom0803/5GslpdAnCPzGTb8GqqEZ3j9W8PbV9xVKJx7NVKrE/h4NpwmrqazOb++iMiMzfrbktxXZcg8qpLZQEBtTNSaMDQ==/_/web/product/extra/big/202209/11310c6c43ef8bb2556cbd066dcd26f3.jpg");
 
                 CommerceCard commerceCard = new CommerceCard();
+                commerceCard.setProfile(profile);
                 commerceCard.setTitle(productDto.getName());
                 commerceCard.setThumbnails(productDto.getImageUrl(),false);
                 commerceCard.setPrice(productDto.getPrice());

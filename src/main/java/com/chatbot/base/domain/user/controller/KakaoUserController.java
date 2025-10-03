@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -218,13 +219,13 @@ public class KakaoUserController {
                     .map(AddressDto::getFullAddress) // AddressDto에서 전체 주소를 가져오는 메서드 사용
                     .orElse("설정안됨");
 
-            Profile profile = new Profile();
-//                profile.setTitle("프로필 정보");
             ItemCard itemCard = new ItemCard();
-            itemCard.setProfile(profile);
-            itemCard.setItemListAlignment("right");
+            itemCard.setProfile(Map.of(
+                    "title","프로필 정보",
+                    "imageUrl","https://pointman-file-repository.s3.ap-northeast-2.amazonaws.com/image/profile/icon-friends-ryan.png")
+            );
 
-            itemCard.setProfile(profile);
+            itemCard.setItemListAlignment("right");
             itemCard.addItemList("고유번호",updateUserDto.getUserKey());
             itemCard.addItemList("이름",updateUserDto.getName());
             itemCard.addItemList("연락처",updateUserDto.getPhone());
