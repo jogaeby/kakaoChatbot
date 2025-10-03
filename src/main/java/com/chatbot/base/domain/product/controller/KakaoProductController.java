@@ -90,6 +90,12 @@ public class KakaoProductController {
         try {
             ChatBotResponse chatBotResponse = new ChatBotResponse();
 
+            Optional<UserDto> maybeUser = service.isUser(chatBotRequest.getUserKey());
+
+            if (maybeUser.isEmpty()) {
+                return chatBotExceptionResponse.createAuthException();
+            }
+
             ProductDto productDto = chatBotRequest.getProduct();
 
             CommerceCard commerceCard = new CommerceCard();
