@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -37,6 +38,8 @@ public class KakaoProductController {
     private final ProductService productService;
 
     private final UserService service;
+
+    private final Profile profile = new Profile("금빛방앗간","https://cafe24.poxo.com/ec01/niacom0803/5GslpdAnCPzGTb8GqqEZ3j9W8PbV9xVKJx7NVKrE/h4NpwmrqazOb++iMiMzfrbktxXZcg8qpLZQEBtTNSaMDQ==/_/web/product/extra/big/202209/11310c6c43ef8bb2556cbd066dcd26f3.jpg");
 
     @PostMapping(value = "list")
     public ChatBotResponse productList(@RequestBody ChatBotRequest chatBotRequest) {
@@ -60,7 +63,6 @@ public class KakaoProductController {
                 }else {
                     button = new Button("구매하기", ButtonAction.블럭이동,"68df74c52c0d3f5ee7182bf2", ButtonParamKey.product,productDto);
                 }
-                Profile profile = new Profile("금빛방앗간","https://cafe24.poxo.com/ec01/niacom0803/5GslpdAnCPzGTb8GqqEZ3j9W8PbV9xVKJx7NVKrE/h4NpwmrqazOb++iMiMzfrbktxXZcg8qpLZQEBtTNSaMDQ==/_/web/product/extra/big/202209/11310c6c43ef8bb2556cbd066dcd26f3.jpg");
 
                 CommerceCard commerceCard = new CommerceCard();
                 commerceCard.setProfile(profile);
@@ -91,6 +93,7 @@ public class KakaoProductController {
             ProductDto productDto = chatBotRequest.getProduct();
 
             CommerceCard commerceCard = new CommerceCard();
+            commerceCard.setProfile(profile);
             commerceCard.setTitle(productDto.getName());
             commerceCard.setThumbnails(productDto.getImageUrl(),false);
             commerceCard.setPrice(productDto.getPrice());
@@ -234,7 +237,10 @@ public class KakaoProductController {
 
             ItemCard itemCard = new ItemCard();
             itemCard.setItemListAlignment("right");
-
+            itemCard.setProfile(Map.of(
+                    "title",profile.getNickname(),
+                    "imageUrl",profile.getImageUrl()
+            ));
             itemCard.setThumbnail(new Thumbnail(product.getImageUrl()));
             itemCard.addItemList("상품명",product.getName());
             itemCard.addItemList("개당 가격",String.format("%,d",product.getDiscountedPrice())+"원");
