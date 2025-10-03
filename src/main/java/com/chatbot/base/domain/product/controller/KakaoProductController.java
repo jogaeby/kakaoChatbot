@@ -164,7 +164,7 @@ public class KakaoProductController {
                         button.setExtra(ButtonParamKey.address,addressDto)
                         ;
                         TextCard textCard = new TextCard();
-                        textCard.setDescription("[최근 배송지]"+addressDto.getFullAddress());
+                        textCard.setDescription("[최근 배송지]\n\n"+addressDto.getFullAddress());
                         textCard.setButtons(button);
                         carousel.addComponent(textCard);
                     });
