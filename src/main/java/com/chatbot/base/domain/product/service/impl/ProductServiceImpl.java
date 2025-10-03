@@ -62,10 +62,10 @@ public class ProductServiceImpl implements ProductService {
             order.add(userDto.getDefaultAddress());
             order.add(productDto.getId());
             order.add(productDto.getName());
-            order.add(productDto.getPrice());
-            order.add(productDto.getDiscountRate());
-            order.add(productDto.getDiscountedPrice());
-            order.add(productDto.getDescription());
+            order.add(String.valueOf(productDto.getPrice()));
+            order.add(String.valueOf(productDto.getDiscountRate()));
+            order.add(String.valueOf(productDto.getDiscountedPrice()));
+            order.add(productDto.getDescription() != null ? productDto.getDescription() : "");
             order.add(LocalDateTime.now().toString());
 
             googleSheetUtil.appendToSheet(SHEET_ID,ORDER_SHEET_NAME,order);
