@@ -56,11 +56,9 @@ public class KakaoUserController {
             TextCard textCard = new TextCard();
             textCard.setDescription("해당 정보로 간편가입을 진행하시겠습니까?");
 
-            Profile profile = new Profile("프로필 정보","https://mblogthumb-phinf.pstatic.net/MjAxNjExMTFfMTUz/MDAxNDc4ODUwNjA5NzY0.N7CFXA8dkfH8II76uPIZupUCKQwwiYZO9oacqOx-ztAg.s0zfuN-xrH6GUzsmXSNscdiX2uRANwps_185X_qh7zQg.JPEG.alclsrorm/attachImage_1270282195.jpeg?type=w800");
             ItemCard itemCard = new ItemCard();
             itemCard.setItemListAlignment("right");
 
-            itemCard.setProfile(profile);
             itemCard.addItemList("이름",name);
             itemCard.addItemList("연락처",phone);
             itemCard.setTitle("기본 배송지");
