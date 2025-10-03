@@ -1,6 +1,7 @@
 package com.chatbot.base.dto.kakao.request;
 
 import com.chatbot.base.domain.product.dto.ProductDto;
+import com.chatbot.base.domain.user.dto.AddressDto;
 import com.chatbot.base.domain.user.dto.UserDto;
 import com.chatbot.base.dto.kakao.sync.KakaoProfileRequestDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -112,7 +113,6 @@ public class ChatBotRequest {
             private String productId;
             private String noticeId;
             private String choice;
-            private String address;
             private String comment;
             private String productStatus;
             private String searchWord;
@@ -121,6 +121,7 @@ public class ChatBotRequest {
             private String lastNumber;
             private UserDto user;
             private ProductDto product;
+            private AddressDto address;
         }
 
         @Getter
@@ -268,7 +269,7 @@ public class ChatBotRequest {
         return action.getClientExtra().getProduct();
     }
 
-    public String getAddressParam(){
+    public AddressDto getAddressDto(){
         if (Objects.isNull(action.getClientExtra().getAddress())) return null;
         return action.getClientExtra().getAddress();
     }

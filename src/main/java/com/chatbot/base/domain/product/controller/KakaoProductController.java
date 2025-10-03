@@ -108,7 +108,7 @@ public class KakaoProductController {
                         .description(productDto.getDescription())
                         .quantity(i)  // 버튼별 수량 설정
                         .build();
-                chatBotResponse.addQuickButton(i+"개",ButtonAction.블럭이동,"68df7a1f2c0d3f5ee7182c35",ButtonParamKey.product,quantityDto);
+                chatBotResponse.addQuickButton(i+"개",ButtonAction.블럭이동,"68df93d62c0d3f5ee7182eb2",ButtonParamKey.product,quantityDto);
             }
 
 
@@ -120,6 +120,65 @@ public class KakaoProductController {
             return chatBotExceptionResponse.createException();
         }
     }
+
+    @PostMapping(value = "delivery")
+    public ChatBotResponse delivery(@RequestBody ChatBotRequest chatBotRequest) {
+        try {
+            ChatBotResponse chatBotResponse = new ChatBotResponse();
+            ProductDto product = chatBotRequest.getProduct();
+
+            Optional<UserDto> maybeUser = service.isUser(chatBotRequest.getUserKey());
+
+            if (maybeUser.isEmpty()) {
+                return chatBotExceptionResponse.createAuthException();
+            }
+            UserDto userDto = maybeUser.get();
+            List<AddressDto> addressDtos = userDto.getAddressDtos();
+
+            // 2. 기본 배송지 가져오기 (Optional)
+            Optional<AddressDto> defaultAddressOpt = userDto.getAddressDtos()
+                    .stream()
+                    .filter(AddressDto::isDefaultYn)
+                    .findFirst();
+
+            if (defaultAddressOpt.isEmpty()) {
+                return chatBotExceptionResponse.createAuthException();
+            }
+            AddressDto defaultAddress = defaultAddressOpt.get();
+
+            Button defaultAddressButton = new Button("선택하기",ButtonAction.블럭이동,"68df7a1f2c0d3f5ee7182c35");
+            defaultAddressButton.setExtra(ButtonParamKey.product,product);
+            defaultAddressButton.setExtra(ButtonParamKey.address,defaultAddress);
+
+            TextCard defaultTextCard = new TextCard();
+            defaultTextCard.setDescription("[기본 배송지]\n\n"+defaultAddress.getFullAddress());
+            defaultTextCard.setButtons(defaultAddressButton);
+
+
+            Carousel carousel = new Carousel();
+            carousel.addComponent(defaultTextCard);
+            addressDtos.stream().filter(addressDto -> !addressDto.isDefaultYn())
+                    .forEach(addressDto -> {
+                        Button button = new Button("선택하기",ButtonAction.블럭이동,"68df7a1f2c0d3f5ee7182c35");
+                        button.setExtra(ButtonParamKey.product,product);
+                        button.setExtra(ButtonParamKey.address,addressDto)
+                        ;
+                        TextCard textCard = new TextCard();
+                        textCard.setDescription("[최근 배송지]"+addressDto.getFullAddress());
+                        textCard.setButtons(button);
+                        carousel.addComponent(textCard);
+                    });
+
+
+            carousel.addComponent(carousel);
+
+            return chatBotResponse;
+        }catch (Exception e) {
+            log.error("ERROR: {}", e.getMessage(), e);
+            return chatBotExceptionResponse.createException();
+        }
+    }
+
 
     @PostMapping(value = "orderSheet")
     public ChatBotResponse productOrderSheet(@RequestBody ChatBotRequest chatBotRequest) {
@@ -135,6 +194,7 @@ public class KakaoProductController {
             UserDto userDto = maybeUser.get();
 
             ProductDto product = chatBotRequest.getProduct();
+            AddressDto addressDto = chatBotRequest.getAddressDto();
 
             TextCard textCard = new TextCard();
             textCard.setDescription("아래 내용으로 주문을 진행하시겠습니까?");
@@ -154,11 +214,18 @@ public class KakaoProductController {
             itemCard.addItemList("수량",product.getQuantity()+"개");
             itemCard.setSummary("총 결제금액",String.format("%,d",totalPrice)+"원");
 
+            itemCard.setTitle("배송지");
+            itemCard.setDescription(addressDto.getFullAddress());
+
             chatBotResponse.addTextCard(textCard);
             chatBotResponse.addItemCard(itemCard);
             chatBotResponse.addTextCard(delivery);
             chatBotResponse.addQuickButton("처음으로",ButtonAction.블럭이동,"68de38ae47a9e61d1ae66a4f");
-            chatBotResponse.addQuickButton("주문하기",ButtonAction.블럭이동,"68df7bdc5390541970472535",ButtonParamKey.product,product);
+
+            Button orderButton = new Button("주문하기",ButtonAction.블럭이동,"68df7bdc5390541970472535",ButtonParamKey.product,product);
+            orderButton.setExtra(ButtonParamKey.address,addressDto);
+
+            chatBotResponse.addQuickButton(orderButton);
 
             return chatBotResponse;
         }catch (Exception e) {
@@ -180,9 +247,10 @@ public class KakaoProductController {
 
 
             ProductDto product = chatBotRequest.getProduct();
+            AddressDto addressDto = chatBotRequest.getAddressDto();
             UserDto userDto = maybeUser.get();
 
-            String orderId = productService.orderProduct(product, userDto);
+            String orderId = productService.orderProduct(product, userDto, addressDto);
 
             TextCard textCard = new TextCard();
             textCard.setTitle("["+orderId+"] 주문 성공");

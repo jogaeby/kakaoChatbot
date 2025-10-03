@@ -3,6 +3,7 @@ package com.chatbot.base.domain.product.service.impl;
 import com.chatbot.base.common.GoogleSheetUtil;
 import com.chatbot.base.domain.product.dto.ProductDto;
 import com.chatbot.base.domain.product.service.ProductService;
+import com.chatbot.base.domain.user.dto.AddressDto;
 import com.chatbot.base.domain.user.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -51,7 +52,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public String orderProduct(ProductDto productDto, UserDto userDto) {
+    public String orderProduct(ProductDto productDto, UserDto userDto, AddressDto addressDto) {
         try {
             List<Object> order = new ArrayList<>();
             long id = System.currentTimeMillis();
@@ -59,7 +60,7 @@ public class ProductServiceImpl implements ProductService {
             order.add(userDto.getUserKey());
             order.add(userDto.getName());
             order.add("'"+userDto.getPhone());
-            order.add(userDto.getDefaultAddress().getFullAddress());
+            order.add(addressDto.getFullAddress());
             order.add(productDto.getId());
             order.add(productDto.getName());
             order.add(String.valueOf(productDto.getPrice()));
