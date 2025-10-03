@@ -69,6 +69,7 @@ public class ProductServiceImpl implements ProductService {
             order.add(productDto.getQuantity()*productDto.getDiscountedPrice());
             order.add(productDto.getDescription() != null ? productDto.getDescription() : "");
             order.add(LocalDateTime.now().toString());
+            order.add("접수");
 
             googleSheetUtil.appendToSheet(SHEET_ID,ORDER_SHEET_NAME,order);
 
