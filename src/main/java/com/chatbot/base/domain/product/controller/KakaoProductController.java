@@ -152,16 +152,47 @@ public class KakaoProductController {
             itemCard.addItemList("상품명",product.getName());
             itemCard.addItemList("개당 가격",String.valueOf(product.getDiscountedPrice()));
             itemCard.addItemList("수량",String.valueOf(product.getQuantity()));
-            itemCard.setSummary("총 결제 금액",String.valueOf(totalPrice)+"원");
+            itemCard.setSummary("총 결제금액",String.format("%,d",totalPrice)+"원");
 
             chatBotResponse.addTextCard(textCard);
             chatBotResponse.addItemCard(itemCard);
             chatBotResponse.addTextCard(delivery);
+            chatBotResponse.addQuickButton("처음으로",ButtonAction.블럭이동,"68de38ae47a9e61d1ae66a4f");
+            chatBotResponse.addQuickButton("주문하기",ButtonAction.블럭이동,"68df7bdc5390541970472535",ButtonParamKey.product,product);
 
             return chatBotResponse;
         }catch (Exception e) {
             log.error("ERROR: {}", e.getMessage(), e);
             return chatBotExceptionResponse.createException();
+        }
+    }
+
+    @PostMapping(value = "order")
+    public ChatBotResponse productOrder(@RequestBody ChatBotRequest chatBotRequest) {
+        try {
+            ChatBotResponse chatBotResponse = new ChatBotResponse();
+
+            Optional<UserDto> maybeUser = service.isUser(chatBotRequest.getUserKey());
+
+            if (maybeUser.isEmpty()) {
+                return chatBotExceptionResponse.createAuthException();
+            }
+
+
+            ProductDto product = chatBotRequest.getProduct();
+            UserDto userDto = maybeUser.get();
+
+            String orderId = productService.orderProduct(product, userDto);
+
+            TextCard textCard = new TextCard();
+            textCard.setTitle("["+orderId+"] 주문 성공");
+            textCard.setDescription("주문을 성공적으로 완료하였습니다.");
+
+            chatBotResponse.addTextCard(textCard);
+            return chatBotResponse;
+        }catch (Exception e) {
+            log.error("ERROR: {}", e.getMessage(), e);
+            return chatBotExceptionResponse.createException("주문을 실패하였습니다.");
         }
     }
 }
