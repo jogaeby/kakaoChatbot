@@ -172,6 +172,7 @@ public class KakaoProductController {
 
             carousel.addComponent(carousel);
 
+            chatBotResponse.addCarousel(carousel);
             return chatBotResponse;
         }catch (Exception e) {
             log.error("ERROR: {}", e.getMessage(), e);
