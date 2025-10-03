@@ -114,12 +114,13 @@ public class GoogleSheetUtil {
     }
 
     public void appendToSheet(String spreadSheetId, String sheetName, List<Object> newRowData) throws GeneralSecurityException, IOException {
+        log.info("{} {}",spreadSheetId,sheetName);
+        final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport(); // HTTP 요청에 사용될 트랜스포트
 
-        log.info("{} {}", spreadSheetId, sheetName);
-
+        // Sheets API 클라이언트 빌드
         Sheets service = getSheetsService();
 
-        // 1. 현재 시트 데이터를 읽어서 최대 no 계산
+        // 현재 시트 데이터를 읽어서 최대 no 값을 계산
         String range = sheetName + "!A:A"; // 첫 번째 열 전체 범위
         ValueRange response = service.spreadsheets().values().get(spreadSheetId, range).execute();
         List<List<Object>> values = response.getValues();
@@ -130,9 +131,9 @@ public class GoogleSheetUtil {
                 if (!row.isEmpty()) {
                     try {
                         int currentNo = Integer.parseInt(row.get(0).toString());
-                        maxNo = Math.max(maxNo, currentNo);
+                        maxNo = Math.max(maxNo, currentNo); // 최대값 갱신
                     } catch (NumberFormatException e) {
-                        log.warn("숫자로 변환할 수 없는 값: {}", row.get(0));
+                        log.warn("숫자로 변환할 수 없는 값: {}", row.get(0)); // 숫자가 아닌 값은 무시
                     }
                 }
             }
@@ -141,21 +142,18 @@ public class GoogleSheetUtil {
         // 새 데이터의 첫 번째 값으로 maxNo + 1 추가
         newRowData.add(0, maxNo + 1);
 
-        // 2. P열(16번째) 자동 "접수" 입력
-        int statusColIndex = 15; // P열, 0-based index
-        while (newRowData.size() <= statusColIndex) {
-            newRowData.add(""); // 빈 칸 채우기
-        }
-        newRowData.set(statusColIndex, newRowData.get(statusColIndex));
-
-        // 3. 데이터 추가
+        // 데이터를 추가할 범위 설정
         String appendRange = sheetName + "!A1"; // 데이터 추가 범위
-        ValueRange body = new ValueRange().setValues(List.of(newRowData));
+
+        // 추가할 데이터를 ValueRange로 변환
+        ValueRange body = new ValueRange()
+                .setValues(List.of(newRowData)); // 데이터를 리스트 형태로 전달
         log.info("Formatted data: {}", newRowData);
 
+        // 데이터를 시트에 Append
         AppendValuesResponse appendResponse = service.spreadsheets().values()
                 .append(spreadSheetId, appendRange, body)
-                .setValueInputOption("USER_ENTERED")
+                .setValueInputOption("USER_ENTERED") // 사용자가 입력한 것처럼 처리
                 .execute();
 
         log.info("데이터 추가 완료 (추가된 셀 수): {}", appendResponse.getUpdates().getUpdatedCells());
