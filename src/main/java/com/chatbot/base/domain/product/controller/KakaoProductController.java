@@ -108,7 +108,7 @@ public class KakaoProductController {
                         .description(productDto.getDescription())
                         .quantity(i)  // 버튼별 수량 설정
                         .build();
-                chatBotResponse.addQuickButton(i+"개",ButtonAction.블럭이동,"",ButtonParamKey.product,quantityDto);
+                chatBotResponse.addQuickButton(i+"개",ButtonAction.블럭이동,"68df7a1f2c0d3f5ee7182c35",ButtonParamKey.product,quantityDto);
             }
 
 
