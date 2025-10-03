@@ -204,7 +204,7 @@ public class ChatBotResponse {
     public void addCommerceCard(CommerceCard commerceCard){
         if(commerceCard.getThumbnails().size() != 1) throw new IllegalArgumentException("썸네일 이미지 URL은 최소 1개가 필수입니다. 현재 1개만 지원");
 
-        if(commerceCard.getButtons().size() == 0) throw new IllegalArgumentException("버튼은 최소 1개 이상이 필수입니다.");
+//        if(commerceCard.getButtons().size() == 0) throw new IllegalArgumentException("버튼은 최소 1개 이상이 필수입니다.");
 
         Component component = new Component(commerceCard);
 
