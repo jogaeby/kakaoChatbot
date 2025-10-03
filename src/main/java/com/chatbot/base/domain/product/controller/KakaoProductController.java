@@ -55,7 +55,7 @@ public class KakaoProductController {
                 if (productDto.isSoldOut()) {
                     button = new Button("품절", ButtonAction.메시지,"품절된 상품입니다.");
                 }else {
-                    button = new Button("구매하기", ButtonAction.블럭이동,"", ButtonParamKey.product,productDto);
+                    button = new Button("구매하기", ButtonAction.블럭이동,"68df74c52c0d3f5ee7182bf2", ButtonParamKey.product,productDto);
                 }
 
                 CommerceCard commerceCard = new CommerceCard();
