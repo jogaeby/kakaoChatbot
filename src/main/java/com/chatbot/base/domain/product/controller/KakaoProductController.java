@@ -155,7 +155,7 @@ public class KakaoProductController {
             defaultTextCard.setButtons(defaultAddressButton);
 
             Button addAddressButton = new Button("직접 입력하기",ButtonAction.블럭이동,"68df9df4edb87047afde88e8");
-            defaultAddressButton.setExtra(ButtonParamKey.product,product);
+            addAddressButton.setExtra(ButtonParamKey.product,product);
 
             TextCard textCard = new TextCard();
             textCard.setDescription("직접 배송지를 입력 할 수 있습니다.");
