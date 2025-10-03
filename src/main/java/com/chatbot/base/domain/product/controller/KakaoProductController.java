@@ -169,9 +169,6 @@ public class KakaoProductController {
                         carousel.addComponent(textCard);
                     });
 
-
-            carousel.addComponent(carousel);
-
             chatBotResponse.addCarousel(carousel);
             return chatBotResponse;
         }catch (Exception e) {
