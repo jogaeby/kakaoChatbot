@@ -154,20 +154,16 @@ public class KakaoProductController {
             defaultTextCard.setDescription("[기본 배송지]\n\n"+defaultAddress.getFullAddress());
             defaultTextCard.setButtons(defaultAddressButton);
 
+            Button addAddressButton = new Button("직접 입력하기",ButtonAction.블럭이동,"68df9df4edb87047afde88e8");
+            defaultAddressButton.setExtra(ButtonParamKey.product,product);
+
+            TextCard textCard = new TextCard();
+            textCard.setDescription("직접 배송지를 입력 할 수 있습니다.");
+            textCard.setButtons(addAddressButton);
 
             Carousel carousel = new Carousel();
             carousel.addComponent(defaultTextCard);
-            addressDtos.stream().filter(addressDto -> !addressDto.isDefaultYn())
-                    .forEach(addressDto -> {
-                        Button button = new Button("선택하기",ButtonAction.블럭이동,"68df7a1f2c0d3f5ee7182c35");
-                        button.setExtra(ButtonParamKey.product,product);
-                        button.setExtra(ButtonParamKey.address,addressDto)
-                        ;
-                        TextCard textCard = new TextCard();
-                        textCard.setDescription("[최근 배송지]\n\n"+addressDto.getFullAddress());
-                        textCard.setButtons(button);
-                        carousel.addComponent(textCard);
-                    });
+            carousel.addComponent(textCard);
 
             chatBotResponse.addCarousel(carousel);
             return chatBotResponse;
@@ -177,6 +173,37 @@ public class KakaoProductController {
         }
     }
 
+    @PostMapping(value = "input/delivery")
+    public ChatBotResponse inputDelivery(@RequestBody ChatBotRequest chatBotRequest) {
+        try {
+            ChatBotResponse chatBotResponse = new ChatBotResponse();
+            String delivery = chatBotRequest.getDelivery();
+            ProductDto product = chatBotRequest.getProduct();
+
+            AddressDto newAddressDto = AddressDto.builder()
+                    .fullAddress(delivery)
+                    .build();
+
+            TextCard textCard = new TextCard();
+            textCard.setDescription(delivery+"\n\n해당 배송지로 진행하시겠습니까?");
+
+
+            chatBotResponse.addTextCard(textCard);
+            chatBotResponse.addQuickButton("처음으로",ButtonAction.블럭이동,"68de38ae47a9e61d1ae66a4f");
+            chatBotResponse.addQuickButton("다시입력",ButtonAction.블럭이동,"68df9df4edb87047afde88e8",ButtonParamKey.product,product);
+
+
+            Button orderSheetButton = new Button("진행하기",ButtonAction.블럭이동,"68df7a1f2c0d3f5ee7182c35",ButtonParamKey.product,product);
+            orderSheetButton.setExtra(ButtonParamKey.address,newAddressDto);
+
+            chatBotResponse.addQuickButton(orderSheetButton);
+
+            return chatBotResponse;
+        }catch (Exception e) {
+            log.error("ERROR: {}", e.getMessage(), e);
+            return chatBotExceptionResponse.createException();
+        }
+    }
 
     @PostMapping(value = "orderSheet")
     public ChatBotResponse productOrderSheet(@RequestBody ChatBotRequest chatBotRequest) {

@@ -129,6 +129,7 @@ public class ChatBotRequest {
         public class Params {
             private String name;
             private String address;
+            private String delivery;
             private String phone;
             private String depart;
             private String arrive;
@@ -202,6 +203,11 @@ public class ChatBotRequest {
     public String getAddress(){
         if (Objects.isNull(action.getParams().getAddress())) return null;
         return action.getParams().getAddress();
+    }
+
+    public String getDelivery(){
+        if (Objects.isNull(action.getParams().getDelivery())) return null;
+        return action.getParams().getDelivery();
     }
 
     public String getDepart(){
