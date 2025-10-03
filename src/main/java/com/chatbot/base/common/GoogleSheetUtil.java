@@ -149,6 +149,7 @@ public class GoogleSheetUtil {
         ValueRange body = new ValueRange()
                 .setValues(List.of(newRowData)); // 데이터를 리스트 형태로 전달
         log.info("Formatted data: {}", newRowData);
+
         // 데이터를 시트에 Append
         AppendValuesResponse appendResponse = service.spreadsheets().values()
                 .append(spreadSheetId, appendRange, body)
@@ -157,12 +158,45 @@ public class GoogleSheetUtil {
 
         log.info("데이터 추가 완료 (추가된 셀 수): {}", appendResponse.getUpdates().getUpdatedCells());
 
-//        int lastRow = maxNo; // 마지막 추가된 행 번호 (0-based index)
-//        // newRowData 기반으로 체크박스 열 계산
-//        int startCol = newRowData.size(); // 마지막 열의 인덱스
-//        int endCol = startCol + 1;        // 체크박스 범위
-//
-//        addCheckboxToSheet(service, spreadSheetId, sheetName, lastRow+1, lastRow + 2, startCol, endCol); // C열에 체크박스 추가
+        // 3. P열(16번째) 드롭다운 적용
+        Spreadsheet spreadsheet = service.spreadsheets().get(spreadSheetId).execute();
+        Sheet sheet = spreadsheet.getSheets().stream()
+                .filter(s -> s.getProperties().getTitle().equals(sheetName))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Sheet not found"));
+
+        int sheetId = sheet.getProperties().getSheetId();
+
+        // 추가된 행 번호 계산 (0-based index)
+        int startRowIndex = maxNo;   // maxNo+1 번째 행
+        int endRowIndex = startRowIndex + 1;
+
+        GridRange rangeForDropdown = new GridRange()
+                .setSheetId(sheetId)
+                .setStartRowIndex(startRowIndex)
+                .setEndRowIndex(endRowIndex)
+                .setStartColumnIndex(15) // P열 (0-based)
+                .setEndColumnIndex(16);
+
+        // "접수" 드롭다운
+        DataValidationRule rule = new DataValidationRule()
+                .setCondition(new BooleanCondition()
+                        .setType("ONE_OF_LIST")
+                        .setValues(List.of(new ConditionValue().setUserEnteredValue("접수"))))
+                .setStrict(true)
+                .setShowCustomUi(true);
+
+        Request request = new Request()
+                .setSetDataValidation(new SetDataValidationRequest()
+                        .setRange(rangeForDropdown)
+                        .setRule(rule));
+
+        BatchUpdateSpreadsheetRequest batchUpdateRequest = new BatchUpdateSpreadsheetRequest()
+                .setRequests(List.of(request));
+
+        service.spreadsheets().batchUpdate(spreadSheetId, batchUpdateRequest).execute();
+
+        log.info("P열 드롭다운('접수') 적용 완료");
     }
 
     public void updateColumnsByReceiptId(String spreadSheetId, String sheetName, String receiptId,
