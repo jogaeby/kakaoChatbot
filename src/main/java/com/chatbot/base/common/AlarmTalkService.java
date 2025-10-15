@@ -15,7 +15,9 @@ import net.nurigo.sdk.message.response.MultipleDetailMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 import org.springframework.stereotype.Service;
 
+import java.text.NumberFormat;
 import java.util.HashMap;
+import java.util.Locale;
 
 @Slf4j
 @Service
@@ -40,6 +42,8 @@ public class AlarmTalkService {
         UserDto user = orderDto.getUser();
         AddressDto address = orderDto.getAddress();
         ProductDto productDto = orderDto.getProduct().get(0);
+        NumberFormat formatter = NumberFormat.getNumberInstance(Locale.KOREA);
+        String formattedPrice = formatter.format(orderDto.getTotalPrice()) + "원";
 
         HashMap<String, String> variables = new HashMap<>();
         variables.put("#{주문번호}", orderDto.getId());
@@ -51,7 +55,7 @@ public class AlarmTalkService {
         variables.put("#{상품번호}", productDto.getId());
         variables.put("#{상품명}",productDto.getName());
         variables.put("#{주문수량}", String.valueOf(orderDto.getTotalQuantity()));
-        variables.put("#{총 결제금액}", String.valueOf(orderDto.getTotalPrice()));
+        variables.put("#{총 결제금액}", formattedPrice);
 
         variables.put("#{url}", ADMIN_GOOGLE_SHEET_URL);
 
