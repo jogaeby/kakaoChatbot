@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 public class ProductServiceImpl implements ProductService {
     private final GoogleSheetUtil googleSheetUtil;
     private final AlarmTalkService alarmTalkService;
-    private final String ADMIN_PHONE = "01081125021";
+    private final String ADMIN_PHONE = "01099395021";
     private final String SHEET_ID = "12LK-mODVa9b5b8KA_m68GUF50AojwdOK7_0cok3inFM";
     private final String PRODUCT_SHEET_NAME = "상품목록";
     private final String ORDER_SHEET_NAME = "주문내역";
