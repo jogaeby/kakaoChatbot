@@ -294,8 +294,8 @@ public class KakaoProductController {
             String orderId = orderDto.getId();
 
             TextCard textCard = new TextCard();
-            textCard.setTitle("["+orderId+"] 주문 성공");
-            textCard.setDescription("주문을 성공적으로 완료하였습니다.");
+            textCard.setTitle("["+orderId+"] 주문접수 성공");
+            textCard.setDescription("주문접수를 성공적으로 완료하였습니다.");
 
             chatBotResponse.addTextCard(textCard);
             return chatBotResponse;
