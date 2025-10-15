@@ -1,5 +1,6 @@
 package com.chatbot.base.domain.product.service;
 
+import com.chatbot.base.domain.product.dto.OrderDto;
 import com.chatbot.base.domain.product.dto.ProductDto;
 import com.chatbot.base.domain.user.dto.AddressDto;
 import com.chatbot.base.domain.user.dto.UserDto;
@@ -10,5 +11,5 @@ public interface ProductService {
 
     List<ProductDto> getProducts();
 
-    String orderProduct(ProductDto productDto, UserDto userDto, AddressDto addressDto);
+    OrderDto orderProduct(ProductDto productDto, UserDto userDto, AddressDto addressDto);
 }

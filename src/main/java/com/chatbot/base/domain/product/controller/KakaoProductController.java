@@ -1,6 +1,7 @@
 package com.chatbot.base.domain.product.controller;
 
 import com.chatbot.base.common.util.StringFormatterUtil;
+import com.chatbot.base.domain.product.dto.OrderDto;
 import com.chatbot.base.domain.product.dto.ProductDto;
 import com.chatbot.base.domain.product.service.ProductService;
 import com.chatbot.base.domain.user.dto.AddressDto;
@@ -289,7 +290,8 @@ public class KakaoProductController {
             AddressDto addressDto = chatBotRequest.getAddressDto();
             UserDto userDto = maybeUser.get();
 
-            String orderId = productService.orderProduct(product, userDto, addressDto);
+            OrderDto orderDto = productService.orderProduct(product, userDto, addressDto);
+            String orderId = orderDto.getId();
 
             TextCard textCard = new TextCard();
             textCard.setTitle("["+orderId+"] 주문 성공");

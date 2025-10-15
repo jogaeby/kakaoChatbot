@@ -1,6 +1,10 @@
 package com.chatbot.base.common;
 
 import com.chatbot.base.common.util.StringFormatterUtil;
+import com.chatbot.base.domain.product.dto.OrderDto;
+import com.chatbot.base.domain.product.dto.ProductDto;
+import com.chatbot.base.domain.user.dto.AddressDto;
+import com.chatbot.base.domain.user.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.nurigo.sdk.NurigoApp;
@@ -17,85 +21,39 @@ import java.util.HashMap;
 @Service
 @RequiredArgsConstructor
 public class AlarmTalkService {
-    private final String SUGGESTION_RECEIPT_TEMPLATE_ID = "KA01TP250718013926202fU9vtoYPbBM";
-    private final String INQUIRIES_RECEIPT_TEMPATE_ID = "KA01TP250723051406499b6FElxSnfDw";
-    private final String MEETING_RECEIPT_TEMPATE_ID = "KA01TP25072305143720661iMKGU3EgZ";
-    private final String CALLER_1_ID = "010-2322-5435";
-    private final String CHANNEL_ID = "KA01PF250717113750014hzmu28fxYvA";
-    private final String API_KEY = "NCSJMX2VW5DE5CXS";
-    private final String API_SECRET_KEY = "BWV37DJ3LKBX6BZLBYYSJBRLQ1N99MZW";
+    private final String ADMIN_GOOGLE_SHEET_URL = "docs.google.com/spreadsheets/d/12LK-mODVa9b5b8KA_m68GUF50AojwdOK7_0cok3inFM/edit?gid=1761432966#gid=1761432966";
+    private final String ORDER_RECEIPT_TO_ADMIN_TEMPLATE_ID = "KA01TP2510150726438721mBM5OU52oo";
+    private final String CALLER_1_ID = "010-9939-5021";
+    private final String CHANNEL_ID = "KA01PF251015071911083UZDV88niwbD";
+    private final String API_KEY = "NCSPI81TZQNKWTLH";
+    private final String API_SECRET_KEY = "S8PLP5HFLWAIWOV81WS7YODC1H6VVS7V";
 
 
-    public MultipleDetailMessageSentResponse sendSuggestionReceipt(String targetPhone, String branchName, String date, String url) {
+    public MultipleDetailMessageSentResponse sendOrderReceiptToAdmin(String targetPhone, OrderDto orderDto) {
         DefaultMessageService messageService =  NurigoApp.INSTANCE.initialize(API_KEY, API_SECRET_KEY, "https://api.solapi.com");
 
         KakaoOption kakaoOption = new KakaoOption();
         kakaoOption.setPfId(CHANNEL_ID);
-        kakaoOption.setTemplateId(SUGGESTION_RECEIPT_TEMPLATE_ID);
+        kakaoOption.setTemplateId(ORDER_RECEIPT_TO_ADMIN_TEMPLATE_ID);
         kakaoOption.setDisableSms(true);
 
-        HashMap<String, String> variables = new HashMap<>();
-        variables.put("#{지점명}", branchName);
-        variables.put("#{만료시간}",date);
-        variables.put("#{url}", url);
-
-        kakaoOption.setVariables(variables);
-
-        Message message = new Message();
-        message.setFrom(CALLER_1_ID);
-        message.setTo(StringFormatterUtil.cleanPhoneNumber(targetPhone));
-        message.setKakaoOptions(kakaoOption);
-
-        try {
-            // send 메소드로 ArrayList<Message> 객체를 넣어도 동작합니다!
-            return messageService.send(message);
-        } catch (NurigoMessageNotReceivedException e) {
-            log.error("{} {}",e.getFailedMessageList(),e.getMessage());
-            throw new RuntimeException(e.getMessage());
-        } catch (Exception e) {
-            log.error("{} {}",e.getMessage(),e.getStackTrace());
-            throw new RuntimeException(e.getMessage());
-        }
-    }
-
-    public MultipleDetailMessageSentResponse sendInquiriesReceipt(String targetPhone) {
-        DefaultMessageService messageService =  NurigoApp.INSTANCE.initialize(API_KEY, API_SECRET_KEY, "https://api.solapi.com");
-
-        KakaoOption kakaoOption = new KakaoOption();
-        kakaoOption.setPfId(CHANNEL_ID);
-        kakaoOption.setTemplateId(INQUIRIES_RECEIPT_TEMPATE_ID);
-        kakaoOption.setDisableSms(true);
+        UserDto user = orderDto.getUser();
+        AddressDto address = orderDto.getAddress();
+        ProductDto productDto = orderDto.getProduct().get(0);
 
         HashMap<String, String> variables = new HashMap<>();
+        variables.put("#{주문번호}", orderDto.getId());
 
-        kakaoOption.setVariables(variables);
+        variables.put("#{고객명}",user.getName());
+        variables.put("#{연락처}",user.getPhone());
+        variables.put("#{배송지}", address.getFullAddress());
 
-        Message message = new Message();
-        message.setFrom(CALLER_1_ID);
-        message.setTo(StringFormatterUtil.cleanPhoneNumber(targetPhone));
-        message.setKakaoOptions(kakaoOption);
+        variables.put("#{상품번호}", productDto.getId());
+        variables.put("#{상품명}",productDto.getName());
+        variables.put("#{주문수량}", String.valueOf(orderDto.getTotalQuantity()));
+        variables.put("#{총 결제금액}", String.valueOf(orderDto.getTotalPrice()));
 
-        try {
-            // send 메소드로 ArrayList<Message> 객체를 넣어도 동작합니다!
-            return messageService.send(message);
-        } catch (NurigoMessageNotReceivedException e) {
-            log.error("{} {}",e.getFailedMessageList(),e.getMessage());
-            throw new RuntimeException(e.getMessage());
-        } catch (Exception e) {
-            log.error("{} {}",e.getMessage(),e.getStackTrace());
-            throw new RuntimeException(e.getMessage());
-        }
-    }
-
-    public MultipleDetailMessageSentResponse sendMeetingReceipt(String targetPhone) {
-        DefaultMessageService messageService =  NurigoApp.INSTANCE.initialize(API_KEY, API_SECRET_KEY, "https://api.solapi.com");
-
-        KakaoOption kakaoOption = new KakaoOption();
-        kakaoOption.setPfId(CHANNEL_ID);
-        kakaoOption.setTemplateId(MEETING_RECEIPT_TEMPATE_ID);
-        kakaoOption.setDisableSms(true);
-
-        HashMap<String, String> variables = new HashMap<>();
+        variables.put("#{url}", ADMIN_GOOGLE_SHEET_URL);
 
         kakaoOption.setVariables(variables);
 

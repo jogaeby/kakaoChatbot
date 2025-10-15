@@ -1,6 +1,8 @@
 package com.chatbot.base.domain.product.service.impl;
 
+import com.chatbot.base.common.AlarmTalkService;
 import com.chatbot.base.common.GoogleSheetUtil;
+import com.chatbot.base.domain.product.dto.OrderDto;
 import com.chatbot.base.domain.product.dto.ProductDto;
 import com.chatbot.base.domain.product.service.ProductService;
 import com.chatbot.base.domain.user.dto.AddressDto;
@@ -17,7 +19,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
     private final GoogleSheetUtil googleSheetUtil;
-
+    private final AlarmTalkService alarmTalkService;
+    private final String ADMIN_PHONE = "01081125021";
     private final String SHEET_ID = "12LK-mODVa9b5b8KA_m68GUF50AojwdOK7_0cok3inFM";
     private final String PRODUCT_SHEET_NAME = "상품목록";
     private final String ORDER_SHEET_NAME = "주문내역";
@@ -52,29 +55,41 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public String orderProduct(ProductDto productDto, UserDto userDto, AddressDto addressDto) {
+    public OrderDto orderProduct(ProductDto productDto, UserDto userDto, AddressDto addressDto) {
         try {
-            List<Object> order = new ArrayList<>();
             long id = System.currentTimeMillis();
-            order.add(id);
-            order.add(userDto.getUserKey());
-            order.add(userDto.getName());
-            order.add("'"+userDto.getPhone());
-            order.add(addressDto.getFullAddress());
-            order.add(productDto.getId());
-            order.add(productDto.getName());
-            order.add(String.valueOf(productDto.getPrice()));
-            order.add(String.valueOf(productDto.getDiscountRate()));
-            order.add(String.valueOf(productDto.getDiscountedPrice()));
-            order.add(productDto.getQuantity());
-            order.add(productDto.getQuantity()*productDto.getDiscountedPrice());
-            order.add(productDto.getDescription() != null ? productDto.getDescription() : "");
-            order.add(LocalDateTime.now().toString());
-            order.add("접수");
+            OrderDto order = OrderDto.builder()
+                    .id(String.valueOf(id))
+                    .address(addressDto)
+                    .product(List.of(productDto))
+                    .user(userDto)
+                    .totalQuantity(productDto.getQuantity())
+                    .totalPrice(productDto.getQuantity() * productDto.getDiscountedPrice())
+                    .build();
 
-            googleSheetUtil.appendToSheet(SHEET_ID,ORDER_SHEET_NAME,order);
 
-            return String.valueOf(id);
+            List<Object> row = new ArrayList<>();
+
+            row.add(id);
+            row.add(userDto.getUserKey());
+            row.add(userDto.getName());
+            row.add("'"+userDto.getPhone());
+            row.add(addressDto.getFullAddress());
+            row.add(productDto.getId());
+            row.add(productDto.getName());
+            row.add(String.valueOf(productDto.getPrice()));
+            row.add(String.valueOf(productDto.getDiscountRate()));
+            row.add(String.valueOf(productDto.getDiscountedPrice()));
+            row.add(productDto.getQuantity());
+            row.add(productDto.getQuantity()*productDto.getDiscountedPrice());
+            row.add(productDto.getDescription() != null ? productDto.getDescription() : "");
+            row.add(LocalDateTime.now().toString());
+            row.add("접수");
+
+            googleSheetUtil.appendToSheet(SHEET_ID,ORDER_SHEET_NAME,row);
+            alarmTalkService.sendOrderReceiptToAdmin(ADMIN_PHONE,order);
+
+            return order;
         }catch (Exception e) {
             throw new RuntimeException(e);
         }
