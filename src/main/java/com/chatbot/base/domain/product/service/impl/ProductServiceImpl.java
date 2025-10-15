@@ -87,7 +87,7 @@ public class ProductServiceImpl implements ProductService {
             row.add("접수");
 
             googleSheetUtil.appendToSheet(SHEET_ID,ORDER_SHEET_NAME,row);
-//            alarmTalkService.sendOrderReceiptToAdmin(ADMIN_PHONE,order);
+            alarmTalkService.sendOrderReceiptToAdmin(ADMIN_PHONE,order);
 
             return order;
         }catch (Exception e) {
