@@ -144,6 +144,8 @@ public class KakaoUserController {
                 itemCard.setTitle("기본 배송지");
                 itemCard.setDescription(defaultAddressStr);
 
+                itemCard.addButton(new Button("이름(입금자명) 변경하기",ButtonAction.블럭이동,"68dfa315b85f48088da03587"));
+                itemCard.addButton(new Button("연락처 변경하기",ButtonAction.블럭이동,"68dfa315b85f48088da03587"));
                 itemCard.addButton(new Button("기본 배송지 변경하기",ButtonAction.블럭이동,"68dfa315b85f48088da03587"));
 
 
