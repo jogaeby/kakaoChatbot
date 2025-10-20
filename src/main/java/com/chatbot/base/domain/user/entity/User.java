@@ -107,4 +107,12 @@ public class User extends BaseEntity {
             addresses.add(newDefaultAddress);
         }
     }
+
+    public void modifyName(String name) {
+        this.name = name;
+    }
+
+    public void modifyPhone(String phone) {
+        this.phone = phone;
+    }
 }

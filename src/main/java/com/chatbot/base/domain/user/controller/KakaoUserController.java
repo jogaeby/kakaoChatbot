@@ -144,8 +144,8 @@ public class KakaoUserController {
                 itemCard.setTitle("기본 배송지");
                 itemCard.setDescription(defaultAddressStr);
 
-                itemCard.addButton(new Button("이름(입금자명) 변경하기",ButtonAction.블럭이동,"68dfa315b85f48088da03587"));
-                itemCard.addButton(new Button("연락처 변경하기",ButtonAction.블럭이동,"68dfa315b85f48088da03587"));
+                itemCard.addButton(new Button("이름(입금자명) 변경하기",ButtonAction.블럭이동,"68f5cbbdedb87047afe27aaf"));
+                itemCard.addButton(new Button("연락처 변경하기",ButtonAction.블럭이동,"68f5cbca465dc163a640d34e"));
                 itemCard.addButton(new Button("기본 배송지 변경하기",ButtonAction.블럭이동,"68dfa315b85f48088da03587"));
 
 
@@ -232,7 +232,182 @@ public class KakaoUserController {
             itemCard.setTitle("기본 배송지");
             itemCard.setDescription(defaultAddressStr);
 
+            itemCard.addButton(new Button("이름(입금자명) 변경하기",ButtonAction.블럭이동,"68f5cbbdedb87047afe27aaf"));
+            itemCard.addButton(new Button("연락처 변경하기",ButtonAction.블럭이동,"68f5cbca465dc163a640d34e"));
             itemCard.addButton(new Button("기본 배송지 변경하기",ButtonAction.블럭이동,"68dfa315b85f48088da03587"));
+
+
+
+            chatBotResponse.addItemCard(itemCard);
+            return chatBotResponse;
+        }catch (Exception e) {
+            log.error("ERROR: {}", e.getMessage(), e);
+            return chatBotExceptionResponse.createException();
+        }
+    }
+
+    @PostMapping(value = "input/name")
+    public ChatBotResponse inputNameUpdate(@RequestBody ChatBotRequest chatBotRequest) {
+        try {
+            ChatBotResponse chatBotResponse = new ChatBotResponse();
+
+            Optional<UserDto> maybeUser = userService.isUser(chatBotRequest.getUserKey());
+
+            if (maybeUser.isEmpty()) {
+                return chatBotExceptionResponse.createAuthException();
+            }
+            String newName = chatBotRequest.getName();
+            UserDto userDto = maybeUser.get();
+
+            UserDto updateUserName = UserDto.builder()
+                    .name(newName)
+                    .build();
+
+            TextCard textCard = new TextCard();
+            textCard.setDescription("[기존]\n"+userDto.getName()+"\n\n[변경]\n"+newName+"\n\n이름(입금자명)을 변경하시겠습니까?");
+
+
+
+            chatBotResponse.addTextCard(textCard);
+            chatBotResponse.addQuickButton("아니요",ButtonAction.블럭이동,"68de387a2c0d3f5ee717ece3");
+            chatBotResponse.addQuickButton("변경하기",ButtonAction.블럭이동,"68f5cbc4b85f48088da44de6",ButtonParamKey.user,updateUserName);
+
+            return chatBotResponse;
+        }catch (Exception e) {
+            log.error("ERROR: {}", e.getMessage(), e);
+            return chatBotExceptionResponse.createException();
+        }
+    }
+
+    @PostMapping(value = "update/name")
+    public ChatBotResponse updateNameUpdate(@RequestBody ChatBotRequest chatBotRequest) {
+        try {
+            ChatBotResponse chatBotResponse = new ChatBotResponse();
+            Optional<UserDto> maybeUser = userService.isUser(chatBotRequest.getUserKey());
+
+            if (maybeUser.isEmpty()) {
+                return chatBotExceptionResponse.createAuthException();
+            }
+            UserDto userDto = maybeUser.get();
+            UserDto newName = chatBotRequest.getUser();
+
+
+            UserDto updateUserDto = userService.modifyName(userDto, newName.getName());
+
+            List<AddressDto> addressDtos = updateUserDto.getAddressDtos();
+            // 기본 배송지 찾기 (없으면 Optional.empty)
+            Optional<AddressDto> defaultAddress = addressDtos.stream()
+                    .filter(AddressDto::isDefaultYn)
+                    .findFirst();
+
+            // 기본 배송지를 문자열로 추출, 없으면 "설정안됨"
+            String defaultAddressStr = defaultAddress
+                    .map(AddressDto::getFullAddress) // AddressDto에서 전체 주소를 가져오는 메서드 사용
+                    .orElse("설정안됨");
+
+            ItemCard itemCard = new ItemCard();
+            itemCard.setProfile(Map.of(
+                    "title","프로필 정보",
+                    "imageUrl","https://pointman-file-repository.s3.ap-northeast-2.amazonaws.com/image/profile/icon-friends-ryan.png")
+            );
+
+            itemCard.setItemListAlignment("right");
+            itemCard.addItemList("고유번호",updateUserDto.getUserKey());
+            itemCard.addItemList("이름",updateUserDto.getName());
+            itemCard.addItemList("연락처",updateUserDto.getPhone());
+            itemCard.setTitle("기본 배송지");
+            itemCard.setDescription(defaultAddressStr);
+
+            itemCard.addButton(new Button("이름(입금자명) 변경하기",ButtonAction.블럭이동,"68f5cbbdedb87047afe27aaf"));
+            itemCard.addButton(new Button("연락처 변경하기",ButtonAction.블럭이동,"68f5cbca465dc163a640d34e"));
+            itemCard.addButton(new Button("기본 배송지 변경하기",ButtonAction.블럭이동,"68dfa315b85f48088da03587"));
+
+
+
+            chatBotResponse.addItemCard(itemCard);
+            return chatBotResponse;
+        }catch (Exception e) {
+            log.error("ERROR: {}", e.getMessage(), e);
+            return chatBotExceptionResponse.createException();
+        }
+    }
+
+    @PostMapping(value = "input/phone")
+    public ChatBotResponse inputPhoneUpdate(@RequestBody ChatBotRequest chatBotRequest) {
+        try {
+            ChatBotResponse chatBotResponse = new ChatBotResponse();
+
+            Optional<UserDto> maybeUser = userService.isUser(chatBotRequest.getUserKey());
+
+            if (maybeUser.isEmpty()) {
+                return chatBotExceptionResponse.createAuthException();
+            }
+            String newPhone = chatBotRequest.getPhone();
+            UserDto userDto = maybeUser.get();
+
+            UserDto updateUserPhone = UserDto.builder()
+                    .phone(newPhone)
+                    .build();
+
+            TextCard textCard = new TextCard();
+            textCard.setDescription("[기존]\n"+userDto.getPhone()+"\n\n[변경]\n"+newPhone+"\n\n연락처를 변경하시겠습니까?");
+
+
+
+            chatBotResponse.addTextCard(textCard);
+            chatBotResponse.addQuickButton("아니요",ButtonAction.블럭이동,"68de387a2c0d3f5ee717ece3");
+            chatBotResponse.addQuickButton("변경하기",ButtonAction.블럭이동,"68f5cbd0edb87047afe27ab2",ButtonParamKey.user,updateUserPhone);
+
+            return chatBotResponse;
+        }catch (Exception e) {
+            log.error("ERROR: {}", e.getMessage(), e);
+            return chatBotExceptionResponse.createException();
+        }
+    }
+
+    @PostMapping(value = "update/phone")
+    public ChatBotResponse updatePhoneUpdate(@RequestBody ChatBotRequest chatBotRequest) {
+        try {
+            ChatBotResponse chatBotResponse = new ChatBotResponse();
+            Optional<UserDto> maybeUser = userService.isUser(chatBotRequest.getUserKey());
+
+            if (maybeUser.isEmpty()) {
+                return chatBotExceptionResponse.createAuthException();
+            }
+            UserDto userDto = maybeUser.get();
+            UserDto newName = chatBotRequest.getUser();
+
+
+            UserDto updateUserDto = userService.modifyPhone(userDto, newName.getPhone());
+
+            List<AddressDto> addressDtos = updateUserDto.getAddressDtos();
+            // 기본 배송지 찾기 (없으면 Optional.empty)
+            Optional<AddressDto> defaultAddress = addressDtos.stream()
+                    .filter(AddressDto::isDefaultYn)
+                    .findFirst();
+
+            // 기본 배송지를 문자열로 추출, 없으면 "설정안됨"
+            String defaultAddressStr = defaultAddress
+                    .map(AddressDto::getFullAddress) // AddressDto에서 전체 주소를 가져오는 메서드 사용
+                    .orElse("설정안됨");
+
+            ItemCard itemCard = new ItemCard();
+            itemCard.setProfile(Map.of(
+                    "title","프로필 정보",
+                    "imageUrl","https://pointman-file-repository.s3.ap-northeast-2.amazonaws.com/image/profile/icon-friends-ryan.png")
+            );
+
+            itemCard.setItemListAlignment("right");
+            itemCard.addItemList("고유번호",updateUserDto.getUserKey());
+            itemCard.addItemList("이름",updateUserDto.getName());
+            itemCard.addItemList("연락처",updateUserDto.getPhone());
+            itemCard.setTitle("기본 배송지");
+            itemCard.setDescription(defaultAddressStr);
+
+            itemCard.addButton(new Button("이름(입금자명) 변경하기",ButtonAction.블럭이동,"68f5cbbdedb87047afe27aaf"));
+            itemCard.addButton(new Button("연락처 변경하기",ButtonAction.블럭이동,"68f5cbca465dc163a640d34e"));
+            itemCard.addButton(new Button("기본 배송지 변경하기",ButtonAction.블럭이동,"68dfa315b85f48088da03587"));
+
 
 
             chatBotResponse.addItemCard(itemCard);

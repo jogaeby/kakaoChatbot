@@ -50,4 +50,24 @@ public class UserServiceImpl implements UserService {
 
         return user.toDto();
     }
+
+    @Override
+    public UserDto modifyName(UserDto userDto, String name) {
+        String userKey = userDto.getUserKey();
+
+        User user = userRepository.findByUserKey(userKey).get();
+        user.modifyName(name);
+
+        return user.toDto();
+    }
+
+    @Override
+    public UserDto modifyPhone(UserDto userDto, String phone) {
+        String userKey = userDto.getUserKey();
+
+        User user = userRepository.findByUserKey(userKey).get();
+        user.modifyPhone(phone);
+
+        return user.toDto();
+    }
 }
