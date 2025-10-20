@@ -237,7 +237,7 @@ public class KakaoUserController {
             itemCard.addButton(new Button("기본 배송지 변경하기",ButtonAction.블럭이동,"68dfa315b85f48088da03587"));
 
 
-
+            chatBotResponse.addSimpleText("성공적으로 기본 배송지를 변경하였습니다.");
             chatBotResponse.addItemCard(itemCard);
             return chatBotResponse;
         }catch (Exception e) {
@@ -323,7 +323,7 @@ public class KakaoUserController {
             itemCard.addButton(new Button("기본 배송지 변경하기",ButtonAction.블럭이동,"68dfa315b85f48088da03587"));
 
 
-
+            chatBotResponse.addSimpleText("성공적으로 이름(입금자명)을 변경하였습니다.");
             chatBotResponse.addItemCard(itemCard);
             return chatBotResponse;
         }catch (Exception e) {
@@ -409,7 +409,7 @@ public class KakaoUserController {
             itemCard.addButton(new Button("기본 배송지 변경하기",ButtonAction.블럭이동,"68dfa315b85f48088da03587"));
 
 
-
+            chatBotResponse.addSimpleText("성공적으로 연락처를 변경하였습니다.");
             chatBotResponse.addItemCard(itemCard);
             return chatBotResponse;
         }catch (Exception e) {

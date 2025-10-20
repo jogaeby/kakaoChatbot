@@ -51,6 +51,7 @@ public class UserServiceImpl implements UserService {
         return user.toDto();
     }
 
+    @Transactional
     @Override
     public UserDto modifyName(UserDto userDto, String name) {
         String userKey = userDto.getUserKey();
@@ -61,6 +62,7 @@ public class UserServiceImpl implements UserService {
         return user.toDto();
     }
 
+    @Transactional
     @Override
     public UserDto modifyPhone(UserDto userDto, String phone) {
         String userKey = userDto.getUserKey();
