@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -22,7 +23,7 @@ public class UserDto {
 
     private LocalDateTime privacyAgreedAt;
 
-    private List<AddressDto> addressDtos;
+    private List<AddressDto> addressDtos = new ArrayList<>();
 
     public AddressDto getDefaultAddress() {
         return addressDtos.stream()
