@@ -23,6 +23,7 @@ public class UserDto {
 
     private LocalDateTime privacyAgreedAt;
 
+    @Builder.Default
     private List<AddressDto> addressDtos = new ArrayList<>();
 
     public AddressDto getDefaultAddress() {
