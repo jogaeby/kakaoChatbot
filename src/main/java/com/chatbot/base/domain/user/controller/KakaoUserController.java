@@ -1,6 +1,9 @@
 package com.chatbot.base.domain.user.controller;
 
 import com.chatbot.base.common.util.StringFormatterUtil;
+import com.chatbot.base.domain.order.dto.OrderDto;
+import com.chatbot.base.domain.order.service.OrderService;
+import com.chatbot.base.domain.product.dto.ProductDto;
 import com.chatbot.base.domain.user.dto.AddressDto;
 import com.chatbot.base.domain.user.dto.UserDto;
 import com.chatbot.base.domain.user.service.UserService;
@@ -10,10 +13,9 @@ import com.chatbot.base.dto.kakao.request.ChatBotRequest;
 import com.chatbot.base.dto.kakao.response.ChatBotExceptionResponse;
 import com.chatbot.base.dto.kakao.response.ChatBotResponse;
 import com.chatbot.base.dto.kakao.response.property.common.Button;
-import com.chatbot.base.dto.kakao.response.property.common.Profile;
+import com.chatbot.base.dto.kakao.response.property.components.Carousel;
 import com.chatbot.base.dto.kakao.response.property.components.ItemCard;
 import com.chatbot.base.dto.kakao.response.property.components.TextCard;
-import com.chatbot.base.dto.kakao.sync.KakaoProfileDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
@@ -34,6 +36,8 @@ public class KakaoUserController {
     private final ChatBotExceptionResponse chatBotExceptionResponse = new ChatBotExceptionResponse();
 
     private final UserService userService;
+
+    private final OrderService orderService;
 
     @PostMapping(value = "join/double-check")
     public ChatBotResponse joinDoubleCheck(@RequestBody ChatBotRequest chatBotRequest) {
@@ -437,6 +441,62 @@ public class KakaoUserController {
             chatBotResponse.addItemCard(itemCard);
             return chatBotResponse;
         }catch (Exception e) {
+            log.error("ERROR: {}", e.getMessage(), e);
+            return chatBotExceptionResponse.createException();
+        }
+    }
+
+    @PostMapping(value = "orders")
+    public ChatBotResponse getOrders(@RequestBody ChatBotRequest chatBotRequest) {
+        try {
+            ChatBotResponse chatBotResponse = new ChatBotResponse();
+
+            Optional<UserDto> blackUser = userService.isBlackUser(chatBotRequest.getUserKey());
+            if (blackUser.isPresent()) {
+                return chatBotExceptionResponse.createBlackUserException();
+            }
+
+            Optional<UserDto> maybeUser = userService.isUser(chatBotRequest.getUserKey());
+
+            if (maybeUser.isPresent()) {
+                UserDto userDto = maybeUser.get();
+                List<OrderDto> orderList = orderService.getOrderList(userDto.getUserKey());
+                Carousel carousel = new Carousel();
+
+
+                orderList.forEach(orderDto -> {
+                    ProductDto productDto = orderDto.getProduct().get(0);
+                    TextCard orderDetail = new TextCard();
+                    StringBuilder description = new StringBuilder();
+                    description
+                            .append("["+orderDto.getId()+"] "+orderDto.getStatus())
+                            .append("\n\n")
+                            .append("상품명: " + productDto.getName())
+                            .append("\n")
+                            .append("할인가: " + StringFormatterUtil.formatCurrency(String.valueOf(productDto.getDiscountedPrice()))+"원")
+                            .append("\n")
+                            .append("수량: " + orderDto.getTotalQuantity()+"개")
+                            .append("\n")
+                            .append("총 결제금액: " + StringFormatterUtil.formatCurrency(String.valueOf(orderDto.getTotalQuantity()))+"원")
+                            .append("\n")
+                            .append("주문일자: " + orderDto.getOrderDate())
+                            .append("\n")
+                            .append("상태: " + orderDto.getStatus())
+                    ;
+
+
+                    orderDetail.setDescription(description.toString());
+                    carousel.addComponent(orderDetail);
+                });
+
+
+                chatBotResponse.addTextCard("최근 주문내역");
+                chatBotResponse.addCarousel(carousel);
+                return chatBotResponse;
+            }
+
+            return chatBotExceptionResponse.createAuthException();
+        } catch (Exception e) {
             log.error("ERROR: {}", e.getMessage(), e);
             return chatBotExceptionResponse.createException();
         }

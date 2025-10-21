@@ -1,6 +1,7 @@
 package com.chatbot.base.domain.product.controller;
 
-import com.chatbot.base.domain.product.dto.OrderDto;
+import com.chatbot.base.domain.order.dto.OrderDto;
+import com.chatbot.base.domain.order.service.OrderService;
 import com.chatbot.base.domain.product.dto.ProductDto;
 import com.chatbot.base.domain.product.service.ProductService;
 import com.chatbot.base.domain.user.dto.AddressDto;
@@ -34,6 +35,8 @@ public class KakaoProductController {
     private final ChatBotExceptionResponse chatBotExceptionResponse = new ChatBotExceptionResponse();
 
     private final ProductService productService;
+
+    private final OrderService orderService;
 
     private final UserService userService;
 
@@ -330,7 +333,7 @@ public class KakaoProductController {
             AddressDto addressDto = chatBotRequest.getAddressDto();
             UserDto userDto = maybeUser.get();
 
-            OrderDto orderDto = productService.orderProduct(product, userDto, addressDto);
+            OrderDto orderDto = orderService.orderProduct(product, userDto, addressDto);
             String orderId = orderDto.getId();
 
             TextCard textCard = new TextCard();

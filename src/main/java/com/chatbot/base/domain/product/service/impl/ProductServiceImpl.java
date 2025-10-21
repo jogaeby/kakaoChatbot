@@ -2,7 +2,7 @@ package com.chatbot.base.domain.product.service.impl;
 
 import com.chatbot.base.common.AlarmTalkService;
 import com.chatbot.base.common.GoogleSheetUtil;
-import com.chatbot.base.domain.product.dto.OrderDto;
+import com.chatbot.base.domain.order.dto.OrderDto;
 import com.chatbot.base.domain.product.dto.ProductDto;
 import com.chatbot.base.domain.product.service.ProductService;
 import com.chatbot.base.domain.user.dto.AddressDto;
@@ -51,47 +51,6 @@ public class ProductServiceImpl implements ProductService {
             return productDtoList;
         }catch (Exception e) {
             return new ArrayList<>();
-        }
-    }
-
-    @Override
-    public OrderDto orderProduct(ProductDto productDto, UserDto userDto, AddressDto addressDto) {
-        try {
-            long id = System.currentTimeMillis();
-            OrderDto order = OrderDto.builder()
-                    .id(String.valueOf(id))
-                    .address(addressDto)
-                    .product(List.of(productDto))
-                    .user(userDto)
-                    .totalQuantity(productDto.getQuantity())
-                    .totalPrice(productDto.getQuantity() * productDto.getDiscountedPrice())
-                    .build();
-
-
-            List<Object> row = new ArrayList<>();
-
-            row.add(id);
-            row.add(userDto.getUserKey());
-            row.add(userDto.getName());
-            row.add("'"+userDto.getPhone());
-            row.add(addressDto.getFullAddress());
-            row.add(productDto.getId());
-            row.add(productDto.getName());
-            row.add(String.valueOf(productDto.getPrice()));
-            row.add(String.valueOf(productDto.getDiscountRate()));
-            row.add(String.valueOf(productDto.getDiscountedPrice()));
-            row.add(productDto.getQuantity());
-            row.add(productDto.getQuantity()*productDto.getDiscountedPrice());
-            row.add(productDto.getDescription() != null ? productDto.getDescription() : "");
-            row.add(LocalDateTime.now().toString());
-            row.add("접수");
-
-            googleSheetUtil.appendToSheet(SHEET_ID,ORDER_SHEET_NAME,row);
-            alarmTalkService.sendOrderReceiptToAdmin(ADMIN_PHONE,order);
-
-            return order;
-        }catch (Exception e) {
-            throw new RuntimeException(e);
         }
     }
 }

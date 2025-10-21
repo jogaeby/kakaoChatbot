@@ -1,7 +1,7 @@
 package com.chatbot.base.common;
 
 import com.chatbot.base.common.util.StringFormatterUtil;
-import com.chatbot.base.domain.product.dto.OrderDto;
+import com.chatbot.base.domain.order.dto.OrderDto;
 import com.chatbot.base.domain.product.dto.ProductDto;
 import com.chatbot.base.domain.user.dto.AddressDto;
 import com.chatbot.base.domain.user.dto.UserDto;
