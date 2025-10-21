@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -469,17 +470,19 @@ public class KakaoUserController {
                     TextCard orderDetail = new TextCard();
                     StringBuilder description = new StringBuilder();
                     description
-                            .append("["+orderDto.getId()+"] "+orderDto.getStatus())
+                            .append("["+orderDto.getId()+"] " + productDto.getName() + "("+orderDto.getStatus()+")")
                             .append("\n\n")
+                            .append("주문번호: " + orderDto.getId())
+                            .append("\n")
                             .append("상품명: " + productDto.getName())
                             .append("\n")
                             .append("할인가: " + StringFormatterUtil.formatCurrency(String.valueOf(productDto.getDiscountedPrice()))+"원")
                             .append("\n")
                             .append("수량: " + orderDto.getTotalQuantity()+"개")
                             .append("\n")
-                            .append("총 결제금액: " + StringFormatterUtil.formatCurrency(String.valueOf(orderDto.getTotalQuantity()))+"원")
+                            .append("총 결제금액: " + StringFormatterUtil.formatCurrency(String.valueOf(orderDto.getTotalPrice()))+"원")
                             .append("\n")
-                            .append("주문일자: " + orderDto.getOrderDate())
+                            .append("주문일자: " + orderDto.getOrderDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")))
                             .append("\n")
                             .append("상태: " + orderDto.getStatus())
                     ;
