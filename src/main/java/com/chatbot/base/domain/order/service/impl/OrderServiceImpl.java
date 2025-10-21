@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -70,7 +71,8 @@ public class OrderServiceImpl implements OrderService {
     public List<OrderDto> getOrderList(String userKey) {
         try {
             List<List<Object>> orderList = googleSheetUtil.readAllSheet(SHEET_ID, "주문내역");
-
+            // 리스트 자체를 뒤집음 (최신 데이터가 앞쪽으로)
+            Collections.reverse(orderList);
             List<OrderDto> collect = orderList.stream()
                     .filter(row -> row.get(2).equals(userKey)) // 3번째 열이 userKey인 데이터만 필터링
                     .map(row -> {
@@ -111,6 +113,7 @@ public class OrderServiceImpl implements OrderService {
                                 .status(String.valueOf(row.get(15)))
                              .build();
                     })
+                    .limit(10) // 최신 10개만
                     .collect(Collectors.toList());
 
             return collect;
