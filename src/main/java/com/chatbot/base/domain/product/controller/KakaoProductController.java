@@ -1,6 +1,5 @@
 package com.chatbot.base.domain.product.controller;
 
-import com.chatbot.base.common.util.StringFormatterUtil;
 import com.chatbot.base.domain.product.dto.OrderDto;
 import com.chatbot.base.domain.product.dto.ProductDto;
 import com.chatbot.base.domain.product.service.ProductService;
@@ -13,13 +12,11 @@ import com.chatbot.base.dto.kakao.request.ChatBotRequest;
 import com.chatbot.base.dto.kakao.response.ChatBotExceptionResponse;
 import com.chatbot.base.dto.kakao.response.ChatBotResponse;
 import com.chatbot.base.dto.kakao.response.property.common.Button;
-import com.chatbot.base.dto.kakao.response.property.common.ListItem;
 import com.chatbot.base.dto.kakao.response.property.common.Profile;
 import com.chatbot.base.dto.kakao.response.property.common.Thumbnail;
 import com.chatbot.base.dto.kakao.response.property.components.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,7 +35,7 @@ public class KakaoProductController {
 
     private final ProductService productService;
 
-    private final UserService service;
+    private final UserService userService;
 
     private final Profile profile = new Profile("금빛방앗간","https://cafe24.poxo.com/ec01/niacom0803/5GslpdAnCPzGTb8GqqEZ3j9W8PbV9xVKJx7NVKrE/h4NpwmrqazOb++iMiMzfrbktxXZcg8qpLZQEBtTNSaMDQ==/_/web/product/extra/big/202209/11310c6c43ef8bb2556cbd066dcd26f3.jpg");
 
@@ -49,15 +46,18 @@ public class KakaoProductController {
             Carousel carousel = new Carousel();
             List<ProductDto> products = productService.getProducts();
 
-            if (products.isEmpty()) {
+            Optional<UserDto> blackUser = userService.isBlackUser(chatBotRequest.getUserKey());
+            if (blackUser.isPresent()) {
+                return chatBotExceptionResponse.createBlackUserException();
+            }
 
+            if (products.isEmpty()) {
                 chatBotResponse.addTextCard("현재 판매중인 모든 상품이 품절입니다.");
                 return chatBotResponse;
             }
 
 
             products.forEach(productDto -> {
-                StringFormatterUtil.objectToString(productDto);
                 Button detailBtn = new Button("상세보기",ButtonAction.블럭이동,"68f6cedda02e490d34823ac2",ButtonParamKey.product,productDto);
                 Button button;
                 if (productDto.isSoldOut()) {
@@ -127,7 +127,7 @@ public class KakaoProductController {
         try {
             ChatBotResponse chatBotResponse = new ChatBotResponse();
 
-            Optional<UserDto> maybeUser = service.isUser(chatBotRequest.getUserKey());
+            Optional<UserDto> maybeUser = userService.isUser(chatBotRequest.getUserKey());
 
             if (maybeUser.isEmpty()) {
                 return chatBotExceptionResponse.createAuthException();
@@ -175,7 +175,7 @@ public class KakaoProductController {
             ChatBotResponse chatBotResponse = new ChatBotResponse();
             ProductDto product = chatBotRequest.getProduct();
 
-            Optional<UserDto> maybeUser = service.isUser(chatBotRequest.getUserKey());
+            Optional<UserDto> maybeUser = userService.isUser(chatBotRequest.getUserKey());
 
             if (maybeUser.isEmpty()) {
                 return chatBotExceptionResponse.createAuthException();
@@ -258,7 +258,7 @@ public class KakaoProductController {
         try {
             ChatBotResponse chatBotResponse = new ChatBotResponse();
 
-            Optional<UserDto> maybeUser = service.isUser(chatBotRequest.getUserKey());
+            Optional<UserDto> maybeUser = userService.isUser(chatBotRequest.getUserKey());
 
             if (maybeUser.isEmpty()) {
                 return chatBotExceptionResponse.createAuthException();
@@ -315,12 +315,16 @@ public class KakaoProductController {
         try {
             ChatBotResponse chatBotResponse = new ChatBotResponse();
 
-            Optional<UserDto> maybeUser = service.isUser(chatBotRequest.getUserKey());
+            Optional<UserDto> maybeUser = userService.isUser(chatBotRequest.getUserKey());
 
             if (maybeUser.isEmpty()) {
                 return chatBotExceptionResponse.createAuthException();
             }
 
+            Optional<UserDto> blackUser = userService.isBlackUser(chatBotRequest.getUserKey());
+            if (blackUser.isPresent()) {
+                return chatBotExceptionResponse.createBlackUserException();
+            }
 
             ProductDto product = chatBotRequest.getProduct();
             AddressDto addressDto = chatBotRequest.getAddressDto();

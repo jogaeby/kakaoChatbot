@@ -39,6 +39,7 @@ public class KakaoUserController {
     public ChatBotResponse joinDoubleCheck(@RequestBody ChatBotRequest chatBotRequest) {
         try {
             ChatBotResponse chatBotResponse = new ChatBotResponse();
+
             Optional<UserDto> maybeUser = userService.isUser(chatBotRequest.getUserKey());
 
             if (maybeUser.isPresent()) {
@@ -115,6 +116,11 @@ public class KakaoUserController {
     public ChatBotResponse info(@RequestBody ChatBotRequest chatBotRequest) {
         try {
             ChatBotResponse chatBotResponse = new ChatBotResponse();
+
+            Optional<UserDto> blackUser = userService.isBlackUser(chatBotRequest.getUserKey());
+            if (blackUser.isPresent()) {
+                return chatBotExceptionResponse.createBlackUserException();
+            }
 
             Optional<UserDto> maybeUser = userService.isUser(chatBotRequest.getUserKey());
 
@@ -202,6 +208,13 @@ public class KakaoUserController {
             if (maybeUser.isEmpty()) {
                 return chatBotExceptionResponse.createAuthException();
             }
+
+            Optional<UserDto> blackUser = userService.isBlackUser(chatBotRequest.getUserKey());
+            if (blackUser.isPresent()) {
+                return chatBotExceptionResponse.createBlackUserException();
+            }
+
+
             UserDto userDto = maybeUser.get();
 
             AddressDto addressDto = chatBotRequest.getAddressDto();
@@ -287,6 +300,11 @@ public class KakaoUserController {
 
             if (maybeUser.isEmpty()) {
                 return chatBotExceptionResponse.createAuthException();
+            }
+
+            Optional<UserDto> blackUser = userService.isBlackUser(chatBotRequest.getUserKey());
+            if (blackUser.isPresent()) {
+                return chatBotExceptionResponse.createBlackUserException();
             }
             UserDto userDto = maybeUser.get();
             UserDto newName = chatBotRequest.getUser();
@@ -374,6 +392,12 @@ public class KakaoUserController {
             if (maybeUser.isEmpty()) {
                 return chatBotExceptionResponse.createAuthException();
             }
+
+            Optional<UserDto> blackUser = userService.isBlackUser(chatBotRequest.getUserKey());
+            if (blackUser.isPresent()) {
+                return chatBotExceptionResponse.createBlackUserException();
+            }
+
             UserDto userDto = maybeUser.get();
             UserDto newName = chatBotRequest.getUser();
 

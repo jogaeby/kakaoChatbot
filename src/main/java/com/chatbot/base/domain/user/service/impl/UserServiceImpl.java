@@ -1,5 +1,6 @@
 package com.chatbot.base.domain.user.service.impl;
 
+import com.chatbot.base.common.GoogleSheetUtil;
 import com.chatbot.base.domain.user.dto.UserDto;
 import com.chatbot.base.domain.user.entity.User;
 import com.chatbot.base.domain.user.repository.UserRepository;
@@ -9,6 +10,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -17,6 +19,10 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+
+    private final GoogleSheetUtil googleSheetUtil;
+
+    private final String SHEET_ID = "12LK-mODVa9b5b8KA_m68GUF50AojwdOK7_0cok3inFM";
 
     @Transactional
     @Override
@@ -38,6 +44,24 @@ public class UserServiceImpl implements UserService {
     public Optional<UserDto> isUser(String userKey) {
         return userRepository.findByUserKey(userKey)
                 .map(User::toDto);
+    }
+
+    @Override
+    public Optional<UserDto> isBlackUser(String userKey) {
+        try {
+            List<List<Object>> blackList = googleSheetUtil.readAllSheet(SHEET_ID, "블랙리스트");
+            Optional<List<Object>> blackUser = blackList.stream()
+                    .filter(row -> row.get(0).equals(userKey))
+                    .findFirst();
+
+            if (blackUser.isEmpty()) {
+                return Optional.empty();
+            }
+            return userRepository.findByUserKey(userKey)
+                    .map(User::toDto);
+        }catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
     @Transactional

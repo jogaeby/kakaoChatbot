@@ -9,9 +9,12 @@ public interface UserService {
 
     Optional<UserDto> isUser(String userKey);
 
+    Optional<UserDto> isBlackUser(String userKey);
+
     UserDto modifyAddress(UserDto userDto, String address);
 
     UserDto modifyName(UserDto userDto, String name);
 
     UserDto modifyPhone(UserDto userDto, String phone);
+
 }

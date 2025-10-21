@@ -34,6 +34,14 @@ public class ChatBotExceptionResponse {
         return chatBotResponse;
     }
 
+    public ChatBotResponse createBlackUserException(){
+        ChatBotResponse chatBotResponse = new ChatBotResponse();
+        TextCard textCard = new TextCard();
+        textCard.setDescription("예상치 못한 계정 문제가 발생하였습니다.\n담당자에게 문의해주세요.");
+        chatBotResponse.addTextCard(textCard);
+        return chatBotResponse;
+    }
+
     public ChatBotResponse createException(){
         ChatBotResponse chatBotResponse = new ChatBotResponse();
         chatBotResponse.addSimpleText("처음부터 다시 시작해주세요.");
