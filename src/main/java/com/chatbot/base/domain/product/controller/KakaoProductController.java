@@ -58,6 +58,7 @@ public class KakaoProductController {
 
             products.forEach(productDto -> {
                 StringFormatterUtil.objectToString(productDto);
+                Button detailBtn = new Button("상세보기",ButtonAction.블럭이동,"68f6cedda02e490d34823ac2",ButtonParamKey.product,productDto);
                 Button button;
                 if (productDto.isSoldOut()) {
                     button = new Button("품절", ButtonAction.메시지,"품절된 상품입니다.");
@@ -74,11 +75,46 @@ public class KakaoProductController {
                 commerceCard.setDiscountedPrice(productDto.getDiscountedPrice());
                 commerceCard.setDescription(productDto.getDescription());
                 commerceCard.setButton(button);
+                commerceCard.setButton(detailBtn);
 
                 carousel.addComponent(commerceCard);
             });
 
             chatBotResponse.addCarousel(carousel);
+            return chatBotResponse;
+        } catch (Exception e) {
+            log.error("ERROR: {}", e.getMessage(), e);
+            return chatBotExceptionResponse.createException();
+        }
+    }
+
+    @PostMapping(value = "detail")
+    public ChatBotResponse productDetail(@RequestBody ChatBotRequest chatBotRequest) {
+        try {
+            ChatBotResponse chatBotResponse = new ChatBotResponse();
+            ProductDto product = chatBotRequest.getProduct();
+
+            Button detailBtn = new Button("상세보기",ButtonAction.블럭이동,"68f6cedda02e490d34823ac2",ButtonParamKey.product,product);
+            Button button;
+            if (product.isSoldOut()) {
+                button = new Button("품절", ButtonAction.메시지,"품절된 상품입니다.");
+            }else {
+                button = new Button("구매하기", ButtonAction.블럭이동,"68df74c52c0d3f5ee7182bf2", ButtonParamKey.product,product);
+            }
+
+            CommerceCard commerceCard = new CommerceCard();
+            commerceCard.setProfile(profile);
+            commerceCard.setTitle(product.getName());
+            commerceCard.setThumbnails(product.getImageUrl(),false);
+            commerceCard.setPrice(product.getPrice());
+            commerceCard.setDiscountRate(product.getDiscountRate());
+            commerceCard.setDiscountedPrice(product.getDiscountedPrice());
+            commerceCard.setDescription(product.getDescription());
+            commerceCard.setButton(button);
+            commerceCard.setButton(detailBtn);
+
+            chatBotResponse.addCommerceCard(commerceCard);
+
             return chatBotResponse;
         } catch (Exception e) {
             log.error("ERROR: {}", e.getMessage(), e);
