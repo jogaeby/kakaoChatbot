@@ -462,6 +462,12 @@ public class KakaoUserController {
             if (maybeUser.isPresent()) {
                 UserDto userDto = maybeUser.get();
                 List<OrderDto> orderList = orderService.getOrderList(userDto.getUserKey());
+
+                if (orderList.isEmpty()) {
+                    chatBotResponse.addTextCard("최근 주문내역이 존재하지 않습니다.");
+                    return chatBotResponse;
+                }
+
                 Carousel carousel = new Carousel();
 
 
