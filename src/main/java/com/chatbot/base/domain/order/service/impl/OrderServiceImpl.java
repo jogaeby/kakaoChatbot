@@ -58,7 +58,7 @@ public class OrderServiceImpl implements OrderService {
             row.add(LocalDateTime.now().toString());
             row.add("접수");
 
-            googleSheetUtil.appendToSheet(SHEET_ID,ORDER_SHEET_NAME,row);
+            googleSheetUtil.appendToTableSheet(SHEET_ID,ORDER_SHEET_NAME,row);
             alarmTalkService.sendOrderReceiptToAdmin(ADMIN_PHONE,order);
 
             return order;

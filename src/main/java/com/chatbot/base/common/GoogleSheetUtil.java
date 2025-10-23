@@ -159,6 +159,53 @@ public class GoogleSheetUtil {
         log.info("데이터 추가 완료 (추가된 셀 수): {}", appendResponse.getUpdates().getUpdatedCells());
     }
 
+    public void appendToTableSheet(String spreadSheetId, String sheetName, List<Object> newRowData) throws GeneralSecurityException, IOException {
+        log.info("{} {}", spreadSheetId, sheetName);
+
+        Sheets service = getSheetsService();
+
+        // 현재 시트 데이터를 읽어서 최대 no 값을 계산
+        String range = sheetName + "!A:A"; // 첫 번째 열 전체 범위
+        ValueRange response = service.spreadsheets().values().get(spreadSheetId, range).execute();
+        List<List<Object>> values = response.getValues();
+
+        int maxNo = 0;
+        if (values != null && !values.isEmpty()) {
+            for (List<Object> row : values) {
+                if (!row.isEmpty()) {
+                    try {
+                        int currentNo = Integer.parseInt(row.get(0).toString());
+                        maxNo = Math.max(maxNo, currentNo);
+                    } catch (NumberFormatException e) {
+                        log.warn("숫자로 변환할 수 없는 값: {}", row.get(0));
+                    }
+                }
+            }
+        }
+
+        // 새 데이터의 첫 번째 값으로 maxNo + 1 추가
+        newRowData.add(0, maxNo + 1);
+
+        // 시트 마지막 행 계산 (값이 들어있는 행 수)
+        int lastRow = (values != null) ? values.size() : 0;
+        int targetRow = lastRow + 1; // 표 마지막 아래 행
+
+        // 추가할 데이터를 ValueRange로 변환
+        ValueRange body = new ValueRange()
+                .setValues(List.of(newRowData));
+
+        // 정확한 범위 지정: 예) A{행}:Z{행} (필요하면 열 범위 조정)
+        String updateRange = sheetName + "!A" + targetRow;
+
+        // update로 값 추가 (append 대신)
+        service.spreadsheets().values()
+                .update(spreadSheetId, updateRange, body)
+                .setValueInputOption("USER_ENTERED")
+                .execute();
+
+        log.info("데이터 추가 완료: 행 번호 = {}, 값 = {}", targetRow, newRowData);
+    }
+
     public void updateColumnsByReceiptId(String spreadSheetId, String sheetName, String receiptId,
                                          Object newC, Object newI, Object newJ) throws GeneralSecurityException, IOException {
         Sheets service = getSheetsService();
