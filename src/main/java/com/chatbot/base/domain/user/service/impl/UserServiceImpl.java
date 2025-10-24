@@ -1,6 +1,7 @@
 package com.chatbot.base.domain.user.service.impl;
 
 import com.chatbot.base.common.GoogleSheetUtil;
+import com.chatbot.base.domain.product.dto.ProductDto;
 import com.chatbot.base.domain.user.dto.UserDto;
 import com.chatbot.base.domain.user.entity.User;
 import com.chatbot.base.domain.user.repository.UserRepository;
@@ -26,7 +27,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UserDto join(String channelName, String userKey, String name, String phone, String address, boolean addressDefault, boolean privacyAgreed) {
+    public UserDto join(String channelName, String channelId, String userKey, String name, String phone, String address, boolean addressDefault, boolean privacyAgreed) {
         Optional<UserDto> maybeUser = isUser(userKey);
 
         if (maybeUser.isPresent()) {
@@ -34,7 +35,7 @@ public class UserServiceImpl implements UserService {
         }
 
 
-        User user = User.create(channelName, userKey, name, phone, address, addressDefault,true);
+        User user = User.create(channelName, channelId, userKey, name, phone, address, addressDefault,true);
         User save = userRepository.save(user);
 
         return save.toDto();
@@ -93,6 +94,16 @@ public class UserServiceImpl implements UserService {
 
         User user = userRepository.findByUserKey(userKey).get();
         user.modifyPhone(phone);
+
+        return user.toDto();
+    }
+
+    @Transactional
+    @Override
+    public UserDto saveProductToCart(String userKey, ProductDto productDto) {
+        User user = userRepository.findByUserKey(userKey).get();
+
+        user.addProductToCart(productDto);
 
         return user.toDto();
     }

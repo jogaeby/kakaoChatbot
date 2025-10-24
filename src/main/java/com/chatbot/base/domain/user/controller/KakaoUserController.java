@@ -103,7 +103,7 @@ public class KakaoUserController {
                     .findFirst()
                     .orElseThrow(Exception::new);
 
-            UserDto join = userService.join(chatBotRequest.getBot().getName(), chatBotRequest.getUserKey(), joinForm.getName(), joinForm.getPhone(), defaultAddress.getFullAddress(),defaultAddress.isDefaultYn(), true);
+            UserDto join = userService.join(chatBotRequest.getBot().getName(), chatBotRequest.getBot().getId(), chatBotRequest.getUserKey(), joinForm.getName(), joinForm.getPhone(), defaultAddress.getFullAddress(),defaultAddress.isDefaultYn(), true);
 
             TextCard textCard = new TextCard();
             textCard.setDescription("성공적으로 간편가입을 완료했습니다.");

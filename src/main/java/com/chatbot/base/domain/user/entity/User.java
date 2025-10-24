@@ -1,6 +1,8 @@
 package com.chatbot.base.domain.user.entity;
 
 import com.chatbot.base.domain.BaseEntity;
+import com.chatbot.base.domain.cart.entity.Cart;
+import com.chatbot.base.domain.product.dto.ProductDto;
 import com.chatbot.base.domain.user.dto.AddressDto;
 import com.chatbot.base.domain.user.dto.UserDto;
 import jakarta.persistence.*;
@@ -30,8 +32,12 @@ public class User extends BaseEntity {
     private String name;
     @Column(nullable = false)
     private String phone;
+
     @Column(nullable = false)
     private String channelName;
+
+    @Column(nullable = false)
+    private String channelId;
 
     @Column(nullable = false)
     private boolean privacyAgreed;
@@ -39,33 +45,47 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private LocalDateTime privacyAgreedAt;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Cart cart;
+
     // 한 명의 유저가 여러 배송지를 가질 수 있도록
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "user_id") // Address 테이블에 user_id FK 생성
     private List<Address> addresses = new ArrayList<>();
 
     @Builder
-    public User(String channelName, String userKey, String name, String phone, boolean privacyAgreed, LocalDateTime privacyAgreedAt, List<Address> addresses) {
+    public User(String channelName, String channelId, String userKey, String name, String phone, boolean privacyAgreed, LocalDateTime privacyAgreedAt, List<Address> addresses, Cart cart) {
         this.userKey = userKey;
         this.name = name;
         this.phone = phone;
         this.channelName = channelName;
+        this.channelId = channelId;
         this.privacyAgreed = privacyAgreed;
         this.privacyAgreedAt = privacyAgreedAt;
         this.addresses = addresses;
+        this.cart = cart;
     }
 
-    public static User create(String channelName, String userKey, String name, String phone, String fullAddress, boolean isDefault,boolean privacyAgreed) {
-        Address address = Address.create(fullAddress,isDefault);
-        return User.builder()
+    public static User create(String channelName, String channelId, String userKey, String name, String phone, String fullAddress, boolean isDefault,boolean privacyAgreed) {
+
+        Address address = Address.create(fullAddress, isDefault);
+
+        User user = User.builder()
                 .userKey(userKey)
                 .name(name)
                 .phone(phone)
                 .channelName(channelName)
-                .addresses(new ArrayList<>(List.of(address))) // ✅ 수정 가능 리스트
+                .channelId(channelId)
+                .addresses(new ArrayList<>(List.of(address)))
                 .privacyAgreed(privacyAgreed)
                 .privacyAgreedAt(LocalDateTime.now())
                 .build();
+
+        // ✅ 장바구니 초기화
+        Cart cart = Cart.create(user);
+        user.setCart(cart); // 연관관계 설정
+
+        return user;
     }
 
     public UserDto toDto() {
@@ -86,7 +106,12 @@ public class User extends BaseEntity {
                 .addressDtos(addressDtos)
                 .build();
     }
-
+    public void setCart(Cart cart) {
+        this.cart = cart;
+        if (cart.getUser() != this) {
+            cart.setUser(this);
+        }
+    }
     public void modifyDefaultAddress(String address) {
         // 1. 현재 기본 배송지 있는지 확인
         Optional<Address> maybeDefaultAddress = addresses.stream()
@@ -114,5 +139,9 @@ public class User extends BaseEntity {
 
     public void modifyPhone(String phone) {
         this.phone = phone;
+    }
+
+    public void addProductToCart(ProductDto productDto) {
+        this.cart.getCartItems().add(productDto);
     }
 }

@@ -8,19 +8,5 @@ import org.springframework.boot.test.context.SpringBootTest;
 class AlarmTalkServiceTest {
     @Autowired
     private AlarmTalkService alarmTalkService;
-    @Test
-    void sendRoomTourAssignment() {
 
-        alarmTalkService.sendSuggestionReceipt("010-7713-1548","테스트","2025-07-21","www.naver.com");
-    }
-
-    @Test
-    void sendInquiriesReceipt() {
-        alarmTalkService.sendInquiriesReceipt("01077131548");
-    }
-
-    @Test
-    void name() {
-        alarmTalkService.sendMeetingReceipt("01077131548");
-    }
 }
