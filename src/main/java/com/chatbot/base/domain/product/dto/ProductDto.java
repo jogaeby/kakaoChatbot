@@ -1,9 +1,11 @@
 package com.chatbot.base.domain.product.dto;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 @Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class ProductDto {
     private String id;

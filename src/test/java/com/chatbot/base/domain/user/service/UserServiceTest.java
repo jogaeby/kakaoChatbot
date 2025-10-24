@@ -1,9 +1,12 @@
 package com.chatbot.base.domain.user.service;
 
 import com.chatbot.base.domain.product.dto.ProductDto;
+import com.chatbot.base.domain.user.dto.UserDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,7 +16,7 @@ class UserServiceTest {
     private UserService userService;
     @Test
     void saveProductToCart() {
-        String userKey = "QFO-xDIZbO77";
+        String userKey = "123123";
 
         ProductDto productDto = ProductDto.builder()
                 .id("1")
@@ -25,6 +28,10 @@ class UserServiceTest {
 
     @Test
     void name() {
-        userService.join("테스트","asd1123","123123","테스트","01055554444","asdasd",true,true);
+        String userKey = "123123";
+        Optional<UserDto> user = userService.isUser(userKey);
+
+        UserDto userDto = user.get();
+
     }
 }
