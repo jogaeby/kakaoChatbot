@@ -45,6 +45,7 @@ public class ProductServiceImpl implements ProductService {
                                 .isSoldOut(soldOut)
                                 .build();
                     })
+                    .limit(10)
                     .collect(Collectors.toList());
 
 
