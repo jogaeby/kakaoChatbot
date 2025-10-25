@@ -63,6 +63,7 @@ public class KakaoProductController {
             products.forEach(productDto -> {
                 Button detailBtn = new Button("상세보기",ButtonAction.블럭이동,"68f6cedda02e490d34823ac2",ButtonParamKey.product,productDto);
                 Button button;
+
                 if (productDto.isSoldOut()) {
                     button = new Button("품절", ButtonAction.메시지,"품절된 상품입니다.");
                 }else {
@@ -79,6 +80,10 @@ public class KakaoProductController {
                 commerceCard.setDescription(productDto.getDescription());
                 commerceCard.setButton(button);
                 commerceCard.setButton(detailBtn);
+                if (!productDto.isSoldOut()) {
+                    Button cartBtn = new Button("장바구니 담기",ButtonAction.블럭이동,"68fc5162edb87047afe45475",ButtonParamKey.product,productDto);
+                    commerceCard.setButton(cartBtn);
+                }
 
                 carousel.addComponent(commerceCard);
             });
@@ -115,7 +120,10 @@ public class KakaoProductController {
             commerceCard.setDescription(product.getDescription());
             commerceCard.setButton(button);
             commerceCard.setButton(detailBtn);
-
+            if (!product.isSoldOut()) {
+                Button cartBtn = new Button("장바구니 담기",ButtonAction.블럭이동,"68fc5162edb87047afe45475",ButtonParamKey.product,product);
+                commerceCard.setButton(cartBtn);
+            }
             chatBotResponse.addCommerceCard(commerceCard);
 
             return chatBotResponse;

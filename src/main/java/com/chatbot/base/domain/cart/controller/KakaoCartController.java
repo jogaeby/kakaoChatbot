@@ -105,4 +105,86 @@ public class KakaoCartController {
             return chatBotExceptionResponse.createException();
         }
     }
+
+    @PostMapping(value = "add/quantity")
+    public ChatBotResponse addProductQuantityToCart(@RequestBody ChatBotRequest chatBotRequest) {
+        try {
+            ChatBotResponse chatBotResponse = new ChatBotResponse();
+
+            Optional<UserDto> blackUser = userService.isBlackUser(chatBotRequest.getUserKey());
+            if (blackUser.isPresent()) {
+                return chatBotExceptionResponse.createBlackUserException();
+            }
+
+            Optional<UserDto> maybeUser = userService.isUser(chatBotRequest.getUserKey());
+
+            if (maybeUser.isPresent()) {
+                ProductDto productDto = chatBotRequest.getProduct();
+
+                CommerceCard commerceCard = new CommerceCard();
+                commerceCard.setProfile(profile);
+                commerceCard.setTitle(productDto.getName());
+                commerceCard.setThumbnails(productDto.getImageUrl(),false);
+                commerceCard.setPrice(productDto.getPrice());
+                commerceCard.setDiscountRate(productDto.getDiscountRate());
+                commerceCard.setDiscountedPrice(productDto.getDiscountedPrice());
+                commerceCard.setDescription(productDto.getDescription());
+
+
+                for (int i = 1; i <= 10; i++) {
+                    ProductDto quantityDto = ProductDto.builder()
+                            .id(productDto.getId())
+                            .name(productDto.getName())
+                            .price(productDto.getPrice())
+                            .discountRate(productDto.getDiscountRate())
+                            .discountedPrice(productDto.getDiscountedPrice())
+                            .imageUrl(productDto.getImageUrl())
+                            .description(productDto.getDescription())
+                            .quantity(i)  // 버튼별 수량 설정
+                            .build();
+                    chatBotResponse.addQuickButton(i+"개",ButtonAction.블럭이동,"68fc521e2c0d3f5ee71df50a",ButtonParamKey.product,quantityDto);
+                }
+
+
+                chatBotResponse.addCommerceCard(commerceCard);
+
+                return chatBotResponse;
+            }
+
+            return chatBotExceptionResponse.createAuthException();
+        } catch (Exception e) {
+            log.error("ERROR: {}", e.getMessage(), e);
+            return chatBotExceptionResponse.createException();
+        }
+    }
+
+    @PostMapping(value = "add/product")
+    public ChatBotResponse addProductToCart(@RequestBody ChatBotRequest chatBotRequest) {
+        try {
+            ChatBotResponse chatBotResponse = new ChatBotResponse();
+
+            Optional<UserDto> blackUser = userService.isBlackUser(chatBotRequest.getUserKey());
+            if (blackUser.isPresent()) {
+                return chatBotExceptionResponse.createBlackUserException();
+            }
+
+            Optional<UserDto> maybeUser = userService.isUser(chatBotRequest.getUserKey());
+
+            if (maybeUser.isPresent()) {
+                UserDto userDto = maybeUser.get();
+
+                ProductDto productDto = chatBotRequest.getProduct();
+                userService.saveProductToCart(userDto.getUserKey(),productDto);
+
+
+                chatBotResponse.addTextCard("장바구니에 추가하였습니다.");
+                return chatBotResponse;
+            }
+
+            return chatBotExceptionResponse.createAuthException();
+        } catch (Exception e) {
+            log.error("ERROR: {}", e.getMessage(), e);
+            return chatBotExceptionResponse.createException();
+        }
+    }
 }
