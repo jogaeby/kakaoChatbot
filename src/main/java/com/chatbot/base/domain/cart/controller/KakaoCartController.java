@@ -276,7 +276,7 @@ public class KakaoCartController {
     public ChatBotResponse inputDelivery(@RequestBody ChatBotRequest chatBotRequest) {
         try {
             ChatBotResponse chatBotResponse = new ChatBotResponse();
-            String delivery = chatBotRequest.getDelivery();
+            String delivery = chatBotRequest.getAddress();
 
             AddressDto newAddressDto = AddressDto.builder()
                     .fullAddress(delivery)
