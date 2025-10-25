@@ -93,7 +93,7 @@ public class KakaoCartController {
 
 
                 chatBotResponse.addCarousel(carousel);
-                chatBotResponse.addQuickButton("주문하기",ButtonAction.블럭이동,"");
+                chatBotResponse.addQuickButton("주문하기",ButtonAction.블럭이동,"68fc6452465dc163a642c68c");
                 return chatBotResponse;
             }
 
@@ -241,14 +241,14 @@ public class KakaoCartController {
                 }
                 AddressDto defaultAddress = defaultAddressOpt.get();
 
-                Button defaultAddressButton = new Button("선택하기",ButtonAction.블럭이동,"68df7a1f2c0d3f5ee7182c35");
+                Button defaultAddressButton = new Button("선택하기",ButtonAction.블럭이동,"68fc64681d1fc539f4ee0d6f");
                 defaultAddressButton.setExtra(ButtonParamKey.address,defaultAddress);
 
                 TextCard defaultTextCard = new TextCard();
                 defaultTextCard.setDescription("[기본 배송지]\n\n"+defaultAddress.getFullAddress());
                 defaultTextCard.setButtons(defaultAddressButton);
 
-                Button addAddressButton = new Button("직접 입력하기",ButtonAction.블럭이동,"68df9df4edb87047afde88e8");
+                Button addAddressButton = new Button("직접 입력하기",ButtonAction.블럭이동,"68fc649b47a9e61d1aecd1fa");
 
                 TextCard textCard = new TextCard();
                 textCard.setDescription("직접 배송지를 입력 할 수 있습니다.");
