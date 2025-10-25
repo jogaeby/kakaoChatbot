@@ -282,7 +282,7 @@ public class ChatBotRequest {
     }
 
     public List<String> getProductIds(){
-        if (Objects.isNull(action.getClientExtra().getProductIds())) return null;
+        if (Objects.isNull(action.getClientExtra().getProductIds())) return new ArrayList<>();
         return action.getClientExtra().getProductIds();
     }
 
