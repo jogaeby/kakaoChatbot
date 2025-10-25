@@ -95,6 +95,8 @@ public class KakaoCartController {
 
                 chatBotResponse.addCarousel(carousel);
                 chatBotResponse.addQuickButton("주문하기",ButtonAction.블럭이동,"68fc6452465dc163a642c68c");
+
+                StringFormatterUtil.objectToString(chatBotResponse);
                 return chatBotResponse;
             }
 
