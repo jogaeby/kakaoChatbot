@@ -479,27 +479,32 @@ public class KakaoUserController {
 
 
                 orderList.forEach(orderDto -> {
-                    ProductDto productDto = orderDto.getProduct().get(0);
+                    List<ProductDto> products = orderDto.getProduct();
                     TextCard orderDetail = new TextCard();
                     StringBuilder description = new StringBuilder();
-                    description
-                            .append("["+orderDto.getId()+"] " + productDto.getName() + "("+orderDto.getStatus()+")")
-                            .append("\n\n")
-                            .append("주문번호: " + orderDto.getId())
-                            .append("\n")
-                            .append("상품명: " + productDto.getName())
-                            .append("\n")
-                            .append("할인가: " + StringFormatterUtil.formatCurrency(String.valueOf(productDto.getDiscountedPrice()))+"원")
-                            .append("\n")
-                            .append("수량: " + orderDto.getTotalQuantity()+"개")
-                            .append("\n")
-                            .append("총 결제금액: " + StringFormatterUtil.formatCurrency(String.valueOf(orderDto.getTotalPrice()))+"원")
-                            .append("\n")
-                            .append("주문일자: " + orderDto.getOrderDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")))
-                            .append("\n")
-                            .append("상태: " + orderDto.getStatus())
-                    ;
 
+                    // 대표 상품명 + n개
+                    String firstProductName = products.get(0).getName();
+                    int remainingCount = products.size() - 1;
+
+                    description.append("[").append(orderDto.getId()).append("] ")
+                            .append(firstProductName);
+                    if (remainingCount > 0) {
+                        description.append(" 외 ").append(remainingCount).append("개");
+                    }
+                    description.append(" (").append(orderDto.getStatus()).append(")")
+                            .append("\n\n")
+                            .append("주문번호: ").append(orderDto.getId())
+                            .append("\n")
+                            .append("총 수량: ").append(orderDto.getTotalQuantity()).append("개")
+                            .append("\n")
+                            .append("총 결제금액: ")
+                            .append(StringFormatterUtil.formatCurrency(String.valueOf(orderDto.getTotalPrice()))).append("원")
+                            .append("\n")
+                            .append("주문일자: ")
+                            .append(orderDto.getOrderDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")))
+                            .append("\n")
+                            .append("상태: ").append(orderDto.getStatus());
 
                     orderDetail.setDescription(description.toString());
                     carousel.addComponent(orderDetail);
