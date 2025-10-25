@@ -320,11 +320,25 @@ public class KakaoCartController {
                 UserDto userDto = maybeUser.get();
                 AddressDto addressDto = chatBotRequest.getAddressDto();
                 List<ProductDto> cartItems = userDto.getCart().getCartItems();
-                // ✅ cartItems → Map<상품ID, 수량>
-                Map<String, Integer> quantityMap = cartItems.stream()
+                List<String> removeId = chatBotRequest.getProductIds();
+
+                // ✅ removeId가 존재하면 제외, 없으면 전체
+                List<ProductDto> filteredCartItems;
+                if (removeId != null && !removeId.isEmpty()) {
+                    filteredCartItems = cartItems.stream()
+                            .filter(item -> !removeId.contains(item.getId()))
+                            .collect(Collectors.toList());
+                } else {
+                    filteredCartItems = cartItems;
+                }
+
+                // ✅ Map<상품ID, 수량>
+                Map<String, Integer> quantityMap = filteredCartItems.stream()
                         .collect(Collectors.toMap(ProductDto::getId, ProductDto::getQuantity));
+
                 Set<String> productIds = quantityMap.keySet();
 
+                // ✅ DB에서 상품 조회
                 List<ProductDto> products = productService.getProducts(productIds);
 
                 if (products.isEmpty()) {
@@ -332,27 +346,24 @@ public class KakaoCartController {
                     return chatBotResponse;
                 }
 
+                // ✅ Carousel 구성
                 Carousel carousel = new Carousel();
-
                 products.forEach(productDto -> {
                     int quantity = quantityMap.getOrDefault(productDto.getId(), 1);
-                    Button deleteBtn = new Button("삭제",ButtonAction.블럭이동,"68fc5caf47a9e61d1aecd121",ButtonParamKey.product,productDto);
+                    Button deleteBtn = new Button("삭제", ButtonAction.블럭이동, "68fc64681d1fc539f4ee0d6f", ButtonParamKey.product, List.of(productDto.getId()));
 
                     CommerceCard commerceCard = new CommerceCard();
                     commerceCard.setProfile(profile);
                     commerceCard.setTitle(productDto.getName());
-                    commerceCard.setThumbnails(productDto.getImageUrl(),false);
+                    commerceCard.setThumbnails(productDto.getImageUrl(), false);
                     commerceCard.setPrice(productDto.getPrice());
                     commerceCard.setDiscountRate(productDto.getDiscountRate());
                     commerceCard.setDiscountedPrice(productDto.getDiscountedPrice());
-                    commerceCard.setDescription("선택 수량: "+quantity+"개");
+                    commerceCard.setDescription("선택 수량: " + quantity + "개");
                     commerceCard.setButton(deleteBtn);
 
                     carousel.addComponent(commerceCard);
                 });
-                List<String> orderProductIds = products.stream()
-                        .map(ProductDto::getId)
-                        .collect(Collectors.toList());
 
 
                 // ✅ 총 수량, 총 결제금액 계산
