@@ -10,5 +10,6 @@ public interface CartService {
     UserDto addProductToCart(String userKey, ProductDto productDto);
 
     UserDto deleteProductToCart(String userKey, String productId);
+
     UserDto deleteProductsToCart(String userKey, Set<String> productId);
 }

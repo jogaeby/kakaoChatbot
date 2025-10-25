@@ -463,10 +463,6 @@ public class KakaoCartController {
                 return chatBotResponse;
             }
 
-            List<String> collect = cartItems.stream()
-                    .map(ProductDto::getId)
-                    .collect(Collectors.toList());
-
             OrderDto orderDto = orderService.orderProduct(cartItems, userDto, addressDto);
             cartService.deleteProductsToCart(userDto.getUserKey(), orderedIds);
             String orderId = orderDto.getId();
