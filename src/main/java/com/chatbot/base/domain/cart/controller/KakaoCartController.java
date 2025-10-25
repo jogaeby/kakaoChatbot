@@ -1,11 +1,8 @@
 package com.chatbot.base.domain.cart.controller;
 
-import com.chatbot.base.common.util.StringFormatterUtil;
-import com.chatbot.base.domain.order.dto.OrderDto;
-import com.chatbot.base.domain.order.service.OrderService;
+import com.chatbot.base.domain.cart.service.CartService;
 import com.chatbot.base.domain.product.dto.ProductDto;
 import com.chatbot.base.domain.product.service.ProductService;
-import com.chatbot.base.domain.user.dto.AddressDto;
 import com.chatbot.base.domain.user.dto.UserDto;
 import com.chatbot.base.domain.user.service.UserService;
 import com.chatbot.base.dto.kakao.constatnt.button.ButtonAction;
@@ -17,17 +14,13 @@ import com.chatbot.base.dto.kakao.response.property.common.Button;
 import com.chatbot.base.dto.kakao.response.property.common.Profile;
 import com.chatbot.base.dto.kakao.response.property.components.Carousel;
 import com.chatbot.base.dto.kakao.response.property.components.CommerceCard;
-import com.chatbot.base.dto.kakao.response.property.components.ItemCard;
-import com.chatbot.base.dto.kakao.response.property.components.TextCard;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -42,7 +35,7 @@ public class KakaoCartController {
     private final ChatBotExceptionResponse chatBotExceptionResponse = new ChatBotExceptionResponse();
 
     private final UserService userService;
-
+    private final CartService cartService;
     private final ProductService productService;
 
     private final Profile profile = new Profile("금빛방앗간","https://cafe24.poxo.com/ec01/niacom0803/5GslpdAnCPzGTb8GqqEZ3j9W8PbV9xVKJx7NVKrE/h4NpwmrqazOb++iMiMzfrbktxXZcg8qpLZQEBtTNSaMDQ==/_/web/product/extra/big/202209/11310c6c43ef8bb2556cbd066dcd26f3.jpg");
@@ -174,10 +167,40 @@ public class KakaoCartController {
                 UserDto userDto = maybeUser.get();
 
                 ProductDto productDto = chatBotRequest.getProduct();
-                userService.saveProductToCart(userDto.getUserKey(),productDto);
+                cartService.addProductToCart(userDto.getUserKey(),productDto);
 
 
                 chatBotResponse.addTextCard("장바구니에 추가하였습니다.");
+                return chatBotResponse;
+            }
+
+            return chatBotExceptionResponse.createAuthException();
+        } catch (Exception e) {
+            log.error("ERROR: {}", e.getMessage(), e);
+            return chatBotExceptionResponse.createException();
+        }
+    }
+
+    @PostMapping(value = "delete/product")
+    public ChatBotResponse deleteProductToCart(@RequestBody ChatBotRequest chatBotRequest) {
+        try {
+            ChatBotResponse chatBotResponse = new ChatBotResponse();
+
+            Optional<UserDto> blackUser = userService.isBlackUser(chatBotRequest.getUserKey());
+            if (blackUser.isPresent()) {
+                return chatBotExceptionResponse.createBlackUserException();
+            }
+
+            Optional<UserDto> maybeUser = userService.isUser(chatBotRequest.getUserKey());
+
+            if (maybeUser.isPresent()) {
+                UserDto userDto = maybeUser.get();
+
+                ProductDto productDto = chatBotRequest.getProduct();
+                UserDto userDto1 = cartService.deleteProductToCart(userDto.getUserKey(), productDto.getId());
+
+
+                chatBotResponse.addTextCard("장바구니에서 삭제하였습니다.");
                 return chatBotResponse;
             }
 

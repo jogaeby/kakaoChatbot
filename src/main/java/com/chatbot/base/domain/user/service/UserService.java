@@ -17,7 +17,4 @@ public interface UserService {
     UserDto modifyName(UserDto userDto, String name);
 
     UserDto modifyPhone(UserDto userDto, String phone);
-
-    UserDto saveProductToCart(String userKey, ProductDto productDto);
-
 }

@@ -1,5 +1,6 @@
 package com.chatbot.base.domain.user.service;
 
+import com.chatbot.base.domain.cart.service.CartService;
 import com.chatbot.base.domain.product.dto.ProductDto;
 import com.chatbot.base.domain.user.dto.UserDto;
 import org.junit.jupiter.api.Test;
@@ -8,14 +9,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @SpringBootTest
 class UserServiceTest {
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private CartService cartService;
     @Test
-    void saveProductToCart() {
+    void addProductToCart() {
         String userKey = "123123";
 
         ProductDto productDto = ProductDto.builder()
@@ -23,7 +25,7 @@ class UserServiceTest {
                 .quantity(10)
                 .build();
 
-        userService.saveProductToCart(userKey,productDto);
+        cartService.addProductToCart(userKey,productDto);
     }
 
     @Test

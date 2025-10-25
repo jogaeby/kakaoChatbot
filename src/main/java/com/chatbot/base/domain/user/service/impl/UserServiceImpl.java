@@ -97,29 +97,4 @@ public class UserServiceImpl implements UserService {
 
         return user.toDto();
     }
-
-    @Transactional
-    @Override
-    public UserDto saveProductToCart(String userKey, ProductDto productDto) {
-        User user = userRepository.findByUserKey(userKey)
-                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
-
-        List<ProductDto> cartItems = user.getCart().getCartItems();
-
-        // ✅ 동일 상품 존재 여부 확인
-        Optional<ProductDto> existingItemOpt = cartItems.stream()
-                .filter(item -> item.getId().equals(productDto.getId()))
-                .findFirst();
-
-        if (existingItemOpt.isPresent()) {
-            // ✅ 이미 있는 상품이면 수량 변경
-            ProductDto existingItem = existingItemOpt.get();
-            existingItem.setQuantity(productDto.getQuantity());
-        } else {
-            // ✅ 새로운 상품 추가
-            user.addProductToCart(productDto);
-        }
-
-        return user.toDto();
-    }
 }
