@@ -350,10 +350,10 @@ public class KakaoCartController {
                 itemCard.setSummary("총 결제금액",String.format("%,d",totalPrice)+"원");
 
                 itemCard.setTitle("배송지");
-                itemCard.setDescription(addressDto.getFullAddress());
 
+                itemCard.setDescription(addressDto.getFullAddress());
+                chatBotResponse.addSimpleText("아래 내용으로 주문을 진행하시겠습니까?");
                 chatBotResponse.addCarousel(carousel);
-                chatBotResponse.addTextCard(textCard);
 //                chatBotResponse.addItemCard(itemCard);
                 chatBotResponse.addQuickButton("장바구니",ButtonAction.블럭이동,"68fc4e1c2c0d3f5ee71df4bd");
                 Button orderButton = new Button("주문하기",ButtonAction.블럭이동,"68df7bdc5390541970472535");
