@@ -2,6 +2,7 @@ package com.chatbot.base.domain.cart.entity;
 
 import com.chatbot.base.domain.BaseEntity;
 import com.chatbot.base.domain.cart.converter.CartItemListConverter;
+import com.chatbot.base.domain.cart.dto.CartDto;
 import com.chatbot.base.domain.product.dto.ProductDto;
 import com.chatbot.base.domain.user.entity.User;
 import jakarta.persistence.*;
@@ -45,5 +46,11 @@ public class Cart extends BaseEntity {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public CartDto toDto() {
+        return CartDto.builder()
+                .cartItems(cartItems)
+                .build();
     }
 }

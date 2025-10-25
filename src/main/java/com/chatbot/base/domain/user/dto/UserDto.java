@@ -1,5 +1,6 @@
 package com.chatbot.base.domain.user.dto;
 
+import com.chatbot.base.domain.cart.dto.CartDto;
 import jakarta.persistence.Column;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,6 +23,8 @@ public class UserDto {
     private boolean privacyAgreed;
 
     private LocalDateTime privacyAgreedAt;
+
+    private CartDto cart;
 
     @Builder.Default
     private List<AddressDto> addressDtos = new ArrayList<>();

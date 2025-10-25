@@ -104,14 +104,17 @@ public class User extends BaseEntity {
                 .privacyAgreed(this.privacyAgreed)
                 .privacyAgreedAt(this.privacyAgreedAt)
                 .addressDtos(addressDtos)
+                .cart(cart.toDto())
                 .build();
     }
-    public void setCart(Cart cart) {
+
+    private void setCart(Cart cart) {
         this.cart = cart;
         if (cart.getUser() != this) {
             cart.setUser(this);
         }
     }
+
     public void modifyDefaultAddress(String address) {
         // 1. 현재 기본 배송지 있는지 확인
         Optional<Address> maybeDefaultAddress = addresses.stream()

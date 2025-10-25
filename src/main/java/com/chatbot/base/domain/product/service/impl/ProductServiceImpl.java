@@ -12,7 +12,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,6 +33,37 @@ public class ProductServiceImpl implements ProductService {
             List<List<Object>> lists = googleSheetUtil.readAllSheet(SHEET_ID, PRODUCT_SHEET_NAME);
             List<ProductDto> productDtoList = lists.stream()
                     .skip(1)
+                    .map(row -> {
+                        boolean soldOut = row.get(7).toString().equals("품절") ? true : false;
+                        return ProductDto.builder()
+                                .id(row.get(0).toString())
+                                .name(row.get(1).toString())
+                                .price(Integer.parseInt(row.get(2).toString()))
+                                .discountRate(Integer.parseInt(row.get(3).toString()))
+                                .discount(0)
+                                .discountedPrice(Integer.parseInt(row.get(4).toString()))
+                                .description(row.get(5).toString())
+                                .imageUrl(row.get(6).toString())
+                                .isSoldOut(soldOut)
+                                .build();
+                    })
+                    .limit(10)
+                    .collect(Collectors.toList());
+
+
+            return productDtoList;
+        }catch (Exception e) {
+            return new ArrayList<>();
+        }
+    }
+
+    @Override
+    public List<ProductDto> getProducts(Set<String> productIds) {
+        try {
+            List<List<Object>> lists = googleSheetUtil.readAllSheet(SHEET_ID, PRODUCT_SHEET_NAME);
+            List<ProductDto> productDtoList = lists.stream()
+                    .skip(1)
+                    .filter(row -> productIds.contains(String.valueOf(row.get(0))))
                     .map(row -> {
                         boolean soldOut = row.get(7).toString().equals("품절") ? true : false;
                         return ProductDto.builder()
