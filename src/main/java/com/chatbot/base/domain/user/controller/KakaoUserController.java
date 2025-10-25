@@ -486,15 +486,17 @@ public class KakaoUserController {
                     // 대표 상품명 + n개
                     String firstProductName = products.get(0).getName();
                     int remainingCount = products.size() - 1;
+                    String productNameDisplay = firstProductName;
+                    if (remainingCount > 0) {
+                        productNameDisplay += " 외 " + remainingCount + "개";
+                    }
 
                     description.append("[").append(orderDto.getId()).append("] ")
-                            .append(firstProductName);
-                    if (remainingCount > 0) {
-                        description.append(" 외 ").append(remainingCount).append("개");
-                    }
-                    description.append(" (").append(orderDto.getStatus()).append(")")
+                            .append(" (").append(orderDto.getStatus()).append(")")
                             .append("\n\n")
                             .append("주문번호: ").append(orderDto.getId())
+                            .append("\n")
+                            .append("상품명: ").append(productNameDisplay)
                             .append("\n")
                             .append("총 수량: ").append(orderDto.getTotalQuantity()).append("개")
                             .append("\n")
