@@ -68,6 +68,76 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public OrderDto orderProduct(List<ProductDto> productDtos, UserDto userDto, AddressDto addressDto) {
+        try {
+            // 총 수량과 총 결제금액 계산
+            int totalQuantity = productDtos.stream().mapToInt(ProductDto::getQuantity).sum();
+            int totalPrice = productDtos.stream()
+                    .mapToInt(p -> p.getQuantity() * p.getDiscountedPrice())
+                    .sum();
+
+            long id = System.currentTimeMillis();
+            OrderDto order = OrderDto.builder()
+                    .id(String.valueOf(id))
+                    .address(addressDto)
+                    .product(productDtos)
+                    .user(userDto)
+                    .totalQuantity(totalQuantity)
+                    .totalPrice(totalPrice)
+                    .build();
+            // ✅ 상품명, 수량, 가격을 각각 줄바꿈으로 연결
+            String ids = productDtos.stream()
+                    .map(ProductDto::getId)
+                    .collect(Collectors.joining("\n"));
+
+            String names = productDtos.stream()
+                    .map(ProductDto::getName)
+                    .collect(Collectors.joining("\n"));
+
+            String quantities = productDtos.stream()
+                    .map(p -> String.valueOf(p.getQuantity()))
+                    .collect(Collectors.joining("\n"));
+
+            String price = productDtos.stream()
+                    .map(p -> String.valueOf(p.getPrice()))
+                    .collect(Collectors.joining("\n"));
+
+            String discountedRate = productDtos.stream()
+                    .map(p -> String.valueOf(p.getDiscountRate()))
+                    .collect(Collectors.joining("\n"));
+
+            String discountedPrice = productDtos.stream()
+                    .map(p -> String.valueOf(p.getDiscountedPrice()))
+                    .collect(Collectors.joining("\n"));
+
+            List<Object> row = new ArrayList<>();
+
+            row.add(id);
+            row.add(userDto.getUserKey());
+            row.add(userDto.getName());
+            row.add("'"+userDto.getPhone());
+            row.add(addressDto.getFullAddress());
+            row.add(ids);
+            row.add(names);
+            row.add(price);
+            row.add(discountedRate);
+            row.add(discountedPrice);
+            row.add(quantities);
+            row.add(totalPrice);
+            row.add("");
+            row.add(LocalDateTime.now().toString());
+            row.add("접수");
+
+            googleSheetUtil.appendToTableSheet(SHEET_ID,ORDER_SHEET_NAME,row);
+            alarmTalkService.sendOrderReceiptToAdmin(ADMIN_PHONE,order);
+
+            return order;
+        }catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public List<OrderDto> getOrderList(String userKey) {
         try {
             List<List<Object>> orderList = googleSheetUtil.readAllSheet(SHEET_ID, "주문내역");

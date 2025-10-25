@@ -2,6 +2,8 @@ package com.chatbot.base.domain.cart.controller;
 
 import com.chatbot.base.common.util.StringFormatterUtil;
 import com.chatbot.base.domain.cart.service.CartService;
+import com.chatbot.base.domain.order.dto.OrderDto;
+import com.chatbot.base.domain.order.service.OrderService;
 import com.chatbot.base.domain.product.dto.ProductDto;
 import com.chatbot.base.domain.product.service.ProductService;
 import com.chatbot.base.domain.user.dto.AddressDto;
@@ -42,6 +44,7 @@ public class KakaoCartController {
     private final UserService userService;
     private final CartService cartService;
     private final ProductService productService;
+    private final OrderService orderService;
 
     private final Profile profile = new Profile("금빛방앗간","https://cafe24.poxo.com/ec01/niacom0803/5GslpdAnCPzGTb8GqqEZ3j9W8PbV9xVKJx7NVKrE/h4NpwmrqazOb++iMiMzfrbktxXZcg8qpLZQEBtTNSaMDQ==/_/web/product/extra/big/202209/11310c6c43ef8bb2556cbd066dcd26f3.jpg");
 
@@ -347,7 +350,9 @@ public class KakaoCartController {
 
                     carousel.addComponent(commerceCard);
                 });
-
+                List<String> orderProductIds = products.stream()
+                        .map(ProductDto::getId)
+                        .collect(Collectors.toList());
 
 
                 // ✅ 총 수량, 총 결제금액 계산
@@ -389,7 +394,7 @@ public class KakaoCartController {
                 chatBotResponse.addCarousel(carousel);
                 chatBotResponse.addItemCard(itemCard);
                 chatBotResponse.addQuickButton("장바구니",ButtonAction.블럭이동,"68fc4e1c2c0d3f5ee71df4bd");
-                Button orderButton = new Button("주문하기",ButtonAction.블럭이동,"68df7bdc5390541970472535");
+                Button orderButton = new Button("주문하기",ButtonAction.블럭이동,"68df7bdc5390541970472535",ButtonParamKey.productIds,productIds);
                 orderButton.setExtra(ButtonParamKey.address,addressDto);
                 chatBotResponse.addQuickButton(orderButton);
 
@@ -403,4 +408,69 @@ public class KakaoCartController {
             return chatBotExceptionResponse.createException();
         }
     }
+
+    @PostMapping(value = "order")
+    public ChatBotResponse orderCart(@RequestBody ChatBotRequest chatBotRequest) {
+        try {
+            ChatBotResponse chatBotResponse = new ChatBotResponse();
+
+            // 1️⃣ 블랙리스트 체크
+            Optional<UserDto> blackUser = userService.isBlackUser(chatBotRequest.getUserKey());
+            if (blackUser.isPresent()) {
+                return chatBotExceptionResponse.createBlackUserException();
+            }
+
+            // 2️⃣ 사용자 체크
+            Optional<UserDto> maybeUser = userService.isUser(chatBotRequest.getUserKey());
+            if (maybeUser.isEmpty()) {
+                return chatBotExceptionResponse.createAuthException();
+            }
+
+            UserDto userDto = maybeUser.get();
+            List<String> orderProductIds = chatBotRequest.getProductIds(); // 주문 요청 상품 ID
+            AddressDto addressDto = chatBotRequest.getAddressDto();
+
+            // 3️⃣ 카트에서 주문 상품만 필터링
+            List<ProductDto> cartItems = userDto.getCart().getCartItems().stream()
+                    .filter(p -> orderProductIds.contains(p.getId()))
+                    .toList();
+
+            // 4️⃣ DB에서 상품 조회
+            Set<String> orderedIds = cartItems.stream()
+                    .map(ProductDto::getId)
+                    .collect(Collectors.toSet());
+            List<ProductDto> dbProducts = productService.getProducts(orderedIds);
+
+            // 5️⃣ ID 및 가격 검증
+            List<String> invalidProducts = cartItems.stream()
+                    .filter(cartItem -> {
+                        ProductDto dbItem = dbProducts.stream()
+                                .filter(p -> p.getId().equals(cartItem.getId()))
+                                .findFirst()
+                                .orElse(null);
+                        return dbItem == null || dbItem.getDiscountedPrice() != cartItem.getDiscountedPrice();
+                    })
+                    .map(ProductDto::getId)
+                    .toList();
+
+            if (!invalidProducts.isEmpty()) {
+                chatBotResponse.addTextCard("주문 실패: 가격이 일치하지 않거나 없는 상품");
+                return chatBotResponse;
+            }
+
+            OrderDto orderDto = orderService.orderProduct(cartItems, userDto, addressDto);
+            String orderId = orderDto.getId();
+
+            TextCard textCard = new TextCard();
+            textCard.setTitle("["+orderId+"] 주문접수 성공");
+            textCard.setDescription("주문접수를 성공적으로 완료하였습니다.");
+
+            chatBotResponse.addTextCard(textCard);
+            return chatBotResponse;
+        } catch (Exception e) {
+            log.error("ERROR: {}", e.getMessage(), e);
+            return chatBotExceptionResponse.createException();
+        }
+    }
+
 }

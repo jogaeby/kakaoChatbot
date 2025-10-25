@@ -9,5 +9,8 @@ import java.util.List;
 
 public interface OrderService {
     OrderDto orderProduct(ProductDto productDto, UserDto userDto, AddressDto addressDto);
+
+    OrderDto orderProduct(List<ProductDto> productDtos, UserDto userDto, AddressDto addressDto);
+
     List<OrderDto> getOrderList(String userKey);
 }

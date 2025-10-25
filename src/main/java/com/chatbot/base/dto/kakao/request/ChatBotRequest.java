@@ -122,6 +122,7 @@ public class ChatBotRequest {
             private UserDto user;
             private ProductDto product;
             private AddressDto address;
+            private List<String> productIds;
         }
 
         @Getter
@@ -278,6 +279,11 @@ public class ChatBotRequest {
     public AddressDto getAddressDto(){
         if (Objects.isNull(action.getClientExtra().getAddress())) return null;
         return action.getClientExtra().getAddress();
+    }
+
+    public List<String> getProductIds(){
+        if (Objects.isNull(action.getClientExtra().getProductIds())) return null;
+        return action.getClientExtra().getProductIds();
     }
 
     public String getCommentParam(){
