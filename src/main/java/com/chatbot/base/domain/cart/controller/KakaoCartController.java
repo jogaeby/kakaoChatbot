@@ -304,6 +304,7 @@ public class KakaoCartController {
 
                 products.forEach(productDto -> {
                     int quantity = quantityMap.getOrDefault(productDto.getId(), 1);
+                    Button deleteBtn = new Button("삭제",ButtonAction.블럭이동,"68fc5caf47a9e61d1aecd121",ButtonParamKey.product,productDto);
 
                     CommerceCard commerceCard = new CommerceCard();
                     commerceCard.setProfile(profile);
@@ -313,6 +314,7 @@ public class KakaoCartController {
                     commerceCard.setDiscountRate(productDto.getDiscountRate());
                     commerceCard.setDiscountedPrice(productDto.getDiscountedPrice());
                     commerceCard.setDescription("선택 수량: "+quantity+"개");
+                    commerceCard.setButton(deleteBtn);
 
                     carousel.addComponent(commerceCard);
                 });
@@ -354,9 +356,9 @@ public class KakaoCartController {
                 itemCard.setDescription(addressDto.getFullAddress());
 
 
-//                chatBotResponse.addSimpleText("아래 내용으로 주문을 진행하시겠습니까?");
+                chatBotResponse.addTextCard(textCard);
                 chatBotResponse.addCarousel(carousel);
-//                chatBotResponse.addItemCard(itemCard);
+                chatBotResponse.addItemCard(itemCard);
                 chatBotResponse.addQuickButton("장바구니",ButtonAction.블럭이동,"68fc4e1c2c0d3f5ee71df4bd");
                 Button orderButton = new Button("주문하기",ButtonAction.블럭이동,"68df7bdc5390541970472535");
                 orderButton.setExtra(ButtonParamKey.address,addressDto);
