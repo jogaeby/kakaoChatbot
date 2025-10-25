@@ -469,7 +469,7 @@ public class KakaoCartController {
             return chatBotResponse;
         } catch (Exception e) {
             log.error("ERROR: {}", e.getMessage(), e);
-            return chatBotExceptionResponse.createException();
+            return chatBotExceptionResponse.createException("주문을 실패하였습니다.");
         }
     }
 
