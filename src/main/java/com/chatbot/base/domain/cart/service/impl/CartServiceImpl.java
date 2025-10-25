@@ -43,6 +43,7 @@ public class CartServiceImpl implements CartService {
         return user.toDto();
     }
 
+    @Transactional
     @Override
     public UserDto deleteProductToCart(String userKey, String productId) {
         User user = userRepository.findByUserKey(userKey)
@@ -52,7 +53,7 @@ public class CartServiceImpl implements CartService {
 
         // ✅ 삭제 대상 상품 찾기
         boolean removed = cartItems.removeIf(item -> item.getId().equals(productId));
-
+        user.set
         return user.toDto();
     }
 }
