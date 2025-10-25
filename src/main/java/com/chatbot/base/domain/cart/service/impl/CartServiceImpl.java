@@ -53,7 +53,7 @@ public class CartServiceImpl implements CartService {
 
         // ✅ 삭제 대상 상품 찾기
         boolean removed = cartItems.removeIf(item -> item.getId().equals(productId));
-        user.set
+
         return user.toDto();
     }
 }
