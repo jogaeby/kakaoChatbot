@@ -159,7 +159,7 @@ public class OrderServiceImpl implements OrderService {
                         // 상품 정보 셀 (한 셀에 여러 상품이 줄바꿈으로 들어올 수 있음)
                         String[] ids = String.valueOf(row.get(6)).split("\n");
                         String[] names = String.valueOf(row.get(7)).split("\n");
-                        String[] quantities = String.valueOf(row.get(8)).split("\n"); // 수량
+                        String[] quantities = String.valueOf(row.get(11)).split("\n"); // 수량
                         String[] prices = String.valueOf(row.get(8)).split("\n");
                         String[] discountRates = String.valueOf(row.get(9)).split("\n");
                         String[] discountedPrices = String.valueOf(row.get(10)).split("\n");
