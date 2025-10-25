@@ -192,7 +192,6 @@ public class KakaoProductController {
                 return chatBotExceptionResponse.createAuthException();
             }
             UserDto userDto = maybeUser.get();
-            List<AddressDto> addressDtos = userDto.getAddressDtos();
 
             // 2. 기본 배송지 가져오기 (Optional)
             Optional<AddressDto> defaultAddressOpt = userDto.getAddressDtos()
