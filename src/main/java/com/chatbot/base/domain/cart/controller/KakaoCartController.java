@@ -319,15 +319,7 @@ public class KakaoCartController {
             if (maybeUser.isPresent()) {
                 UserDto userDto = maybeUser.get();
                 AddressDto addressDto = chatBotRequest.getAddressDto();
-                List<ProductDto> allCartItems = userDto.getCart().getCartItems();
-                List<String> removeId = chatBotRequest.getProductIds();
-
-                // ✅ removeId가 비어있지 않다면 해당 상품 제외, 비어있다면 전체 유지
-                List<ProductDto> cartItems = (removeId != null && !removeId.isEmpty())
-                        ? allCartItems.stream()
-                        .filter(item -> !removeId.contains(item.getId()))
-                        .collect(Collectors.toList())
-                        : allCartItems;
+                List<ProductDto> cartItems = userDto.getCart().getCartItems();
 
                 // ✅ cartItems → Map<상품ID, 수량>
                 Map<String, Integer> quantityMap = cartItems.stream()
@@ -345,8 +337,10 @@ public class KakaoCartController {
 
                 products.forEach(productDto -> {
                     int quantity = quantityMap.getOrDefault(productDto.getId(), 1);
-                    Button deleteBtn = new Button("빼기",ButtonAction.블럭이동,"68fc64681d1fc539f4ee0d6f",ButtonParamKey.productIds,List.of(productDto.getId()));
+                    int totalPrice = productDto.getDiscountedPrice() * quantity;
+                    Button deleteBtn = new Button(StringFormatterUtil.formatCurrency(String.valueOf(totalPrice))+"원",ButtonAction.블럭이동,"");
                     deleteBtn.setExtra(ButtonParamKey.address,addressDto);
+
                     CommerceCard commerceCard = new CommerceCard();
                     commerceCard.setProfile(profile);
                     commerceCard.setTitle(productDto.getName());
