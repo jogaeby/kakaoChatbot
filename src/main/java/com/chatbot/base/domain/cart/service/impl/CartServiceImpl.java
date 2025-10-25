@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -53,6 +54,20 @@ public class CartServiceImpl implements CartService {
 
         // ✅ 삭제 대상 상품 찾기
         boolean removed = cartItems.removeIf(item -> item.getId().equals(productId));
+
+        return user.toDto();
+    }
+
+    @Transactional
+    @Override
+    public UserDto deleteProductsToCart(String userKey, Set<String> productIds) {
+        User user = userRepository.findByUserKey(userKey)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+
+        List<ProductDto> cartItems = user.getCart().getCartItems();
+
+        // ✅ productIds에 해당하는 상품 모두 제거
+        cartItems.removeIf(item -> productIds.contains(item.getId()));
 
         return user.toDto();
     }

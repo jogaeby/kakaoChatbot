@@ -441,6 +441,11 @@ public class KakaoCartController {
                     .collect(Collectors.toSet());
             List<ProductDto> dbProducts = productService.getProducts(orderedIds);
 
+            if (orderedIds.size() != dbProducts.size()) {
+                chatBotResponse.addTextCard("주문 실패: 품절된 상품이 있습니다.");
+                return chatBotResponse;
+            }
+
             // 5️⃣ ID 및 가격 검증
             List<String> invalidProducts = cartItems.stream()
                     .filter(cartItem -> {
@@ -458,7 +463,12 @@ public class KakaoCartController {
                 return chatBotResponse;
             }
 
+            List<String> collect = cartItems.stream()
+                    .map(ProductDto::getId)
+                    .collect(Collectors.toList());
+
             OrderDto orderDto = orderService.orderProduct(cartItems, userDto, addressDto);
+            cartService.deleteProductsToCart(userDto.getUserKey(), orderedIds);
             String orderId = orderDto.getId();
 
             TextCard textCard = new TextCard();
