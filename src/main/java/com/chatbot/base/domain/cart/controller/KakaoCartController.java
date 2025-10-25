@@ -394,7 +394,7 @@ public class KakaoCartController {
                 chatBotResponse.addCarousel(carousel);
                 chatBotResponse.addItemCard(itemCard);
                 chatBotResponse.addQuickButton("장바구니",ButtonAction.블럭이동,"68fc4e1c2c0d3f5ee71df4bd");
-                Button orderButton = new Button("주문하기",ButtonAction.블럭이동,"68df7bdc5390541970472535",ButtonParamKey.productIds,productIds);
+                Button orderButton = new Button("주문하기",ButtonAction.블럭이동,"68fc7680edb87047afe457c8",ButtonParamKey.productIds,productIds);
                 orderButton.setExtra(ButtonParamKey.address,addressDto);
                 chatBotResponse.addQuickButton(orderButton);
 
