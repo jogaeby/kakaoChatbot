@@ -338,20 +338,20 @@ public class KakaoCartController {
                 products.forEach(productDto -> {
                     int quantity = quantityMap.getOrDefault(productDto.getId(), 1);
                     int totalPrice = productDto.getDiscountedPrice() * quantity;
-                    Button deleteBtn = new Button(StringFormatterUtil.formatCurrency(String.valueOf(totalPrice))+"원",ButtonAction.블럭이동,"");
-                    deleteBtn.setExtra(ButtonParamKey.address,addressDto);
 
-                    CommerceCard commerceCard = new CommerceCard();
-                    commerceCard.setProfile(profile);
-                    commerceCard.setTitle(productDto.getName());
-                    commerceCard.setThumbnails(productDto.getImageUrl(),false);
-                    commerceCard.setPrice(productDto.getPrice());
-                    commerceCard.setDiscountRate(productDto.getDiscountRate());
-                    commerceCard.setDiscountedPrice(productDto.getDiscountedPrice());
-                    commerceCard.setDescription("선택 수량: "+quantity+"개");
-                    commerceCard.setButton(deleteBtn);
+                    ItemCard itemCard = new ItemCard();
+                    itemCard.setItemListAlignment("right");
+                    itemCard.setProfile(Map.of(
+                            "title",profile.getNickname(),
+                            "imageUrl",profile.getImageUrl()
+                    ));
+                    itemCard.setThumbnail(new Thumbnail(productDto.getImageUrl()));
+                    itemCard.addItemList("상품명",productDto.getName());
+                    itemCard.addItemList("개당 가격",String.format("%,d",productDto.getDiscountedPrice())+"원");
+                    itemCard.addItemList("수량",quantity+"개");
+                    itemCard.setSummary("결제금액",String.format("%,d",totalPrice)+"원");
 
-                    carousel.addComponent(commerceCard);
+                    carousel.addComponent(itemCard);
                 });
 
 
