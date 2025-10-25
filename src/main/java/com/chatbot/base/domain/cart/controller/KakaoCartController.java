@@ -251,7 +251,7 @@ public class KakaoCartController {
                 defaultTextCard.setDescription("[기본 배송지]\n\n"+defaultAddress.getFullAddress());
                 defaultTextCard.setButtons(defaultAddressButton);
 
-                Button addAddressButton = new Button("직접 입력하기",ButtonAction.블럭이동,"68fc649b47a9e61d1aecd1fa");
+                Button addAddressButton = new Button("직접 입력하기",ButtonAction.블럭이동,"68fc6e03a02e490d3483bb24");
 
                 TextCard textCard = new TextCard();
                 textCard.setDescription("직접 배송지를 입력 할 수 있습니다.");
@@ -271,7 +271,34 @@ public class KakaoCartController {
             return chatBotExceptionResponse.createException();
         }
     }
+    @PostMapping(value = "order/input/delivery")
+    public ChatBotResponse inputDelivery(@RequestBody ChatBotRequest chatBotRequest) {
+        try {
+            ChatBotResponse chatBotResponse = new ChatBotResponse();
+            String delivery = chatBotRequest.getDelivery();
 
+            AddressDto newAddressDto = AddressDto.builder()
+                    .fullAddress(delivery)
+                    .build();
+
+            TextCard textCard = new TextCard();
+            textCard.setDescription(delivery+"\n\n해당 배송지로 진행하시겠습니까?");
+
+
+            chatBotResponse.addTextCard(textCard);
+            chatBotResponse.addQuickButton("다시입력",ButtonAction.블럭이동,"68fc6e03a02e490d3483bb24");
+
+
+            Button orderSheetButton = new Button("진행하기",ButtonAction.블럭이동,"68fc64681d1fc539f4ee0d6f",ButtonParamKey.address,newAddressDto);
+
+            chatBotResponse.addQuickButton(orderSheetButton);
+
+            return chatBotResponse;
+        }catch (Exception e) {
+            log.error("ERROR: {}", e.getMessage(), e);
+            return chatBotExceptionResponse.createException();
+        }
+    }
     @PostMapping(value = "order/sheet")
     public ChatBotResponse orderCartSheet(@RequestBody ChatBotRequest chatBotRequest) {
         try {
@@ -350,7 +377,7 @@ public class KakaoCartController {
                         "imageUrl",profile.getImageUrl()
                 ));
                 itemCard.addItemList("상품명",productTitle);
-                itemCard.addItemList("수량",totalQuantity+"개");
+                itemCard.addItemList("총 수량",totalQuantity+"개");
                 itemCard.setSummary("총 결제금액",String.format("%,d",totalPrice)+"원");
                 itemCard.setTitle("배송지");
                 itemCard.setDescription(addressDto.getFullAddress());
