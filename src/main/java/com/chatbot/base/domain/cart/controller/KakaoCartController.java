@@ -1,5 +1,6 @@
 package com.chatbot.base.domain.cart.controller;
 
+import com.chatbot.base.common.util.StringFormatterUtil;
 import com.chatbot.base.domain.cart.service.CartService;
 import com.chatbot.base.domain.product.dto.ProductDto;
 import com.chatbot.base.domain.product.service.ProductService;
@@ -359,7 +360,7 @@ public class KakaoCartController {
                 orderButton.setExtra(ButtonParamKey.address,addressDto);
 
                 chatBotResponse.addQuickButton(orderButton);
-
+                StringFormatterUtil.objectToString(chatBotResponse);
                 return chatBotResponse;
             }
 
