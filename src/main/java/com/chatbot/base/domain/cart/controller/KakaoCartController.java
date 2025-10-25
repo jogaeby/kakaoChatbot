@@ -350,7 +350,7 @@ public class KakaoCartController {
                 Carousel carousel = new Carousel();
                 products.forEach(productDto -> {
                     int quantity = quantityMap.getOrDefault(productDto.getId(), 1);
-                    Button deleteBtn = new Button("삭제", ButtonAction.블럭이동, "68fc64681d1fc539f4ee0d6f", ButtonParamKey.product, List.of(productDto.getId()));
+                    Button deleteBtn = new Button("빼기", ButtonAction.블럭이동, "68fc64681d1fc539f4ee0d6f", ButtonParamKey.product, List.of(productDto.getId()));
 
                     CommerceCard commerceCard = new CommerceCard();
                     commerceCard.setProfile(profile);
