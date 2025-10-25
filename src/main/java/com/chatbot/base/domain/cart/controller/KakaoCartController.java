@@ -72,7 +72,7 @@ public class KakaoCartController {
 
                 products.forEach(productDto -> {
                     int quantity = quantityMap.getOrDefault(productDto.getId(), 1);
-                    Button deleteBtn = new Button("삭제",ButtonAction.블럭이동,"",ButtonParamKey.product,productDto);
+                    Button deleteBtn = new Button("삭제",ButtonAction.블럭이동,"68fc5caf47a9e61d1aecd121",ButtonParamKey.product,productDto);
 
                     CommerceCard commerceCard = new CommerceCard();
                     commerceCard.setProfile(profile);
