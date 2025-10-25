@@ -47,10 +47,6 @@ public class KakaoUserController {
 
     private final OrderService orderService;
 
-    private final ProductService productService;
-
-    private final Profile profile = new Profile("금빛방앗간","https://cafe24.poxo.com/ec01/niacom0803/5GslpdAnCPzGTb8GqqEZ3j9W8PbV9xVKJx7NVKrE/h4NpwmrqazOb++iMiMzfrbktxXZcg8qpLZQEBtTNSaMDQ==/_/web/product/extra/big/202209/11310c6c43ef8bb2556cbd066dcd26f3.jpg");
-
     @PostMapping(value = "join/double-check")
     public ChatBotResponse joinDoubleCheck(@RequestBody ChatBotRequest chatBotRequest) {
         try {
@@ -127,66 +123,6 @@ public class KakaoUserController {
             return chatBotExceptionResponse.createException();
         }
     }
-
-    @PostMapping(value = "cart")
-    public ChatBotResponse getCartInfo(@RequestBody ChatBotRequest chatBotRequest) {
-        try {
-            ChatBotResponse chatBotResponse = new ChatBotResponse();
-
-            Optional<UserDto> blackUser = userService.isBlackUser(chatBotRequest.getUserKey());
-            if (blackUser.isPresent()) {
-                return chatBotExceptionResponse.createBlackUserException();
-            }
-
-            Optional<UserDto> maybeUser = userService.isUser(chatBotRequest.getUserKey());
-
-            if (maybeUser.isPresent()) {
-                Carousel carousel = new Carousel();
-
-                UserDto userDto = maybeUser.get();
-                List<ProductDto> cartItems = userDto.getCart().getCartItems();
-
-                if (cartItems.isEmpty()) {
-                    chatBotResponse.addTextCard("장바구니가 비어있습니다.");
-                    return chatBotResponse;
-                }
-
-                // ✅ cartItems → Map<상품ID, 수량>
-                Map<String, Integer> quantityMap = cartItems.stream()
-                        .collect(Collectors.toMap(ProductDto::getId, ProductDto::getQuantity));
-                Set<String> productIds = quantityMap.keySet();
-
-                List<ProductDto> products = productService.getProducts(productIds);
-
-                products.forEach(productDto -> {
-                    int quantity = quantityMap.getOrDefault(productDto.getId(), 1);
-                    Button deleteBtn = new Button("삭제",ButtonAction.블럭이동,"",ButtonParamKey.product,productDto);
-
-                    CommerceCard commerceCard = new CommerceCard();
-                    commerceCard.setProfile(profile);
-                    commerceCard.setTitle(productDto.getName());
-                    commerceCard.setThumbnails(productDto.getImageUrl(),false);
-                    commerceCard.setPrice(productDto.getPrice());
-                    commerceCard.setDiscountRate(productDto.getDiscountRate());
-                    commerceCard.setDiscountedPrice(productDto.getDiscountedPrice());
-                    commerceCard.setDescription("선택 수량: "+quantity+"개");
-                    commerceCard.setButton(deleteBtn);
-
-                    carousel.addComponent(commerceCard);
-                });
-
-
-                chatBotResponse.addCarousel(carousel);
-                return chatBotResponse;
-            }
-
-            return chatBotExceptionResponse.createAuthException();
-        } catch (Exception e) {
-            log.error("ERROR: {}", e.getMessage(), e);
-            return chatBotExceptionResponse.createException();
-        }
-    }
-
 
     @PostMapping(value = "info")
     public ChatBotResponse info(@RequestBody ChatBotRequest chatBotRequest) {
