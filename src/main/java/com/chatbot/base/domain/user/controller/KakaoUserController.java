@@ -228,7 +228,7 @@ public class KakaoUserController {
                     .map(AddressDto::getFullAddress) // AddressDto에서 전체 주소를 가져오는 메서드 사용
                     .orElse("설정안됨");
 
-            ItemCard infoItemCard = createInfoItemCard(userDto, defaultAddressStr);
+            ItemCard infoItemCard = createInfoItemCard(updateUserDto, defaultAddressStr);
 
 
             chatBotResponse.addSimpleText("성공적으로 기본 배송지를 변경하였습니다.");
@@ -304,7 +304,7 @@ public class KakaoUserController {
                     .map(AddressDto::getFullAddress) // AddressDto에서 전체 주소를 가져오는 메서드 사용
                     .orElse("설정안됨");
 
-            ItemCard infoItemCard = createInfoItemCard(userDto, defaultAddressStr);
+            ItemCard infoItemCard = createInfoItemCard(updateUserDto, defaultAddressStr);
 
 
             chatBotResponse.addSimpleText("성공적으로 이름(입금자명)을 변경하였습니다.");
@@ -381,7 +381,7 @@ public class KakaoUserController {
                     .map(AddressDto::getFullAddress) // AddressDto에서 전체 주소를 가져오는 메서드 사용
                     .orElse("설정안됨");
 
-            ItemCard infoItemCard = createInfoItemCard(userDto, defaultAddressStr);
+            ItemCard infoItemCard = createInfoItemCard(updateUserDto, defaultAddressStr);
 
             chatBotResponse.addSimpleText("성공적으로 연락처를 변경하였습니다.");
             chatBotResponse.addItemCard(infoItemCard);
