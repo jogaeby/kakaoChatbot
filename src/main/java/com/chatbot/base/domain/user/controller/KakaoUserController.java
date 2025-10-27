@@ -72,7 +72,7 @@ public class KakaoUserController {
             ItemCard itemCard = new ItemCard();
             itemCard.setItemListAlignment("right");
 
-            itemCard.addItemList("이름",name);
+            itemCard.addItemList("이름(입금자명)",name);
             itemCard.addItemList("연락처",phone);
             itemCard.setTitle("기본 배송지");
             itemCard.setDescription(address);
@@ -149,25 +149,9 @@ public class KakaoUserController {
                         .map(AddressDto::getFullAddress) // AddressDto에서 전체 주소를 가져오는 메서드 사용
                         .orElse("설정안됨");
 
-                ItemCard itemCard = new ItemCard();
-                itemCard.setItemListAlignment("right");
+                ItemCard infoItemCard = createInfoItemCard(userDto, defaultAddressStr);
 
-                itemCard.setProfile(Map.of(
-                        "title","프로필 정보",
-                        "imageUrl","https://pointman-file-repository.s3.ap-northeast-2.amazonaws.com/image/profile/icon-friends-ryan.png")
-                );
-                itemCard.addItemList("고유번호",userDto.getUserKey());
-                itemCard.addItemList("이름",userDto.getName());
-                itemCard.addItemList("연락처",userDto.getPhone());
-                itemCard.setTitle("기본 배송지");
-                itemCard.setDescription(defaultAddressStr);
-
-                itemCard.addButton(new Button("이름(입금자명) 변경하기",ButtonAction.블럭이동,"68f5cbbdedb87047afe27aaf"));
-                itemCard.addButton(new Button("연락처 변경하기",ButtonAction.블럭이동,"68f5cbca465dc163a640d34e"));
-                itemCard.addButton(new Button("기본 배송지 변경하기",ButtonAction.블럭이동,"68dfa315b85f48088da03587"));
-
-
-                chatBotResponse.addItemCard(itemCard);
+                chatBotResponse.addItemCard(infoItemCard);
                 return chatBotResponse;
             }
 
@@ -244,26 +228,11 @@ public class KakaoUserController {
                     .map(AddressDto::getFullAddress) // AddressDto에서 전체 주소를 가져오는 메서드 사용
                     .orElse("설정안됨");
 
-            ItemCard itemCard = new ItemCard();
-            itemCard.setProfile(Map.of(
-                    "title","프로필 정보",
-                    "imageUrl","https://pointman-file-repository.s3.ap-northeast-2.amazonaws.com/image/profile/icon-friends-ryan.png")
-            );
-
-            itemCard.setItemListAlignment("right");
-            itemCard.addItemList("고유번호",updateUserDto.getUserKey());
-            itemCard.addItemList("이름",updateUserDto.getName());
-            itemCard.addItemList("연락처",updateUserDto.getPhone());
-            itemCard.setTitle("기본 배송지");
-            itemCard.setDescription(defaultAddressStr);
-
-            itemCard.addButton(new Button("이름(입금자명) 변경하기",ButtonAction.블럭이동,"68f5cbbdedb87047afe27aaf"));
-            itemCard.addButton(new Button("연락처 변경하기",ButtonAction.블럭이동,"68f5cbca465dc163a640d34e"));
-            itemCard.addButton(new Button("기본 배송지 변경하기",ButtonAction.블럭이동,"68dfa315b85f48088da03587"));
+            ItemCard infoItemCard = createInfoItemCard(userDto, defaultAddressStr);
 
 
             chatBotResponse.addSimpleText("성공적으로 기본 배송지를 변경하였습니다.");
-            chatBotResponse.addItemCard(itemCard);
+            chatBotResponse.addItemCard(infoItemCard);
             return chatBotResponse;
         }catch (Exception e) {
             log.error("ERROR: {}", e.getMessage(), e);
@@ -335,26 +304,11 @@ public class KakaoUserController {
                     .map(AddressDto::getFullAddress) // AddressDto에서 전체 주소를 가져오는 메서드 사용
                     .orElse("설정안됨");
 
-            ItemCard itemCard = new ItemCard();
-            itemCard.setProfile(Map.of(
-                    "title","프로필 정보",
-                    "imageUrl","https://pointman-file-repository.s3.ap-northeast-2.amazonaws.com/image/profile/icon-friends-ryan.png")
-            );
-
-            itemCard.setItemListAlignment("right");
-            itemCard.addItemList("고유번호",updateUserDto.getUserKey());
-            itemCard.addItemList("이름",updateUserDto.getName());
-            itemCard.addItemList("연락처",updateUserDto.getPhone());
-            itemCard.setTitle("기본 배송지");
-            itemCard.setDescription(defaultAddressStr);
-
-            itemCard.addButton(new Button("이름(입금자명) 변경하기",ButtonAction.블럭이동,"68f5cbbdedb87047afe27aaf"));
-            itemCard.addButton(new Button("연락처 변경하기",ButtonAction.블럭이동,"68f5cbca465dc163a640d34e"));
-            itemCard.addButton(new Button("기본 배송지 변경하기",ButtonAction.블럭이동,"68dfa315b85f48088da03587"));
+            ItemCard infoItemCard = createInfoItemCard(userDto, defaultAddressStr);
 
 
             chatBotResponse.addSimpleText("성공적으로 이름(입금자명)을 변경하였습니다.");
-            chatBotResponse.addItemCard(itemCard);
+            chatBotResponse.addItemCard(infoItemCard);
             return chatBotResponse;
         }catch (Exception e) {
             log.error("ERROR: {}", e.getMessage(), e);
@@ -427,26 +381,10 @@ public class KakaoUserController {
                     .map(AddressDto::getFullAddress) // AddressDto에서 전체 주소를 가져오는 메서드 사용
                     .orElse("설정안됨");
 
-            ItemCard itemCard = new ItemCard();
-            itemCard.setProfile(Map.of(
-                    "title","프로필 정보",
-                    "imageUrl","https://pointman-file-repository.s3.ap-northeast-2.amazonaws.com/image/profile/icon-friends-ryan.png")
-            );
-
-            itemCard.setItemListAlignment("right");
-            itemCard.addItemList("고유번호",updateUserDto.getUserKey());
-            itemCard.addItemList("이름",updateUserDto.getName());
-            itemCard.addItemList("연락처",updateUserDto.getPhone());
-            itemCard.setTitle("기본 배송지");
-            itemCard.setDescription(defaultAddressStr);
-
-            itemCard.addButton(new Button("이름(입금자명) 변경하기",ButtonAction.블럭이동,"68f5cbbdedb87047afe27aaf"));
-            itemCard.addButton(new Button("연락처 변경하기",ButtonAction.블럭이동,"68f5cbca465dc163a640d34e"));
-            itemCard.addButton(new Button("기본 배송지 변경하기",ButtonAction.블럭이동,"68dfa315b85f48088da03587"));
-
+            ItemCard infoItemCard = createInfoItemCard(userDto, defaultAddressStr);
 
             chatBotResponse.addSimpleText("성공적으로 연락처를 변경하였습니다.");
-            chatBotResponse.addItemCard(itemCard);
+            chatBotResponse.addItemCard(infoItemCard);
             return chatBotResponse;
         }catch (Exception e) {
             log.error("ERROR: {}", e.getMessage(), e);
@@ -523,6 +461,28 @@ public class KakaoUserController {
             log.error("ERROR: {}", e.getMessage(), e);
             return chatBotExceptionResponse.createException();
         }
+    }
+
+
+    public ItemCard createInfoItemCard(UserDto userDto, String defaultAddressStr) {
+        ItemCard itemCard = new ItemCard();
+        itemCard.setItemListAlignment("right");
+
+        itemCard.setProfile(Map.of(
+                "title","프로필 정보",
+                "imageUrl","https://pointman-file-repository.s3.ap-northeast-2.amazonaws.com/image/profile/icon-friends-ryan.png")
+        );
+        itemCard.addItemList("고유번호",userDto.getUserKey());
+        itemCard.addItemList("이름(입금자명)",userDto.getName());
+        itemCard.addItemList("연락처",userDto.getPhone());
+        itemCard.setTitle("기본 배송지");
+        itemCard.setDescription(defaultAddressStr);
+
+        itemCard.addButton(new Button("이름(입금자명) 변경하기",ButtonAction.블럭이동,"68f5cbbdedb87047afe27aaf"));
+        itemCard.addButton(new Button("연락처 변경하기",ButtonAction.블럭이동,"68f5cbca465dc163a640d34e"));
+        itemCard.addButton(new Button("기본 배송지 변경하기",ButtonAction.블럭이동,"68dfa315b85f48088da03587"));
+
+        return itemCard;
     }
 
 }
