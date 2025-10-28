@@ -586,6 +586,7 @@ public class KakaoUserController {
                 "imageUrl","https://pointman-file-repository.s3.ap-northeast-2.amazonaws.com/image/profile/icon-friends-ryan.png")
         );
         if (userDto.getAccount().isDefault()) {
+            itemCard.addItemList("등록일자",StringFormatterUtil.formatDateTime(userDto.getAccount().getLastModifiedDate()));
             itemCard.addItemList("예금주",userDto.getAccount().getAccountName());
             itemCard.addItemList("은행명",userDto.getAccount().getBankName());
             itemCard.setTitle("계좌번호");
