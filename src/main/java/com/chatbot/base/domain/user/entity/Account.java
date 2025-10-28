@@ -59,6 +59,7 @@ public class Account extends BaseEntity {
                 .accountName(this.accountName)
                 .bankName(this.bankName)
                 .accountNumber(this.accountNumber)
+                .lastModifiedDate(this.getLastModifiedDate())
                 .isDefault(this.isDefault)
                 .build();
     }
@@ -67,5 +68,6 @@ public class Account extends BaseEntity {
         this.accountName = accountDto.getAccountName();
         this.bankName = accountDto.getBankName();
         this.accountNumber = accountDto.getAccountNumber();
+        this.isDefault = accountDto.isDefault();
     }
 }

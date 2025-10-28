@@ -8,12 +8,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.time.LocalDateTime;
+
 @Getter
 @Builder
 public class AccountDto {
     private String accountName; // 입금자명
     private String bankName; // 은행명
     private String accountNumber; // 계좌번호
+    private LocalDateTime lastModifiedDate;
     private boolean isDefault;
-
 }
