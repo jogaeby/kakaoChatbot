@@ -105,7 +105,7 @@ public class UserServiceImpl implements UserService {
 
         User user = userRepository.findByUserKey(userKey).get();
 
-        user.modifyAccount(accountDto);
+        user.modifyAccount(accountDto,true);
 
         return user.toDto();
     }

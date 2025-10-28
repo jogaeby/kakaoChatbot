@@ -158,7 +158,6 @@ public class KakaoUserController {
                     .accountName(name)
                     .bankName(bankName)
                     .accountNumber(accountNum)
-                    .isDefault(true)
                     .build();
 
             chatBotResponse.addTextCard(textCard);

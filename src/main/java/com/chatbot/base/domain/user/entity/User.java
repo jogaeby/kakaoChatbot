@@ -160,8 +160,8 @@ public class User extends BaseEntity {
         this.phone = phone;
     }
 
-    public void modifyAccount(AccountDto accountDto) {
-        this.account.updateAccount(accountDto);
+    public void modifyAccount(AccountDto accountDto, boolean isDefault) {
+        this.account.updateAccount(accountDto,isDefault);
     }
 
     public void addProductToCart(ProductDto productDto) {

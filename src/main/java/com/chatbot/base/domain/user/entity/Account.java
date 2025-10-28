@@ -64,10 +64,10 @@ public class Account extends BaseEntity {
                 .build();
     }
 
-    public void updateAccount(AccountDto accountDto) {
+    public void updateAccount(AccountDto accountDto, boolean isDefault) {
         this.accountName = accountDto.getAccountName();
         this.bankName = accountDto.getBankName();
         this.accountNumber = accountDto.getAccountNumber();
-        this.isDefault = accountDto.isDefault();
+        this.isDefault = isDefault;
     }
 }
