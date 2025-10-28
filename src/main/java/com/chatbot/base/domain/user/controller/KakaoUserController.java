@@ -156,6 +156,7 @@ public class KakaoUserController {
                 carousel.addComponent(accountInfoItemCard);
 
                 chatBotResponse.addCarousel(carousel);
+                StringFormatterUtil.objectToString(chatBotResponse);
                 return chatBotResponse;
             }
 
