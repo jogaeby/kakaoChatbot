@@ -44,9 +44,9 @@ public class OrderServiceImpl implements OrderService {
 
             row.add(id);
             row.add(userDto.getUserKey());
-            row.add(userDto.getName());
             row.add("'"+userDto.getPhone());
             row.add(addressDto.getFullAddress());
+            row.add(userDto.getName());
             row.add(productDto.getId());
             row.add(productDto.getName());
             row.add(String.valueOf(productDto.getPrice()));
@@ -55,8 +55,8 @@ public class OrderServiceImpl implements OrderService {
             row.add(productDto.getQuantity());
             row.add(productDto.getQuantity()*productDto.getDiscountedPrice());
             row.add(productDto.getDescription() != null ? productDto.getDescription() : "");
-            row.add(LocalDateTime.now().toString());
             row.add("접수");
+            row.add(LocalDateTime.now().toString());
 
             googleSheetUtil.appendToTableSheet(SHEET_ID,ORDER_SHEET_NAME,row);
             alarmTalkService.sendOrderReceiptToAdmin(ADMIN_PHONE,order);
