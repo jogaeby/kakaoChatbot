@@ -7,6 +7,7 @@ import com.chatbot.base.domain.order.dto.OrderDto;
 import com.chatbot.base.domain.order.service.OrderService;
 import com.chatbot.base.domain.product.dto.ProductDto;
 import com.chatbot.base.domain.product.service.ProductService;
+import com.chatbot.base.domain.user.dto.AccountDto;
 import com.chatbot.base.domain.user.dto.AddressDto;
 import com.chatbot.base.domain.user.dto.UserDto;
 import com.chatbot.base.domain.user.service.UserService;
@@ -91,7 +92,6 @@ public class KakaoUserController {
             chatBotResponse.addItemCard(itemCard);
             chatBotResponse.addQuickButton("다시입력", ButtonAction.블럭이동,"68de3871539054197046e5b2");
             chatBotResponse.addQuickButton("가입하기", ButtonAction.블럭이동,"68de386847a9e61d1ae66a39", ButtonParamKey.user,joinForm);
-            StringFormatterUtil.objectToString(chatBotResponse);
             return chatBotResponse;
         }catch (Exception e) {
             log.error("ERROR: {}", e.getMessage(), e);
@@ -103,6 +103,15 @@ public class KakaoUserController {
     public ChatBotResponse join(@RequestBody ChatBotRequest chatBotRequest) {
         try {
             ChatBotResponse chatBotResponse = new ChatBotResponse();
+            Optional<UserDto> maybeUser = userService.isUser(chatBotRequest.getUserKey());
+
+            if (maybeUser.isPresent()) {
+                TextCard textCard = new TextCard();
+                textCard.setDescription("이미 가입된 회원입니다.");
+                chatBotResponse.addTextCard(textCard);
+                return chatBotResponse;
+            }
+
             UserDto joinForm = chatBotRequest.getUser();
 
             AddressDto defaultAddress = joinForm.getAddressDtos().stream()
@@ -110,7 +119,7 @@ public class KakaoUserController {
                     .findFirst()
                     .orElseThrow(Exception::new);
 
-            UserDto join = userService.join(chatBotRequest.getBot().getName(), chatBotRequest.getBot().getId(), chatBotRequest.getUserKey(), joinForm.getName(), joinForm.getPhone(), defaultAddress.getFullAddress(),defaultAddress.isDefaultYn(), true);
+            userService.join(chatBotRequest.getBot().getName(), chatBotRequest.getBot().getId(), chatBotRequest.getUserKey(), joinForm.getName(), joinForm.getPhone(), defaultAddress.getFullAddress(),defaultAddress.isDefaultYn(), true);
 
             TextCard textCard = new TextCard();
             textCard.setDescription("성공적으로 간편가입을 완료했습니다.");
@@ -124,43 +133,107 @@ public class KakaoUserController {
         }
     }
 
+    @PostMapping(value = "add/account/double-check")
+    public ChatBotResponse addAccountDoubleCheck(@RequestBody ChatBotRequest chatBotRequest) {
+        try {
+            ChatBotResponse chatBotResponse = new ChatBotResponse();
+
+            String name = chatBotRequest.getName();
+            String bankName = chatBotRequest.getBankName();
+            String accountNum = chatBotRequest.getAccountNum();
+
+            TextCard textCard = new TextCard();
+            textCard.setDescription("해당 정보로 환불계좌 등록을 진행하시겠습니까?");
+
+            ItemCard itemCard = new ItemCard();
+            itemCard.setItemListAlignment("right");
+
+            itemCard.addItemList("예금주명",name);
+            itemCard.addItemList("은행명",bankName);
+            itemCard.setTitle("계좌번호");
+            itemCard.setDescription(accountNum);
+
+
+            AccountDto accountDto = AccountDto.builder()
+                    .accountName(name)
+                    .bankName(bankName)
+                    .accountNumber(accountNum)
+                    .build();
+
+            chatBotResponse.addTextCard(textCard);
+            chatBotResponse.addItemCard(itemCard);
+            chatBotResponse.addQuickButton("다시입력", ButtonAction.블럭이동,"690014fe53905419704dd98b");
+            chatBotResponse.addQuickButton("등록하기", ButtonAction.블럭이동,"690019322c0d3f5ee71ed5a0", ButtonParamKey.account,accountDto);
+            return chatBotResponse;
+        }catch (Exception e) {
+            log.error("ERROR: {}", e.getMessage(), e);
+            return chatBotExceptionResponse.createException();
+        }
+    }
+    @PostMapping(value = "add/account")
+    public ChatBotResponse addAccount(@RequestBody ChatBotRequest chatBotRequest) {
+        try {
+            ChatBotResponse chatBotResponse = new ChatBotResponse();
+            Optional<UserDto> maybeUser = userService.isUser(chatBotRequest.getUserKey());
+
+            AccountDto account = chatBotRequest.getAccount();
+            if (maybeUser.isEmpty()) {
+                return chatBotExceptionResponse.createAuthException();
+            }
+
+            Optional<UserDto> blackUser = userService.isBlackUser(chatBotRequest.getUserKey());
+            if (blackUser.isPresent()) {
+                return chatBotExceptionResponse.createBlackUserException();
+            }
+            UserDto userDto = maybeUser.get();
+            userService.modifyAccount(userDto, account);
+
+            TextCard textCard = new TextCard();
+            textCard.setDescription("성공적으로 환불계좌를 등록했습니다.");
+            chatBotResponse.addTextCard(textCard);
+            return chatBotResponse;
+        }catch (Exception e) {
+            log.error("ERROR: {}", e.getMessage(), e);
+            return chatBotExceptionResponse.createException();
+        }
+    }
+
     @PostMapping(value = "info")
     public ChatBotResponse info(@RequestBody ChatBotRequest chatBotRequest) {
         try {
             ChatBotResponse chatBotResponse = new ChatBotResponse();
+            Optional<UserDto> maybeUser = userService.isUser(chatBotRequest.getUserKey());
+
+            AccountDto account = chatBotRequest.getAccount();
+            if (maybeUser.isEmpty()) {
+                return chatBotExceptionResponse.createAuthException();
+            }
 
             Optional<UserDto> blackUser = userService.isBlackUser(chatBotRequest.getUserKey());
             if (blackUser.isPresent()) {
                 return chatBotExceptionResponse.createBlackUserException();
             }
 
-            Optional<UserDto> maybeUser = userService.isUser(chatBotRequest.getUserKey());
+            UserDto userDto = maybeUser.get();
+            Carousel carousel = new Carousel();
+            List<AddressDto> addressDtos = userDto.getAddressDtos();
+            // 기본 배송지 찾기 (없으면 Optional.empty)
+            Optional<AddressDto> defaultAddress = addressDtos.stream()
+                    .filter(AddressDto::isDefaultYn)
+                    .findFirst();
 
-            if (maybeUser.isPresent()) {
-                Carousel carousel = new Carousel();
-                UserDto userDto = maybeUser.get();
-                List<AddressDto> addressDtos = userDto.getAddressDtos();
-                // 기본 배송지 찾기 (없으면 Optional.empty)
-                Optional<AddressDto> defaultAddress = addressDtos.stream()
-                        .filter(AddressDto::isDefaultYn)
-                        .findFirst();
+            // 기본 배송지를 문자열로 추출, 없으면 "설정안됨"
+            String defaultAddressStr = defaultAddress
+                    .map(AddressDto::getFullAddress) // AddressDto에서 전체 주소를 가져오는 메서드 사용
+                    .orElse("설정안됨");
 
-                // 기본 배송지를 문자열로 추출, 없으면 "설정안됨"
-                String defaultAddressStr = defaultAddress
-                        .map(AddressDto::getFullAddress) // AddressDto에서 전체 주소를 가져오는 메서드 사용
-                        .orElse("설정안됨");
+            ItemCard infoItemCard = createInfoItemCard(userDto, defaultAddressStr);
+            ItemCard accountInfoItemCard = createAccountInfoItemCard(userDto);
+            carousel.addComponent(infoItemCard);
+            carousel.addComponent(accountInfoItemCard);
 
-                ItemCard infoItemCard = createInfoItemCard(userDto, defaultAddressStr);
-                ItemCard accountInfoItemCard = createAccountInfoItemCard(userDto);
-                carousel.addComponent(infoItemCard);
-                carousel.addComponent(accountInfoItemCard);
-
-                chatBotResponse.addCarousel(carousel);
-                StringFormatterUtil.objectToString(chatBotResponse);
-                return chatBotResponse;
-            }
-
-            return chatBotExceptionResponse.createAuthException();
+            chatBotResponse.addCarousel(carousel);
+            return chatBotResponse;
         } catch (Exception e) {
             log.error("ERROR: {}", e.getMessage(), e);
             return chatBotExceptionResponse.createException();
@@ -257,6 +330,7 @@ public class KakaoUserController {
             if (maybeUser.isEmpty()) {
                 return chatBotExceptionResponse.createAuthException();
             }
+
             String newName = chatBotRequest.getName();
             UserDto userDto = maybeUser.get();
 
@@ -337,6 +411,7 @@ public class KakaoUserController {
             if (maybeUser.isEmpty()) {
                 return chatBotExceptionResponse.createAuthException();
             }
+
             String newPhone = chatBotRequest.getPhone();
             UserDto userDto = maybeUser.get();
 
@@ -374,6 +449,7 @@ public class KakaoUserController {
             if (blackUser.isPresent()) {
                 return chatBotExceptionResponse.createBlackUserException();
             }
+
             Carousel carousel = new Carousel();
 
             UserDto userDto = maybeUser.get();
@@ -411,67 +487,67 @@ public class KakaoUserController {
     public ChatBotResponse getOrders(@RequestBody ChatBotRequest chatBotRequest) {
         try {
             ChatBotResponse chatBotResponse = new ChatBotResponse();
+            Optional<UserDto> maybeUser = userService.isUser(chatBotRequest.getUserKey());
+
+            if (maybeUser.isEmpty()) {
+                return chatBotExceptionResponse.createAuthException();
+            }
 
             Optional<UserDto> blackUser = userService.isBlackUser(chatBotRequest.getUserKey());
             if (blackUser.isPresent()) {
                 return chatBotExceptionResponse.createBlackUserException();
             }
 
-            Optional<UserDto> maybeUser = userService.isUser(chatBotRequest.getUserKey());
+            UserDto userDto = maybeUser.get();
 
-            if (maybeUser.isPresent()) {
-                UserDto userDto = maybeUser.get();
-                List<OrderDto> orderList = orderService.getOrderList(userDto.getUserKey());
+            List<OrderDto> orderList = orderService.getOrderList(userDto.getUserKey());
 
-                if (orderList.isEmpty()) {
-                    chatBotResponse.addTextCard("최근 주문내역이 존재하지 않습니다.");
-                    return chatBotResponse;
-                }
-
-                Carousel carousel = new Carousel();
-
-
-                orderList.forEach(orderDto -> {
-                    List<ProductDto> products = orderDto.getProduct();
-                    TextCard orderDetail = new TextCard();
-                    StringBuilder description = new StringBuilder();
-
-                    // 대표 상품명 + n개
-                    String firstProductName = products.get(0).getName();
-                    int remainingCount = products.size() - 1;
-                    String productNameDisplay = firstProductName;
-                    if (remainingCount > 0) {
-                        productNameDisplay += " 외 " + remainingCount + "개";
-                    }
-
-                    description.append("[").append(orderDto.getId()).append("] ")
-                            .append(" (").append(orderDto.getStatus()).append(")")
-                            .append("\n\n")
-                            .append("주문번호: ").append(orderDto.getId())
-                            .append("\n")
-                            .append("상품명: ").append(productNameDisplay)
-                            .append("\n")
-                            .append("총 수량: ").append(orderDto.getTotalQuantity()).append("개")
-                            .append("\n")
-                            .append("총 결제금액: ")
-                            .append(StringFormatterUtil.formatCurrency(String.valueOf(orderDto.getTotalPrice()))).append("원")
-                            .append("\n")
-                            .append("주문일자: ")
-                            .append(orderDto.getOrderDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")))
-                            .append("\n")
-                            .append("상태: ").append(orderDto.getStatus());
-
-                    orderDetail.setDescription(description.toString());
-                    carousel.addComponent(orderDetail);
-                });
-
-
-                chatBotResponse.addTextCard("최근 주문내역");
-                chatBotResponse.addCarousel(carousel);
+            if (orderList.isEmpty()) {
+                chatBotResponse.addTextCard("최근 주문내역이 존재하지 않습니다.");
                 return chatBotResponse;
             }
 
-            return chatBotExceptionResponse.createAuthException();
+            Carousel carousel = new Carousel();
+
+
+            orderList.forEach(orderDto -> {
+                List<ProductDto> products = orderDto.getProduct();
+                TextCard orderDetail = new TextCard();
+                StringBuilder description = new StringBuilder();
+
+                // 대표 상품명 + n개
+                String firstProductName = products.get(0).getName();
+                int remainingCount = products.size() - 1;
+                String productNameDisplay = firstProductName;
+                if (remainingCount > 0) {
+                    productNameDisplay += " 외 " + remainingCount + "개";
+                }
+
+                description.append("[").append(orderDto.getId()).append("] ")
+                        .append(" (").append(orderDto.getStatus()).append(")")
+                        .append("\n\n")
+                        .append("주문번호: ").append(orderDto.getId())
+                        .append("\n")
+                        .append("상품명: ").append(productNameDisplay)
+                        .append("\n")
+                        .append("총 수량: ").append(orderDto.getTotalQuantity()).append("개")
+                        .append("\n")
+                        .append("총 결제금액: ")
+                        .append(StringFormatterUtil.formatCurrency(String.valueOf(orderDto.getTotalPrice()))).append("원")
+                        .append("\n")
+                        .append("주문일자: ")
+                        .append(orderDto.getOrderDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")))
+                        .append("\n")
+                        .append("상태: ").append(orderDto.getStatus());
+
+                orderDetail.setDescription(description.toString());
+                carousel.addComponent(orderDetail);
+            });
+
+
+            chatBotResponse.addTextCard("최근 주문내역");
+            chatBotResponse.addCarousel(carousel);
+            return chatBotResponse;
         } catch (Exception e) {
             log.error("ERROR: {}", e.getMessage(), e);
             return chatBotExceptionResponse.createException();
@@ -513,15 +589,15 @@ public class KakaoUserController {
             itemCard.addItemList("은행명",userDto.getAccount().getBankName());
             itemCard.setTitle("계좌번호");
             itemCard.setDescription(userDto.getAccount().getAccountNumber());
-
-            itemCard.addButton(new Button("환불계좌 변경하기",ButtonAction.블럭이동,"68f5cbbdedb87047afe27aaf"));
+//
+//            itemCard.addButton(new Button("환불계좌 변경하기",ButtonAction.블럭이동,"68f5cbbdedb87047afe27aaf"));
 
             return itemCard;
         }else {
             itemCard.addItemList("환불계좌","미등록");
             itemCard.setTitle("환불계좌 미등록 상태입니다.");
             itemCard.setDescription("아래 [환불계좌 등록하기] 버튼을 눌러 등록해주세요.");
-            itemCard.addButton(new Button("환불계좌 등록하기",ButtonAction.블럭이동,"68f5cbbdedb87047afe27aaf"));
+            itemCard.addButton(new Button("환불계좌 등록하기",ButtonAction.블럭이동,"690014fe53905419704dd98b"));
             return itemCard;
         }
     }

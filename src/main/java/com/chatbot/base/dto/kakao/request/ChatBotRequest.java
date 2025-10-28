@@ -1,6 +1,7 @@
 package com.chatbot.base.dto.kakao.request;
 
 import com.chatbot.base.domain.product.dto.ProductDto;
+import com.chatbot.base.domain.user.dto.AccountDto;
 import com.chatbot.base.domain.user.dto.AddressDto;
 import com.chatbot.base.domain.user.dto.UserDto;
 import com.chatbot.base.dto.kakao.sync.KakaoProfileRequestDto;
@@ -122,6 +123,7 @@ public class ChatBotRequest {
             private UserDto user;
             private ProductDto product;
             private AddressDto address;
+            private AccountDto account;
             private List<String> productIds;
         }
 
@@ -132,6 +134,8 @@ public class ChatBotRequest {
             private String address;
             private String delivery;
             private String phone;
+            private String bankName;
+            private String accountNum;
             private String depart;
             private String arrive;
             private String hopePrice;
@@ -199,6 +203,16 @@ public class ChatBotRequest {
     public String getPhone(){
         if (Objects.isNull(action.getParams().getPhone())) return null;
         return action.getParams().getPhone();
+    }
+
+    public String getBankName(){
+        if (Objects.isNull(action.getParams().getBankName())) return null;
+        return action.getParams().getBankName();
+    }
+
+    public String getAccountNum(){
+        if (Objects.isNull(action.getParams().getAccountNum())) return null;
+        return action.getParams().getAccountNum();
     }
 
     public String getAddress(){
@@ -274,6 +288,11 @@ public class ChatBotRequest {
     public ProductDto getProduct(){
         if (Objects.isNull(action.getClientExtra().getProduct())) return null;
         return action.getClientExtra().getProduct();
+    }
+
+    public AccountDto getAccount(){
+        if (Objects.isNull(action.getClientExtra().getAccount())) return null;
+        return action.getClientExtra().getAccount();
     }
 
     public AddressDto getAddressDto(){

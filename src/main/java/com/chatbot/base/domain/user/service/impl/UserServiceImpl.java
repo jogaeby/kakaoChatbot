@@ -2,6 +2,7 @@ package com.chatbot.base.domain.user.service.impl;
 
 import com.chatbot.base.common.GoogleSheetUtil;
 import com.chatbot.base.domain.product.dto.ProductDto;
+import com.chatbot.base.domain.user.dto.AccountDto;
 import com.chatbot.base.domain.user.dto.UserDto;
 import com.chatbot.base.domain.user.entity.User;
 import com.chatbot.base.domain.user.repository.UserRepository;
@@ -94,6 +95,17 @@ public class UserServiceImpl implements UserService {
 
         User user = userRepository.findByUserKey(userKey).get();
         user.modifyPhone(phone);
+
+        return user.toDto();
+    }
+    @Transactional
+    @Override
+    public UserDto modifyAccount(UserDto userDto, AccountDto accountDto) {
+        String userKey = userDto.getUserKey();
+
+        User user = userRepository.findByUserKey(userKey).get();
+
+        user.modifyAccount(accountDto);
 
         return user.toDto();
     }

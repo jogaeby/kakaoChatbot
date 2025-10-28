@@ -1,6 +1,7 @@
 package com.chatbot.base.domain.user.service;
 
 import com.chatbot.base.domain.product.dto.ProductDto;
+import com.chatbot.base.domain.user.dto.AccountDto;
 import com.chatbot.base.domain.user.dto.UserDto;
 
 import java.util.Optional;
@@ -17,4 +18,6 @@ public interface UserService {
     UserDto modifyName(UserDto userDto, String name);
 
     UserDto modifyPhone(UserDto userDto, String phone);
+
+    UserDto modifyAccount(UserDto userDto, AccountDto accountDto);
 }

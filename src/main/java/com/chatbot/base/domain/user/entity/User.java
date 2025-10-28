@@ -3,6 +3,7 @@ package com.chatbot.base.domain.user.entity;
 import com.chatbot.base.domain.BaseEntity;
 import com.chatbot.base.domain.cart.entity.Cart;
 import com.chatbot.base.domain.product.dto.ProductDto;
+import com.chatbot.base.domain.user.dto.AccountDto;
 import com.chatbot.base.domain.user.dto.AddressDto;
 import com.chatbot.base.domain.user.dto.UserDto;
 import jakarta.persistence.*;
@@ -157,6 +158,10 @@ public class User extends BaseEntity {
 
     public void modifyPhone(String phone) {
         this.phone = phone;
+    }
+
+    public void modifyAccount(AccountDto accountDto) {
+        this.account.updateAccount(accountDto);
     }
 
     public void addProductToCart(ProductDto productDto) {
