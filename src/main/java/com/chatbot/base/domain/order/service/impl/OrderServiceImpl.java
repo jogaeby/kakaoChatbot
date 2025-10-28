@@ -114,9 +114,9 @@ public class OrderServiceImpl implements OrderService {
 
             row.add(id);
             row.add(userDto.getUserKey());
-            row.add(userDto.getName());
             row.add("'"+userDto.getPhone());
             row.add(addressDto.getFullAddress());
+            row.add(userDto.getName());
             row.add(ids);
             row.add(names);
             row.add(price);
@@ -125,8 +125,8 @@ public class OrderServiceImpl implements OrderService {
             row.add(quantities);
             row.add(totalPrice);
             row.add("");
-            row.add(LocalDateTime.now().toString());
             row.add("접수");
+            row.add(LocalDateTime.now().toString());
 
             googleSheetUtil.appendToTableSheet(SHEET_ID,ORDER_SHEET_NAME,row);
             alarmTalkService.sendOrderReceiptToAdmin(ADMIN_PHONE,order);
