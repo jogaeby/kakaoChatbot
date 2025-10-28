@@ -503,11 +503,11 @@ public class KakaoUserController {
     public ItemCard createAccountInfoItemCard(UserDto userDto) {
         ItemCard itemCard = new ItemCard();
         itemCard.setItemListAlignment("right");
+        itemCard.setProfile(Map.of(
+                "title","프로필 정보",
+                "imageUrl","https://pointman-file-repository.s3.ap-northeast-2.amazonaws.com/image/profile/icon-friends-ryan.png")
+        );
         if (userDto.getAccount().isDefault()) {
-            itemCard.setProfile(Map.of(
-                    "title","프로필 정보",
-                    "imageUrl","https://pointman-file-repository.s3.ap-northeast-2.amazonaws.com/image/profile/icon-friends-ryan.png")
-            );
             itemCard.addItemList("예금주",userDto.getAccount().getAccountName());
             itemCard.addItemList("은행명",userDto.getAccount().getBankName());
             itemCard.setTitle("계좌번호");
