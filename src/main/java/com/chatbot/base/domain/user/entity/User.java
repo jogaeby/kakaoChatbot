@@ -48,6 +48,9 @@ public class User extends BaseEntity {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Cart cart;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Account account;
+
     // 한 명의 유저가 여러 배송지를 가질 수 있도록
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "user_id") // Address 테이블에 user_id FK 생성
@@ -85,6 +88,10 @@ public class User extends BaseEntity {
         Cart cart = Cart.create(user);
         user.setCart(cart); // 연관관계 설정
 
+        //// ✅ 장바구니 초기화환불 계좌 초기화
+        Account account = Account.create(user, "", "", "",false);
+        user.setAccount(account);
+
         return user;
     }
 
@@ -104,6 +111,7 @@ public class User extends BaseEntity {
                 .privacyAgreed(this.privacyAgreed)
                 .privacyAgreedAt(this.privacyAgreedAt)
                 .addressDtos(addressDtos)
+                .account(account.toDto())
                 .cart(cart.toDto())
                 .build();
     }
@@ -112,6 +120,13 @@ public class User extends BaseEntity {
         this.cart = cart;
         if (cart.getUser() != this) {
             cart.setUser(this);
+        }
+    }
+
+    private void setAccount(Account account) {
+        this.account = account;
+        if (account.getUser() != this) {
+            account.setUser(this);
         }
     }
 

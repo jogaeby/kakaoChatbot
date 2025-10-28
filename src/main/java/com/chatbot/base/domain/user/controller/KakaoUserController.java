@@ -137,6 +137,7 @@ public class KakaoUserController {
             Optional<UserDto> maybeUser = userService.isUser(chatBotRequest.getUserKey());
 
             if (maybeUser.isPresent()) {
+                Carousel carousel = new Carousel();
                 UserDto userDto = maybeUser.get();
                 List<AddressDto> addressDtos = userDto.getAddressDtos();
                 // 기본 배송지 찾기 (없으면 Optional.empty)
@@ -150,8 +151,11 @@ public class KakaoUserController {
                         .orElse("설정안됨");
 
                 ItemCard infoItemCard = createInfoItemCard(userDto, defaultAddressStr);
+                ItemCard accountInfoItemCard = createAccountInfoItemCard(userDto);
+                carousel.addComponent(infoItemCard);
+                carousel.addComponent(accountInfoItemCard);
 
-                chatBotResponse.addItemCard(infoItemCard);
+                chatBotResponse.addCarousel(carousel);
                 return chatBotResponse;
             }
 
@@ -210,7 +214,7 @@ public class KakaoUserController {
                 return chatBotExceptionResponse.createBlackUserException();
             }
 
-
+            Carousel carousel = new Carousel();
             UserDto userDto = maybeUser.get();
 
             AddressDto addressDto = chatBotRequest.getAddressDto();
@@ -229,10 +233,12 @@ public class KakaoUserController {
                     .orElse("설정안됨");
 
             ItemCard infoItemCard = createInfoItemCard(updateUserDto, defaultAddressStr);
-
+            ItemCard accountInfoItemCard = createAccountInfoItemCard(updateUserDto);
+            carousel.addComponent(infoItemCard);
+            carousel.addComponent(accountInfoItemCard);
 
             chatBotResponse.addSimpleText("성공적으로 기본 배송지를 변경하였습니다.");
-            chatBotResponse.addItemCard(infoItemCard);
+            chatBotResponse.addCarousel(carousel);
             return chatBotResponse;
         }catch (Exception e) {
             log.error("ERROR: {}", e.getMessage(), e);
@@ -287,6 +293,8 @@ public class KakaoUserController {
             if (blackUser.isPresent()) {
                 return chatBotExceptionResponse.createBlackUserException();
             }
+
+            Carousel carousel = new Carousel();
             UserDto userDto = maybeUser.get();
             UserDto newName = chatBotRequest.getUser();
 
@@ -305,10 +313,12 @@ public class KakaoUserController {
                     .orElse("설정안됨");
 
             ItemCard infoItemCard = createInfoItemCard(updateUserDto, defaultAddressStr);
-
+            ItemCard accountInfoItemCard = createAccountInfoItemCard(updateUserDto);
+            carousel.addComponent(infoItemCard);
+            carousel.addComponent(accountInfoItemCard);
 
             chatBotResponse.addSimpleText("성공적으로 이름(입금자명)을 변경하였습니다.");
-            chatBotResponse.addItemCard(infoItemCard);
+            chatBotResponse.addCarousel(carousel);
             return chatBotResponse;
         }catch (Exception e) {
             log.error("ERROR: {}", e.getMessage(), e);
@@ -363,6 +373,7 @@ public class KakaoUserController {
             if (blackUser.isPresent()) {
                 return chatBotExceptionResponse.createBlackUserException();
             }
+            Carousel carousel = new Carousel();
 
             UserDto userDto = maybeUser.get();
             UserDto newName = chatBotRequest.getUser();
@@ -382,9 +393,12 @@ public class KakaoUserController {
                     .orElse("설정안됨");
 
             ItemCard infoItemCard = createInfoItemCard(updateUserDto, defaultAddressStr);
+            ItemCard accountInfoItemCard = createAccountInfoItemCard(updateUserDto);
+            carousel.addComponent(infoItemCard);
+            carousel.addComponent(accountInfoItemCard);
 
             chatBotResponse.addSimpleText("성공적으로 연락처를 변경하였습니다.");
-            chatBotResponse.addItemCard(infoItemCard);
+            chatBotResponse.addCarousel(carousel);
             return chatBotResponse;
         }catch (Exception e) {
             log.error("ERROR: {}", e.getMessage(), e);
@@ -485,4 +499,30 @@ public class KakaoUserController {
         return itemCard;
     }
 
+    public ItemCard createAccountInfoItemCard(UserDto userDto) {
+        ItemCard itemCard = new ItemCard();
+        itemCard.setItemListAlignment("right");
+        if (userDto.getAccount().isDefault()) {
+            itemCard.setProfile(Map.of(
+                    "title","프로필 정보",
+                    "imageUrl","https://pointman-file-repository.s3.ap-northeast-2.amazonaws.com/image/profile/icon-friends-ryan.png")
+            );
+            itemCard.addItemList("예금주",userDto.getAccount().getAccountName());
+            itemCard.addItemList("은행명",userDto.getAccount().getBankName());
+            itemCard.setTitle("계좌번호");
+            itemCard.setDescription(userDto.getAccount().getAccountNumber());
+
+            itemCard.addButton(new Button("환불계좌 변경하기",ButtonAction.블럭이동,"68f5cbbdedb87047afe27aaf"));
+
+            return itemCard;
+        }else {
+            itemCard.addItemList("환불계좌","미등록");
+            itemCard.setTitle("환불계좌 미등록 상태입니다.");
+            itemCard.setDescription("아래 [환불계좌 등록하기] 버튼을 눌러 등록해주세요.");
+            itemCard.addButton(new Button("환불계좌 등록하기",ButtonAction.블럭이동,"68f5cbbdedb87047afe27aaf"));
+            return itemCard;
+        }
+    }
+
 }
+
