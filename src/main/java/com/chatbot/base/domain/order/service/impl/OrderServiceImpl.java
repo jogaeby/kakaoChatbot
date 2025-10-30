@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -152,7 +153,7 @@ public class OrderServiceImpl implements OrderService {
     public List<OrderDto> getOrderList(String userKey) {
         try {
             List<List<Object>> orderList = googleSheetUtil.readAllSheet(SHEET_ID, "주문내역");
-            // 리스트 자체를 뒤집음 (최신 데이터가 앞쪽으로)
+
             List<OrderDto> collect = orderList.stream()
                     .filter(row -> String.valueOf(row.get(2)).trim().equals(userKey.trim()))
                     .map(row -> {
@@ -167,20 +168,18 @@ public class OrderServiceImpl implements OrderService {
                                     .defaultYn(true)
                                     .fullAddress(String.valueOf(row.get(5)))
                                     .build();
-                            // 상품 정보 셀 (한 셀에 여러 상품이 줄바꿈으로 들어올 수 있음)
+
                             String[] ids = String.valueOf(row.get(6)).split("\n");
                             String[] names = String.valueOf(row.get(7)).split("\n");
-                            String[] quantities = String.valueOf(row.get(11)).split("\n"); // 수량
+                            String[] quantities = String.valueOf(row.get(11)).split("\n");
                             String[] prices = String.valueOf(row.get(8)).split("\n");
                             String[] discountRates = String.valueOf(row.get(9)).split("\n");
                             String[] discountedPrices = String.valueOf(row.get(10)).split("\n");
                             String[] descriptions = String.valueOf(row.get(13)).split("\n");
+
                             int totalQuantity = 0;
-
-                            int productCount = ids.length; // 실제 상품 개수
                             List<ProductDto> productList = new ArrayList<>();
-
-                            for (int i = 0; i < productCount; i++) {
+                            for (int i = 0; i < ids.length; i++) {
                                 int quantity = Integer.parseInt(quantities[i]);
                                 ProductDto productDto = ProductDto.builder()
                                         .id(ids[i])
@@ -188,14 +187,14 @@ public class OrderServiceImpl implements OrderService {
                                         .price(Integer.parseInt(prices[i]))
                                         .discountRate(Integer.parseInt(discountRates[i]))
                                         .discountedPrice(Integer.parseInt(discountedPrices[i]))
-                                        .description(descriptions.length > i ? descriptions[i] : "") // 없는 값은 빈 문자열 처리
+                                        .description(descriptions.length > i ? descriptions[i] : "")
                                         .build();
                                 productList.add(productDto);
-                                totalQuantity += quantity;               // 수량 합산
-                            };
+                                totalQuantity += quantity;
+                            }
 
                             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                            LocalDateTime localDateTime = LocalDateTime.parse(String.valueOf(row.get(15)), formatter);
+                            LocalDateTime orderDate = LocalDateTime.parse(String.valueOf(row.get(15)), formatter);
 
                             return OrderDto.builder()
                                     .id(String.valueOf(row.get(1)))
@@ -204,20 +203,24 @@ public class OrderServiceImpl implements OrderService {
                                     .address(addressDto)
                                     .totalQuantity(totalQuantity)
                                     .totalPrice(Integer.parseInt(row.get(12).toString()))
-                                    .orderDate(localDateTime)
+                                    .orderDate(orderDate)
                                     .status(String.valueOf(row.get(14)))
                                     .build();
-                        }catch (Exception e) {
+                        } catch (Exception e) {
                             System.out.println("e = " + e);
                             throw new RuntimeException(e);
                         }
                     })
-                    .limit(10) // 최신 10개만
+                    // 날짜 기준 내림차순 정렬
+                    .sorted(Comparator.comparing(OrderDto::getOrderDate).reversed())
+                    .limit(10)
                     .collect(Collectors.toList());
 
             return collect;
-        }catch (Exception e) {
+        } catch (Exception e) {
+            e.printStackTrace();
             return new ArrayList<>();
         }
     }
+
 }
