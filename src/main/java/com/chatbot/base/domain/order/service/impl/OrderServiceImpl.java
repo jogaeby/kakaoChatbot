@@ -60,7 +60,12 @@ public class OrderServiceImpl implements OrderService {
             row.add(LocalDateTime.now().toString());
 
             googleSheetUtil.appendToTableSheet(SHEET_ID,ORDER_SHEET_NAME,row);
-            alarmTalkService.sendOrderReceiptToAdmin(ADMIN_PHONE,order);
+            try {
+                alarmTalkService.sendOrderReceiptToAdmin(ADMIN_PHONE,order);
+            }catch (Exception e) {
+
+            }
+
 
             return order;
         }catch (Exception e) {
@@ -130,7 +135,12 @@ public class OrderServiceImpl implements OrderService {
             row.add(LocalDateTime.now().toString());
 
             googleSheetUtil.appendToTableSheet(SHEET_ID,ORDER_SHEET_NAME,row);
-            alarmTalkService.sendOrderReceiptToAdmin(ADMIN_PHONE,order);
+
+            try {
+                alarmTalkService.sendOrderReceiptToAdmin(ADMIN_PHONE,order);
+            }catch (Exception e) {
+
+            }
 
             return order;
         }catch (Exception e) {
