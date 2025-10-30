@@ -142,60 +142,64 @@ public class OrderServiceImpl implements OrderService {
         try {
             List<List<Object>> orderList = googleSheetUtil.readAllSheet(SHEET_ID, "주문내역");
             // 리스트 자체를 뒤집음 (최신 데이터가 앞쪽으로)
-            Collections.reverse(orderList);
             List<OrderDto> collect = orderList.stream()
-                    .filter(row -> row.get(2).equals(userKey)) // 3번째 열이 userKey인 데이터만 필터링
+                    .filter(row -> String.valueOf(row.get(2)).trim().equals(userKey.trim()))
                     .map(row -> {
-                        UserDto userDto = UserDto.builder()
-                                .userKey(String.valueOf(row.get(2)))
-                                .name(String.valueOf(row.get(3)))
-                                .phone(String.valueOf(row.get(4)))
-                                .build();
-
-                        AddressDto addressDto = AddressDto.builder()
-                                .defaultYn(true)
-                                .fullAddress(String.valueOf(row.get(5)))
-                                .build();
-                        // 상품 정보 셀 (한 셀에 여러 상품이 줄바꿈으로 들어올 수 있음)
-                        String[] ids = String.valueOf(row.get(6)).split("\n");
-                        String[] names = String.valueOf(row.get(7)).split("\n");
-                        String[] quantities = String.valueOf(row.get(11)).split("\n"); // 수량
-                        String[] prices = String.valueOf(row.get(8)).split("\n");
-                        String[] discountRates = String.valueOf(row.get(9)).split("\n");
-                        String[] discountedPrices = String.valueOf(row.get(10)).split("\n");
-                        String[] descriptions = String.valueOf(row.get(13)).split("\n");
-                        int totalQuantity = 0;
-
-                        int productCount = ids.length; // 실제 상품 개수
-                        List<ProductDto> productList = new ArrayList<>();
-
-                        for (int i = 0; i < productCount; i++) {
-                            int quantity = Integer.parseInt(quantities[i]);
-                            ProductDto productDto = ProductDto.builder()
-                                    .id(ids[i])
-                                    .name(names[i])
-                                    .price(Integer.parseInt(prices[i]))
-                                    .discountRate(Integer.parseInt(discountRates[i]))
-                                    .discountedPrice(Integer.parseInt(discountedPrices[i]))
-                                    .description(descriptions.length > i ? descriptions[i] : "") // 없는 값은 빈 문자열 처리
+                        try {
+                            UserDto userDto = UserDto.builder()
+                                    .userKey(String.valueOf(row.get(2)))
+                                    .name(String.valueOf(row.get(3)))
+                                    .phone(String.valueOf(row.get(4)))
                                     .build();
-                            productList.add(productDto);
-                            totalQuantity += quantity;               // 수량 합산
-                        };
 
-                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                        LocalDateTime localDateTime = LocalDateTime.parse(String.valueOf(row.get(14)), formatter);
+                            AddressDto addressDto = AddressDto.builder()
+                                    .defaultYn(true)
+                                    .fullAddress(String.valueOf(row.get(5)))
+                                    .build();
+                            // 상품 정보 셀 (한 셀에 여러 상품이 줄바꿈으로 들어올 수 있음)
+                            String[] ids = String.valueOf(row.get(6)).split("\n");
+                            String[] names = String.valueOf(row.get(7)).split("\n");
+                            String[] quantities = String.valueOf(row.get(11)).split("\n"); // 수량
+                            String[] prices = String.valueOf(row.get(8)).split("\n");
+                            String[] discountRates = String.valueOf(row.get(9)).split("\n");
+                            String[] discountedPrices = String.valueOf(row.get(10)).split("\n");
+                            String[] descriptions = String.valueOf(row.get(13)).split("\n");
+                            int totalQuantity = 0;
 
-                        return OrderDto.builder()
-                                .id(String.valueOf(row.get(1)))
-                                .product(productList)
-                                .user(userDto)
-                                .address(addressDto)
-                                .totalQuantity(totalQuantity)
-                                .totalPrice(Integer.parseInt(row.get(12).toString()))
-                                .orderDate(localDateTime)
-                                .status(String.valueOf(row.get(15)))
-                             .build();
+                            int productCount = ids.length; // 실제 상품 개수
+                            List<ProductDto> productList = new ArrayList<>();
+
+                            for (int i = 0; i < productCount; i++) {
+                                int quantity = Integer.parseInt(quantities[i]);
+                                ProductDto productDto = ProductDto.builder()
+                                        .id(ids[i])
+                                        .name(names[i])
+                                        .price(Integer.parseInt(prices[i]))
+                                        .discountRate(Integer.parseInt(discountRates[i]))
+                                        .discountedPrice(Integer.parseInt(discountedPrices[i]))
+                                        .description(descriptions.length > i ? descriptions[i] : "") // 없는 값은 빈 문자열 처리
+                                        .build();
+                                productList.add(productDto);
+                                totalQuantity += quantity;               // 수량 합산
+                            };
+
+                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                            LocalDateTime localDateTime = LocalDateTime.parse(String.valueOf(row.get(15)), formatter);
+
+                            return OrderDto.builder()
+                                    .id(String.valueOf(row.get(1)))
+                                    .product(productList)
+                                    .user(userDto)
+                                    .address(addressDto)
+                                    .totalQuantity(totalQuantity)
+                                    .totalPrice(Integer.parseInt(row.get(12).toString()))
+                                    .orderDate(localDateTime)
+                                    .status(String.valueOf(row.get(14)))
+                                    .build();
+                        }catch (Exception e) {
+                            System.out.println("e = " + e);
+                            throw new RuntimeException(e);
+                        }
                     })
                     .limit(10) // 최신 10개만
                     .collect(Collectors.toList());
