@@ -2,6 +2,7 @@ package com.chatbot.base.domain.order.service.impl;
 
 import com.chatbot.base.common.AlarmTalkService;
 import com.chatbot.base.common.GoogleSheetUtil;
+import com.chatbot.base.common.util.StringFormatterUtil;
 import com.chatbot.base.domain.order.dto.OrderDto;
 import com.chatbot.base.domain.order.service.OrderService;
 import com.chatbot.base.domain.product.dto.ProductDto;
@@ -49,11 +50,11 @@ public class OrderServiceImpl implements OrderService {
             row.add(userDto.getName());
             row.add(productDto.getId());
             row.add(productDto.getName());
-            row.add(String.valueOf(productDto.getPrice()));
-            row.add(String.valueOf(productDto.getDiscountRate()));
-            row.add(String.valueOf(productDto.getDiscountedPrice()));
+            row.add(StringFormatterUtil.formatCurrency(String.valueOf(productDto.getPrice())));
+            row.add(productDto.getDiscountRate()+"%");
+            row.add(StringFormatterUtil.formatCurrency(String.valueOf(productDto.getDiscountedPrice())));
             row.add(productDto.getQuantity());
-            row.add(productDto.getQuantity()*productDto.getDiscountedPrice());
+            row.add(StringFormatterUtil.formatCurrency(String.valueOf(productDto.getQuantity()*productDto.getDiscountedPrice())));
             row.add(productDto.getDescription() != null ? productDto.getDescription() : "");
             row.add("접수");
             row.add(LocalDateTime.now().toString());
@@ -99,15 +100,15 @@ public class OrderServiceImpl implements OrderService {
                     .collect(Collectors.joining("\n"));
 
             String price = productDtos.stream()
-                    .map(p -> String.valueOf(p.getPrice()))
+                    .map(p -> StringFormatterUtil.formatCurrency(String.valueOf(p.getPrice())))
                     .collect(Collectors.joining("\n"));
 
             String discountedRate = productDtos.stream()
-                    .map(p -> String.valueOf(p.getDiscountRate()))
+                    .map(p -> p.getDiscountRate()+"%")
                     .collect(Collectors.joining("\n"));
 
             String discountedPrice = productDtos.stream()
-                    .map(p -> String.valueOf(p.getDiscountedPrice()))
+                    .map(p -> StringFormatterUtil.formatCurrency(String.valueOf(p.getDiscountedPrice())))
                     .collect(Collectors.joining("\n"));
 
             List<Object> row = new ArrayList<>();
@@ -123,7 +124,7 @@ public class OrderServiceImpl implements OrderService {
             row.add(discountedRate);
             row.add(discountedPrice);
             row.add(quantities);
-            row.add(totalPrice);
+            row.add(StringFormatterUtil.formatCurrency(String.valueOf(totalPrice)));
             row.add("");
             row.add("접수");
             row.add(LocalDateTime.now().toString());
