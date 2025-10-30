@@ -186,9 +186,9 @@ public class OrderServiceImpl implements OrderService {
                                 ProductDto productDto = ProductDto.builder()
                                         .id(ids[i])
                                         .name(names[i])
-                                        .price(Integer.parseInt(prices[i]))
-                                        .discountRate(Integer.parseInt(discountRates[i]))
-                                        .discountedPrice(Integer.parseInt(discountedPrices[i]))
+                                        .price(StringFormatterUtil.parseIntSafe(prices[i]))
+                                        .discountRate(StringFormatterUtil.parseIntSafe(discountRates[i]))
+                                        .discountedPrice(StringFormatterUtil.parseIntSafe(discountedPrices[i]))
                                         .description(descriptions.length > i ? descriptions[i] : "") // 없는 값은 빈 문자열 처리
                                         .build();
                                 productList.add(productDto);
