@@ -2,6 +2,7 @@ package com.chatbot.base.domain.product.service.impl;
 
 import com.chatbot.base.common.AlarmTalkService;
 import com.chatbot.base.common.GoogleSheetUtil;
+import com.chatbot.base.common.util.StringFormatterUtil;
 import com.chatbot.base.domain.order.dto.OrderDto;
 import com.chatbot.base.domain.product.dto.ProductDto;
 import com.chatbot.base.domain.product.service.ProductService;
@@ -38,10 +39,10 @@ public class ProductServiceImpl implements ProductService {
                         return ProductDto.builder()
                                 .id(row.get(0).toString())
                                 .name(row.get(1).toString())
-                                .price(Integer.parseInt(row.get(2).toString()))
-                                .discountRate(Integer.parseInt(row.get(3).toString()))
+                                .price(StringFormatterUtil.parseIntSafe(row.get(2).toString()))
+                                .discountRate(StringFormatterUtil.parseIntSafe(row.get(3).toString()))
                                 .discount(0)
-                                .discountedPrice(Integer.parseInt(row.get(4).toString()))
+                                .discountedPrice(StringFormatterUtil.parseIntSafe(row.get(4).toString()))
                                 .description(row.get(5).toString())
                                 .imageUrl(row.get(6).toString())
                                 .isSoldOut(soldOut)
@@ -69,10 +70,10 @@ public class ProductServiceImpl implements ProductService {
                         return ProductDto.builder()
                                 .id(row.get(0).toString())
                                 .name(row.get(1).toString())
-                                .price(Integer.parseInt(row.get(2).toString()))
-                                .discountRate(Integer.parseInt(row.get(3).toString()))
+                                .price(StringFormatterUtil.parseIntSafe(row.get(2).toString()))
+                                .discountRate(StringFormatterUtil.parseIntSafe(row.get(3).toString()))
                                 .discount(0)
-                                .discountedPrice(Integer.parseInt(row.get(4).toString()))
+                                .discountedPrice(StringFormatterUtil.parseIntSafe(row.get(4).toString()))
                                 .description(row.get(5).toString())
                                 .imageUrl(row.get(6).toString())
                                 .isSoldOut(soldOut)

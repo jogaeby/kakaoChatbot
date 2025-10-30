@@ -68,6 +68,21 @@ public class StringFormatterUtil {
 
         return input;
     }
+    //100,000 -> 100000
+    public static int parseIntSafe(String input) {
+        if (input == null) {
+            throw new IllegalArgumentException("Input cannot be null");
+        }
+
+        // 숫자와 음수 부호만 남기기
+        String cleaned = input.replaceAll("[^0-9-]", "");
+
+        if (cleaned.isEmpty() || cleaned.equals("-")) {
+            throw new NumberFormatException("No valid number in input: " + input);
+        }
+
+        return Integer.parseInt(cleaned);
+    }
 
     public static String formatCurrency(String amount) {
         if (amount == null || amount.equals("0")) {
