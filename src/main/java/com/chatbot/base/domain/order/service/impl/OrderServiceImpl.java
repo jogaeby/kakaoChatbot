@@ -204,7 +204,7 @@ public class OrderServiceImpl implements OrderService {
                                     .user(userDto)
                                     .address(addressDto)
                                     .totalQuantity(totalQuantity)
-                                    .totalPrice(Integer.parseInt(row.get(12).toString()))
+                                    .totalPrice(StringFormatterUtil.parseIntSafe(row.get(12).toString()))
                                     .orderDate(localDateTime)
                                     .status(String.valueOf(row.get(14)))
                                     .build();
