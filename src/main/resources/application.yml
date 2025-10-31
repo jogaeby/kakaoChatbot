@@ -35,7 +35,7 @@ spring:
           time_zone: Asia/Seoul
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/sesameOil
+    url: jdbc:mysql://13.125.151.133:3306/sesameOil
     username: sesameOil
     password: sesameOil2025!
     hikari:

@@ -9,6 +9,7 @@ import com.chatbot.base.domain.product.dto.ProductDto;
 import com.chatbot.base.domain.user.dto.AddressDto;
 import com.chatbot.base.domain.user.dto.UserDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class OrderServiceImpl implements OrderService {
     private final GoogleSheetUtil googleSheetUtil;
     private final AlarmTalkService alarmTalkService;
@@ -64,12 +66,13 @@ public class OrderServiceImpl implements OrderService {
             try {
                 alarmTalkService.sendOrderReceiptToAdmin(ADMIN_PHONE,order);
             }catch (Exception e) {
-
+                log.warn("알림톡 실패 무시하고 주문 접수 진행");
             }
 
 
             return order;
         }catch (Exception e) {
+            log.error("{}",e.getMessage(),e);
             throw new RuntimeException(e);
         }
     }
@@ -145,6 +148,7 @@ public class OrderServiceImpl implements OrderService {
 
             return order;
         }catch (Exception e) {
+            log.error("{}",e.getMessage(),e);
             throw new RuntimeException(e);
         }
     }
@@ -219,6 +223,7 @@ public class OrderServiceImpl implements OrderService {
 
             return collect;
         }catch (Exception e) {
+            log.error("{}",e.getMessage(),e);
             return new ArrayList<>();
         }
     }
