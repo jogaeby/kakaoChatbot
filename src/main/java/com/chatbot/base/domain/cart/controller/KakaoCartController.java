@@ -476,7 +476,8 @@ public class KakaoCartController {
 
             sb.append("\n")
                     .append("고객님의 (해당 상품) 주문이 정상적으로 접수되었습니다.\n")
-                    .append("접수번호: "+orderId)
+                    .append("\n")
+                    .append("주문번호: "+orderId)
                     .append("\n\n")
                     .append("입금계좌: "+branch.getAccountNum())
                     .append("\n")
