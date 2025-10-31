@@ -29,10 +29,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -558,7 +555,10 @@ public class KakaoUserController {
             Optional<UserDto> maybeUser = userService.isUser(userKey);
 
             if (maybeUser.isEmpty()) {
-                return ResponseEntity.status(404).body("고객을 찾을 수 없습니다.");
+                // 고객이 없는 경우
+                Map<String, String> body = new HashMap<>();
+                body.put("message", "고객을 찾을 수 없습니다.\n고유번호를 다시 확인해주세요");
+                return ResponseEntity.status(404).body(body);
             }
 
             UserDto userDto = maybeUser.get();
@@ -567,7 +567,11 @@ public class KakaoUserController {
 
             return ResponseEntity.ok(account);
         }catch (Exception e) {
-            return ResponseEntity.status(400).body(e.getMessage());
+            log.error("{}",e.getMessage(),e);
+
+            Map<String, String> body = new HashMap<>();
+            body.put("message", "예상치 못한 오류가 발생했습니다: " + e.getMessage());
+            return ResponseEntity.status(500).body(body);
         }
     }
 
