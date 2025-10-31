@@ -1,5 +1,8 @@
 package com.chatbot.base.domain.product.controller;
 
+import com.chatbot.base.common.util.StringFormatterUtil;
+import com.chatbot.base.domain.branch.dto.BranchDto;
+import com.chatbot.base.domain.branch.service.BranchService;
 import com.chatbot.base.domain.order.dto.OrderDto;
 import com.chatbot.base.domain.order.service.OrderService;
 import com.chatbot.base.domain.product.dto.ProductDto;
@@ -39,6 +42,7 @@ public class KakaoProductController {
     private final OrderService orderService;
 
     private final UserService userService;
+    private final BranchService branchService;
 
     private final Profile profile = new Profile("금빛방앗간","https://cafe24.poxo.com/ec01/niacom0803/5GslpdAnCPzGTb8GqqEZ3j9W8PbV9xVKJx7NVKrE/h4NpwmrqazOb++iMiMzfrbktxXZcg8qpLZQEBtTNSaMDQ==/_/web/product/extra/big/202209/11310c6c43ef8bb2556cbd066dcd26f3.jpg");
 
@@ -339,14 +343,33 @@ public class KakaoProductController {
             ProductDto product = chatBotRequest.getProduct();
             AddressDto addressDto = chatBotRequest.getAddressDto();
             UserDto userDto = maybeUser.get();
-
+            BranchDto branch = branchService.getBranch(chatBotRequest.getBot().getId());
             OrderDto orderDto = orderService.orderProduct(product, userDto, addressDto);
             String orderId = orderDto.getId();
 
             TextCard textCard = new TextCard();
-            textCard.setTitle("["+orderId+"] 주문접수 성공");
-            textCard.setDescription("주문접수를 성공적으로 완료하였습니다.");
+            textCard.setTitle("[주문 접수 안내]");
+            StringBuilder sb = new StringBuilder();
 
+            sb.append("\n")
+                    .append("고객님의 (해당 상품) 주문이 정상적으로 접수되었습니다.\n")
+                    .append("접수번호: "+orderId)
+                    .append("\n\n")
+                    .append("입금계좌: "+branch.getAccountNum())
+                    .append("\n")
+                    .append("예금주: "+branch.getAccountName())
+                    .append("\n")
+                    .append("은행명: "+branch.getAccountBankName())
+                    .append("\n")
+                    .append("총 결제금액:\n\n"+ StringFormatterUtil.formatCurrency(String.valueOf(orderDto.getTotalPrice()))+"원")
+                    .append("\uD83D\uDCE6 배송 안내\n")
+                    .append("입금 확인 후 1~2일 이내에 우편함으로 배송되며, 배송 완료 시 문자로 안내드립니다.\n")
+                    .append("*상품은 기본적으로 우편함으로 배송되며, 수량이 많을 경우 문 앞까지 배송됩니다.\n\n")
+                    .append("\uD83D\uDCB0 입금 기한 안내 및 유의사항\n")
+                    .append("주문일로부터 24시간 이내 미입금 시 주문은 자동 취소됩니다.\n")
+                    .append("입금 시, 입금자명과 주문자명(회원명)이 다를 경우 확인이 지연될 수 있으니 유의해 주세요.");
+
+            textCard.setDescription(sb.toString());
             chatBotResponse.addTextCard(textCard);
             return chatBotResponse;
         }catch (Exception e) {
