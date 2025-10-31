@@ -25,10 +25,8 @@ import com.chatbot.base.dto.kakao.response.property.components.TextCard;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -554,6 +552,24 @@ public class KakaoUserController {
         }
     }
 
+    @GetMapping(value = "refundAccount")
+    public ResponseEntity getRefundAccount(@RequestParam String userKey) {
+        try {
+            Optional<UserDto> maybeUser = userService.isUser(userKey);
+
+            if (maybeUser.isEmpty()) {
+                return ResponseEntity.status(404).body("고객을 찾을 수 없습니다.");
+            }
+
+            UserDto userDto = maybeUser.get();
+            AccountDto account = userDto.getAccount();
+
+
+            return ResponseEntity.ok(account);
+        }catch (Exception e) {
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
+    }
 
     public ItemCard createInfoItemCard(UserDto userDto, String defaultAddressStr) {
         ItemCard itemCard = new ItemCard();
