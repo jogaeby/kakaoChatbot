@@ -1,9 +1,5 @@
 package com.chatbot.base.dto.kakao.request;
 
-import com.chatbot.base.domain.product.dto.ProductDto;
-import com.chatbot.base.domain.user.dto.AccountDto;
-import com.chatbot.base.domain.user.dto.AddressDto;
-import com.chatbot.base.domain.user.dto.UserDto;
 import com.chatbot.base.dto.kakao.sync.KakaoProfileRequestDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -120,10 +116,6 @@ public class ChatBotRequest {
             private String pageNumber;
             private String firstNumber;
             private String lastNumber;
-            private UserDto user;
-            private ProductDto product;
-            private AddressDto address;
-            private AccountDto account;
             private List<String> productIds;
         }
 
@@ -280,25 +272,6 @@ public class ChatBotRequest {
         return action.getClientExtra().getChoice();
     }
 
-    public UserDto getUser(){
-        if (Objects.isNull(action.getClientExtra().getUser())) return null;
-        return action.getClientExtra().getUser();
-    }
-
-    public ProductDto getProduct(){
-        if (Objects.isNull(action.getClientExtra().getProduct())) return null;
-        return action.getClientExtra().getProduct();
-    }
-
-    public AccountDto getAccount(){
-        if (Objects.isNull(action.getClientExtra().getAccount())) return null;
-        return action.getClientExtra().getAccount();
-    }
-
-    public AddressDto getAddressDto(){
-        if (Objects.isNull(action.getClientExtra().getAddress())) return null;
-        return action.getClientExtra().getAddress();
-    }
 
     public List<String> getProductIds(){
         if (Objects.isNull(action.getClientExtra().getProductIds())) return new ArrayList<>();

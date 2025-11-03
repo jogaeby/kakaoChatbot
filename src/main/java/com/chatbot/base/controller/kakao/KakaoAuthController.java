@@ -1,17 +1,13 @@
 package com.chatbot.base.controller.kakao;
 
 import com.chatbot.base.common.KakaoApiService;
-import com.chatbot.base.dto.kakao.constatnt.button.ButtonAction;
 import com.chatbot.base.dto.kakao.request.ChatBotRequest;
 import com.chatbot.base.dto.kakao.response.ChatBotExceptionResponse;
 import com.chatbot.base.dto.kakao.response.ChatBotResponse;
-import com.chatbot.base.dto.kakao.response.property.common.Button;
-import com.chatbot.base.dto.kakao.response.property.components.TextCard;
 import com.chatbot.base.dto.kakao.sync.KakaoAccessTokenDto;
 import com.chatbot.base.dto.kakao.sync.KakaoMemberTermsDto;
 import com.chatbot.base.dto.kakao.sync.KakaoProfileDto;
 import com.chatbot.base.dto.kakao.sync.KakaoProfileRequestDto;
-import com.chatbot.base.view.KakaoChatBotView;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +21,6 @@ import javax.security.sasl.AuthenticationException;
 @RequestMapping(value = "/kakao/chatbot/auth")
 public class KakaoAuthController {
     private final KakaoApiService kakaoApiService;
-    private final KakaoChatBotView kakaoChatBotView;
     private ChatBotExceptionResponse chatBotExceptionResponse = new ChatBotExceptionResponse();
 
     @PostMapping("fallback")
@@ -56,7 +51,7 @@ public class KakaoAuthController {
             return chatBotResponse;
         }catch (Exception e) {
             log.error("profile: {} {}", e.getMessage(), e.getStackTrace());
-            return kakaoChatBotView.authView();
+            return chatBotExceptionResponse.createAuthException();
         }
     }
 

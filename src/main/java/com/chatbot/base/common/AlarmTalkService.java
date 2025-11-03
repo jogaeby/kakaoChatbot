@@ -1,10 +1,6 @@
 package com.chatbot.base.common;
 
 import com.chatbot.base.common.util.StringFormatterUtil;
-import com.chatbot.base.domain.order.dto.OrderDto;
-import com.chatbot.base.domain.product.dto.ProductDto;
-import com.chatbot.base.domain.user.dto.AddressDto;
-import com.chatbot.base.domain.user.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.nurigo.sdk.NurigoApp;
@@ -15,9 +11,7 @@ import net.nurigo.sdk.message.response.MultipleDetailMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 import org.springframework.stereotype.Service;
 
-import java.text.NumberFormat;
 import java.util.HashMap;
-import java.util.Locale;
 
 @Slf4j
 @Service
@@ -31,7 +25,7 @@ public class AlarmTalkService {
     private final String API_SECRET_KEY = "S8PLP5HFLWAIWOV81WS7YODC1H6VVS7V";
 
 
-    public MultipleDetailMessageSentResponse sendOrderReceiptToAdmin(String targetPhone, OrderDto orderDto) {
+    public MultipleDetailMessageSentResponse sendOrderReceiptToAdmin(String targetPhone) {
         DefaultMessageService messageService =  NurigoApp.INSTANCE.initialize(API_KEY, API_SECRET_KEY, "https://api.solapi.com");
 
         KakaoOption kakaoOption = new KakaoOption();
@@ -39,24 +33,8 @@ public class AlarmTalkService {
         kakaoOption.setTemplateId(ORDER_RECEIPT_TO_ADMIN_TEMPLATE_ID);
         kakaoOption.setDisableSms(true);
 
-        UserDto user = orderDto.getUser();
-        AddressDto address = orderDto.getAddress();
-        ProductDto productDto = orderDto.getProduct().get(0);
-        NumberFormat formatter = NumberFormat.getNumberInstance(Locale.KOREA);
-        String formattedPrice = formatter.format(orderDto.getTotalPrice()) + "원";
 
         HashMap<String, String> variables = new HashMap<>();
-        variables.put("#{주문번호}", orderDto.getId());
-
-        variables.put("#{고객명}",user.getName());
-        variables.put("#{연락처}",user.getPhone());
-        variables.put("#{배송지}", address.getFullAddress());
-
-        variables.put("#{상품번호}", productDto.getId());
-        variables.put("#{상품명}",productDto.getName());
-        variables.put("#{주문수량}", String.valueOf(orderDto.getTotalQuantity()));
-        variables.put("#{총 결제금액}", formattedPrice);
-
         variables.put("#{url}", ADMIN_GOOGLE_SHEET_URL);
 
         kakaoOption.setVariables(variables);
