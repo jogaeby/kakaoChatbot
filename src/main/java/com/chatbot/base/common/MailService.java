@@ -83,6 +83,7 @@ public class MailService {
             helper.addAttachment(pdfFile.getName(), new FileSystemResource(pdfFile));
 
             mailSender.send(message);
+            log.info("✅ 이메일 발송 성공: {} {} ",to, subject);
             return true;
         } catch (Exception e) {
             log.error("메일 전송 실패", e);
