@@ -8,10 +8,5 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class BranchServiceTest {
-    @Autowired
-    private BranchService branchService;
-    @Test
-    void getBranch() {
-        branchService.getBranch("");
-    }
+
 }

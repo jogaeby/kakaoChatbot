@@ -19,10 +19,10 @@ import java.util.HashMap;
 public class AlarmTalkService {
     private final String ADMIN_GOOGLE_SHEET_URL = "docs.google.com/spreadsheets/d/12LK-mODVa9b5b8KA_m68GUF50AojwdOK7_0cok3inFM/edit?gid=1761432966#gid=1761432966";
     private final String ORDER_RECEIPT_TO_ADMIN_TEMPLATE_ID = "KA01TP2510150726438721mBM5OU52oo";
-    private final String CALLER_1_ID = "010-9939-5021";
+    private final String CALLER_1_ID = "010-8776-9454";
     private final String CHANNEL_ID = "KA01PF251015071911083UZDV88niwbD";
-    private final String API_KEY = "NCSPI81TZQNKWTLH";
-    private final String API_SECRET_KEY = "S8PLP5HFLWAIWOV81WS7YODC1H6VVS7V";
+    private final String API_KEY = "NCSS6GVKW9MEQUIM";
+    private final String API_SECRET_KEY = "DXSTXO67JB6IX8XAEVDUBJKRRMVH9XFW";
 
 
     public MultipleDetailMessageSentResponse sendOrderReceiptToAdmin(String targetPhone) {
