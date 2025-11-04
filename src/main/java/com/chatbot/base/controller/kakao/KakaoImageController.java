@@ -1,5 +1,6 @@
 package com.chatbot.base.controller.kakao;
 
+import com.chatbot.base.common.util.StringFormatterUtil;
 import com.chatbot.base.dto.kakao.constatnt.button.ButtonAction;
 import com.chatbot.base.dto.kakao.request.ChatBotRequest;
 import com.chatbot.base.dto.kakao.response.ChatBotExceptionResponse;
@@ -48,6 +49,7 @@ public class KakaoImageController {
 
             chatBotResponse.addCarousel(carousel);
             chatBotResponse.addTextCard(textCard);
+            StringFormatterUtil.objectToString(chatBotResponse);
             return chatBotResponse;
         }catch (Exception e) {
             log.error("ERROR {}",e.getMessage(),e);
