@@ -30,9 +30,9 @@ public class KakaoImageController {
     private final String FAX_TO = "0647249454";
     private ChatBotExceptionResponse chatBotExceptionResponse = new ChatBotExceptionResponse();
 
-    private FaxSender faxSender;
+    private final FaxSender faxSender;
 
-    private MailService mailService;
+    private final MailService mailService;
     @PostMapping("medicine/check")
     public ChatBotResponse medicineCheck(@RequestBody ChatBotRequest chatBotRequest) {
         try {
