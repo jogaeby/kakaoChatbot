@@ -14,11 +14,21 @@ import com.chatbot.base.dto.kakao.response.property.components.SimpleImage;
 import com.chatbot.base.dto.kakao.response.property.components.TextCard;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.net.URL;
 import java.util.List;
 
 @RestController
@@ -74,38 +84,38 @@ public class KakaoImageController {
             String firstImageUrl = (images != null && !images.isEmpty()) ? images.get(0) : null;
             String id = String.valueOf(System.currentTimeMillis());
 
-            boolean mailSuccess = mailService.sendMailWithImageAttachments("ikpharmacy@naver.com", "[" + id + "] " + phone, "연락처: " + phone, List.of(firstImageUrl));
+            // 1️⃣ 이미지 → PDF 변환
+            File pdfFile = mailService.convertImageUrlToPdf(firstImageUrl, id);
 
+            // 2️⃣ 메일 전송 (PDF 첨부)
+            boolean mailSuccess = mailService.sendMailWithPdfAttachment(
+                    "ikpharmacy@naver.com",
+                    "[" + id + "] " + phone,
+                    "연락처: " + phone,
+                    pdfFile
+            );
 
-            String imageId = faxSender.uploadImageFromUrl(firstImageUrl);
-            boolean faxSuccess = faxSender.sendFax(imageId, FAX_FROM, FAX_TO);
+            // 3️⃣ Solapi 업로드 후 팩스 전송
+            String fileId = faxSender.uploadPdfFileToSolapi(pdfFile);
+            boolean faxSuccess = faxSender.sendFax(fileId, FAX_FROM, FAX_TO);
 
+            // 4️⃣ 결과 처리
             if (mailSuccess && faxSuccess) {
-
-                Button button = new Button("약사 연결", ButtonAction.상담원연결,"");
+                Button button = new Button("약사 연결", ButtonAction.상담원연결, "");
                 TextCard textCard = new TextCard();
-                StringBuilder message = new StringBuilder();
-                message.append("["+id+"]")
-                        .append("\n")
-                        .append("성공적으로 처방전을 제출하였습니다.")
-                        .append("\n\n")
-                        .append("아래 [약사 연결] 버튼을 눌른 후")
-                        .append("\n")
-                        .append("전송완료를 입력해주세요.")
-                ;
-
-
-                textCard.setDescription(message.toString());
+                textCard.setDescription("[" + id + "]\n성공적으로 처방전을 제출하였습니다.\n\n" +
+                        "아래 [약사 연결] 버튼을 눌른 후\n전송완료를 입력해주세요.");
                 textCard.setButtons(button);
 
-                chatBotResponse.addSimpleImage(firstImageUrl,"처방전");
+                chatBotResponse.addSimpleImage(firstImageUrl, "처방전");
                 chatBotResponse.addTextCard(textCard);
                 return chatBotResponse;
             }
 
             return chatBotExceptionResponse.createException("처방전 제출을 실패하였습니다.\n다시 처음부터 진행해주세요.");
-        }catch (Exception e) {
-            log.error("ERROR {}",e.getMessage(),e);
+
+        } catch (Exception e) {
+            log.error("ERROR {}", e.getMessage(), e);
             return chatBotExceptionResponse.createException("처방전 제출을 실패하였습니다.\n다시 처음부터 진행해주세요.");
         }
     }

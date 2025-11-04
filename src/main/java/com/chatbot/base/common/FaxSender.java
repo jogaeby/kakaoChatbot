@@ -13,6 +13,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -99,6 +100,38 @@ public class FaxSender {
             return response.getBody().get("fileId").toString();
         } else {
             throw new RuntimeException("파일 업로드 실패: " + response);
+        }
+    }
+
+    public String uploadPdfFileToSolapi(File pdfFile) throws Exception {
+        // 1️⃣ PDF 파일 Base64 인코딩
+        byte[] pdfBytes = Files.readAllBytes(pdfFile.toPath());
+        String base64File = Base64.getEncoder().encodeToString(pdfBytes);
+
+        // 2️⃣ 헤더 설정
+        String url = "https://api.solapi.com/storage/v1/files";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Authorization", createAuthHeader(API_KEY, API_SECRET_KEY));
+
+        // 3️⃣ 요청 바디 구성
+        Map<String, Object> body = new HashMap<>();
+        body.put("file", base64File);
+        body.put("name", pdfFile.getName());
+        body.put("type", "FAX");
+
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
+        RestTemplate restTemplate = new RestTemplate();
+
+        // 4️⃣ Solapi API 호출
+        ResponseEntity<Map> response = restTemplate.postForEntity(url, entity, Map.class);
+
+        if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+            String fileId = response.getBody().get("fileId").toString();
+            System.out.println("✅ PDF 업로드 성공: " + fileId);
+            return fileId;
+        } else {
+            throw new RuntimeException("❌ PDF 업로드 실패: " + response);
         }
     }
 

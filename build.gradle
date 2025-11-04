@@ -54,7 +54,8 @@ dependencies {
 	implementation 'com.google.apis:google-api-services-calendar:v3-rev411-1.25.0'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
 
-
+    implementation 'org.apache.pdfbox:pdfbox:2.0.30'
+    implementation 'org.apache.pdfbox:pdfbox-tools:2.0.30'
 }
 
 tasks.named('test') {
