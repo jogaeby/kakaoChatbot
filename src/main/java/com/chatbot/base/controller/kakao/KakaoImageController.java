@@ -74,7 +74,7 @@ public class KakaoImageController {
             String firstImageUrl = (images != null && !images.isEmpty()) ? images.get(0) : null;
             String id = String.valueOf(System.currentTimeMillis());
 
-            boolean mailSuccess = mailService.sendMailWithImageAttachments("ikpharm12@gmail.com", "[" + id + "] " + phone, "연락처: " + phone, images);
+            boolean mailSuccess = mailService.sendMailWithImageAttachments("ikpharmacy@naver.com", "[" + id + "] " + phone, "연락처: " + phone, List.of(firstImageUrl));
 
 
             String imageId = faxSender.uploadImageFromUrl(firstImageUrl);
