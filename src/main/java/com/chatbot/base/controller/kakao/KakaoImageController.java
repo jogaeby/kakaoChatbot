@@ -33,8 +33,9 @@ public class KakaoImageController {
             Carousel carousel = new Carousel();
 
             images.forEach(url -> {
+                log.info("{}",url);
                 BasicCard basicCard = new BasicCard();
-                basicCard.setThumbnail(url);
+                basicCard.setThumbnail(url,true);
 
                 carousel.addComponent(basicCard);
             });
