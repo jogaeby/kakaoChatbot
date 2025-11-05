@@ -36,8 +36,7 @@ import java.util.List;
 @Slf4j
 @RequestMapping(value = "/kakao/chatbot/imagae")
 public class KakaoImageController {
-    private final String FAX_FROM = "010-8776-9454";
-    private final String FAX_TO = "0647249454";
+
     private ChatBotExceptionResponse chatBotExceptionResponse = new ChatBotExceptionResponse();
 
     private final FaxSender faxSender;
@@ -96,23 +95,18 @@ public class KakaoImageController {
             );
 
             // 3️⃣ Solapi 업로드 후 팩스 전송
-            String fileId = faxSender.uploadPdfFileToSolapi(pdfFile);
-            boolean faxSuccess = faxSender.sendFax(fileId, FAX_FROM, FAX_TO);
+            faxSender.uploadPdfFileAndSendFax(pdfFile);
 
             // 4️⃣ 결과 처리
-            if (faxSuccess) {
-                Button button = new Button("약사 연결", ButtonAction.상담원연결, "");
-                TextCard textCard = new TextCard();
-                textCard.setDescription("[" + id + "]\n성공적으로 처방전을 제출하였습니다.\n\n" +
-                        "아래 [약사 연결] 버튼을 눌른 후\n\"전송완료\"라고 말씀해주세요.");
-                textCard.setButtons(button);
+            Button button = new Button("약사 연결", ButtonAction.상담원연결, "");
+            TextCard textCard = new TextCard();
+            textCard.setDescription("[" + id + "]\n성공적으로 처방전을 제출하였습니다.\n\n" +
+                    "아래 [약사 연결] 버튼을 눌른 후\n\"전송완료\"라고 말씀해주세요.");
+            textCard.setButtons(button);
 
-                chatBotResponse.addSimpleImage(firstImageUrl, "처방전");
-                chatBotResponse.addTextCard(textCard);
-                return chatBotResponse;
-            }
-
-            return chatBotExceptionResponse.createException("처방전 제출을 실패하였습니다.\n다시 처음부터 진행해주세요.");
+            chatBotResponse.addSimpleImage(firstImageUrl, "처방전");
+            chatBotResponse.addTextCard(textCard);
+            return chatBotResponse;
 
         } catch (Exception e) {
             log.error("ERROR {}", e.getMessage(), e);

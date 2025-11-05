@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -25,7 +26,8 @@ import java.util.*;
 public class FaxSender {
     private final String API_KEY = "NCSS6GVKW9MEQUIM";
     private final String API_SECRET_KEY = "DXSTXO67JB6IX8XAEVDUBJKRRMVH9XFW";
-
+    private final String FAX_FROM = "010-8776-9454";
+    private final String FAX_TO = "0647249454";
     private final RestTemplate restTemplate = new RestTemplate();
 
     /**
@@ -103,7 +105,8 @@ public class FaxSender {
         }
     }
 
-    public String uploadPdfFileToSolapi(File pdfFile) throws Exception {
+    @Async
+    public void uploadPdfFileAndSendFax(File pdfFile) throws Exception {
         // 1️⃣ PDF 파일 Base64 인코딩
         byte[] pdfBytes = Files.readAllBytes(pdfFile.toPath());
         String base64File = Base64.getEncoder().encodeToString(pdfBytes);
@@ -128,8 +131,9 @@ public class FaxSender {
 
         if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
             String fileId = response.getBody().get("fileId").toString();
-            System.out.println("✅ PDF 업로드 성공: " + fileId);
-            return fileId;
+            log.info("✅ PDF 업로드 성공: {}",fileId);
+
+            sendFax(fileId,FAX_FROM,FAX_TO);
         } else {
             throw new RuntimeException("❌ PDF 업로드 실패: " + response);
         }
