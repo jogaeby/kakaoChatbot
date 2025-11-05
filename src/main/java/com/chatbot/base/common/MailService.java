@@ -74,7 +74,7 @@ public class MailService {
     }
 
     @Async
-    public boolean sendMailWithPdfAttachment(String to, String subject, String messageText, File pdfFile) {
+    public void sendMailWithPdfAttachment(String to, String subject, String messageText, File pdfFile) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
@@ -86,10 +86,8 @@ public class MailService {
 
             mailSender.send(message);
             log.info("✅ 이메일 발송 성공: {} {} ",to, subject);
-            return true;
         } catch (Exception e) {
             log.error("메일 전송 실패", e);
-            return false;
         }
     }
 

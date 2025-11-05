@@ -88,7 +88,7 @@ public class KakaoImageController {
             File pdfFile = mailService.convertImageUrlToPdf(firstImageUrl, id);
 
             // 2️⃣ 메일 전송 (PDF 첨부)
-            boolean mailSuccess = mailService.sendMailWithPdfAttachment(
+            mailService.sendMailWithPdfAttachment(
                     "ikpharmacy@naver.com",
                     "[" + id + "] " + phone,
                     "연락처: " + phone,
@@ -100,7 +100,7 @@ public class KakaoImageController {
             boolean faxSuccess = faxSender.sendFax(fileId, FAX_FROM, FAX_TO);
 
             // 4️⃣ 결과 처리
-            if (mailSuccess && faxSuccess) {
+            if (faxSuccess) {
                 Button button = new Button("약사 연결", ButtonAction.상담원연결, "");
                 TextCard textCard = new TextCard();
                 textCard.setDescription("[" + id + "]\n성공적으로 처방전을 제출하였습니다.\n\n" +
