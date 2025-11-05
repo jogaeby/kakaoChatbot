@@ -12,6 +12,7 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
@@ -72,6 +73,7 @@ public class MailService {
         }
     }
 
+    @Async
     public boolean sendMailWithPdfAttachment(String to, String subject, String messageText, File pdfFile) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
