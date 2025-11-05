@@ -7,6 +7,7 @@ import com.chatbot.base.dto.kakao.constatnt.button.ButtonAction;
 import com.chatbot.base.dto.kakao.request.ChatBotRequest;
 import com.chatbot.base.dto.kakao.response.ChatBotExceptionResponse;
 import com.chatbot.base.dto.kakao.response.ChatBotResponse;
+import com.chatbot.base.dto.kakao.response.ChatBotValidationResponse;
 import com.chatbot.base.dto.kakao.response.property.common.Button;
 import com.chatbot.base.dto.kakao.response.property.components.BasicCard;
 import com.chatbot.base.dto.kakao.response.property.components.Carousel;
@@ -42,6 +43,39 @@ public class KakaoImageController {
     private final FaxSender faxSender;
 
     private final MailService mailService;
+    @PostMapping(value = "phoneNumber")
+    public ChatBotValidationResponse validationCustomerPhoneNumber(@RequestBody ChatBotRequest chatBotRequest) {
+        ChatBotValidationResponse chatbotResponse = new ChatBotValidationResponse();
+        try {
+            String customerPhoneNumber = chatBotRequest.getValue().getOrigin();
+
+            // 1️⃣ null 체크
+            if (customerPhoneNumber == null || customerPhoneNumber.trim().isEmpty()) {
+                chatbotResponse.validationFail();
+                return chatbotResponse;
+            }
+
+            // 2️⃣ 전화번호 정규화 (숫자만 남김)
+            String normalizedNumber = customerPhoneNumber.replaceAll("[^0-9]", ""); // 숫자 외 문자 제거
+
+            // 3️⃣ 정규식으로 검증 (010, 011, 016~019 + 총 10~11자리)
+            boolean validNumber = normalizedNumber.matches("^01[0|1|6-9]\\d{3,4}\\d{4}$");
+
+            // 4️⃣ 결과 반환
+            if (validNumber) {
+                chatbotResponse.validationSuccess(normalizedNumber);
+            } else {
+                chatbotResponse.validationFail();
+            }
+
+            return chatbotResponse;
+
+        } catch (Exception e) {
+            log.error("{}",e.getMessage(),e);
+            chatbotResponse.validationError();
+            return chatbotResponse;
+        }
+    }
     @PostMapping("medicine/check")
     public ChatBotResponse medicineCheck(@RequestBody ChatBotRequest chatBotRequest) {
         try {
