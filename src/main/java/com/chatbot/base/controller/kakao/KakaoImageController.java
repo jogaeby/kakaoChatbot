@@ -132,10 +132,10 @@ public class KakaoImageController {
             faxSender.uploadPdfFileAndSendFax(pdfFile);
 
             // 4️⃣ 결과 처리
-            Button button = new Button("약사 연결", ButtonAction.상담원연결, "");
+            Button button = new Button("약국 연결", ButtonAction.상담원연결, "");
             TextCard textCard = new TextCard();
             textCard.setDescription("[" + id + "]\n성공적으로 처방전을 제출하였습니다.\n\n" +
-                    "아래 [약사 연결] 버튼을 눌른 후\n\"전송완료\"라고 말씀해주세요.");
+                    "아래 [약국 연결] 버튼을 눌른 후\n\"전송완료\"라고 말씀해주세요.");
             textCard.setButtons(button);
 
             chatBotResponse.addSimpleImage(firstImageUrl, "처방전");
