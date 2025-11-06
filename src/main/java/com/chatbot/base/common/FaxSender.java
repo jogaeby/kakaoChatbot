@@ -3,22 +3,22 @@ package com.chatbot.base.common;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.*;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.File;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
 import java.nio.file.Files;
 import java.time.Instant;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Slf4j
@@ -28,7 +28,57 @@ public class FaxSender {
     private final String API_SECRET_KEY = "DXSTXO67JB6IX8XAEVDUBJKRRMVH9XFW";
     private final String FAX_FROM = "010-8776-9454";
     private final String FAX_TO = "0647249454";
+    private final String USERNAME = "vinsulill";
+    private final String PASSWORD = "!nt3rFax$Zipper95";
     private final RestTemplate restTemplate = new RestTemplate();
+
+    /**
+     * InterFAX로 팩스 전송 요청
+     */
+    public Long sendFax(String faxNumber, File file, Map<String, String> options) {
+        String BASE_URL = "https://rest.interfax.net/outbound/faxes";
+        // ✅ 1. 쿼리 파라미터 구성
+        StringJoiner query = new StringJoiner("&");
+        query.add("faxNumber=" + faxNumber);
+        if (options != null) {
+            options.forEach((k, v) -> query.add(k + "=" + v));
+        }
+        String url = BASE_URL + "?" + query.toString();
+
+        // ✅ 2. multipart body 구성
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        body.add("file", new FileSystemResource(file));
+
+        // ✅ 3. 헤더 설정
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBasicAuth(USERNAME, PASSWORD);
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+
+        // ✅ 4. POST 요청
+        ResponseEntity<String> response = restTemplate.postForEntity(url, requestEntity, String.class);
+
+        // ✅ 5. 응답 상태 코드 확인
+        if (response.getStatusCode() == HttpStatus.CREATED) {
+            URI location = response.getHeaders().getLocation();
+            if (location != null) {
+                // Location 헤더에서 faxId 추출
+                String path = location.getPath(); // 예: /outbound/faxes/854759652
+                String faxId = path.substring(path.lastIndexOf("/") + 1);
+                System.out.println("✅ Fax successfully created! Fax ID = " + faxId);
+                return Long.parseLong(faxId);
+            } else {
+                System.out.println("⚠️ Fax created but Location header missing!");
+                return null;
+            }
+        } else {
+            System.err.println("❌ Fax request failed. Status: " + response.getStatusCode());
+            System.err.println("Body: " + response.getBody());
+            return null;
+        }
+    }
+
 
     /**
      * ✅ 이미 업로드된 파일 ID로 팩스 전송
