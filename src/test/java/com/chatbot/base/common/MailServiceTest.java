@@ -6,6 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
@@ -21,19 +22,19 @@ class MailServiceTest {
 
 
         // 1️⃣ 이미지 → PDF 변환
-        File pdfFile = mailService.convertImageUrlToPdf("http://k.kakaocdn.net/dn/ckQzE5/btsRAnP6ZbU/QmkKuYwDxMVvFzyiy1Fwv0/resize.jpg", "123123123");
+        File pdfFile = mailService.convertImageUrlToFaxTiff("https://blog.kakaocdn.net/dna/xYFz9/dJMcai9tqgQ/AAAAAAAAAAAAAAAAAAAAAH94YqJ4Y1MfCKMT-pGNqOpaICk8yVFeTdSgRbDQWvT_/img.jpg?credential=yqXZFxpELC7KVnFOS48ylbz2pIh7yKj8&expires=1764514799&allow_ip=&allow_referer=&signature=czaopC1TOVg1LocGzKDD2OA7kLo%3D", "123123123");
 
         // 2️⃣ 메일 전송 (PDF 첨부)
-        boolean mailSuccess = mailService.sendMailWithImageAttachments(
+        mailService.sendMailWithPdfAttachment(
                 "vinsulill@gmail.com",
                 "[" + 123123 + "] " + 123123,
                 "연락처: " + 123123,
-                List.of("http://k.kakaocdn.net/dn/ckQzE5/btsRAnP6ZbU/QmkKuYwDxMVvFzyiy1Fwv0/resize.jpg")
+                pdfFile
         );
 //
-//        String s = faxSender.uploadPdfFileToSolapi(pdfFile);
-//
-//        faxSender.sendFax(s,"010-8776-9454","0647249454");
+         faxSender.uploadPdfFileAndSendFax(pdfFile);
+
+//        faxSender.sendFax("0082647249454",pdfFile, Map.of());
 //        System.out.println("s = " + s);
 
 

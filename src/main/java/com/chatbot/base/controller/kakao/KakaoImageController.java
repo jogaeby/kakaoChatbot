@@ -118,7 +118,7 @@ public class KakaoImageController {
             String id = String.valueOf(System.currentTimeMillis());
 
             // 1️⃣ 이미지 → PDF 변환
-            File pdfFile = mailService.convertImageUrlToPdf(firstImageUrl, id);
+            File pdfFile = mailService.convertImageUrlToFaxTiff(firstImageUrl, id);
 
             // 2️⃣ 메일 전송 (PDF 첨부)
             mailService.sendMailWithPdfAttachment(
