@@ -81,6 +81,7 @@ public class MailService {
     }
 
 
+    @Async
     public void sendMailWithPdfAttachment(String to, String subject, String messageText, File file) {
         try {
             log.info("✅ 이메일 발송 시작: {} {} ",to, subject);
