@@ -32,7 +32,7 @@ class MailServiceTest {
                 pdfFile
         );
 //
-         faxSender.uploadPdfFileAndSendFax(pdfFile);
+//         faxSender.uploadPdfFileAndSendFax(pdfFile);
 
 //        faxSender.sendFax("0082647249454",pdfFile, Map.of());
 //        System.out.println("s = " + s);

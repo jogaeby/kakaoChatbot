@@ -128,13 +128,6 @@ public class KakaoImageController {
                     pdfFile
             );
 
-            mailService.sendMailWithPdfAttachment(
-                    "vinsulill@gmail.com",
-                    "[" + id + "] " + phone,
-                    "연락처: " + phone,
-                    pdfFile
-            );
-
             // 3️⃣ Solapi 업로드 후 팩스 전송
             faxSender.uploadPdfFileAndSendFax(pdfFile);
 
